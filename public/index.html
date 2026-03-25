@@ -44,19 +44,19 @@ img{max-width:100%;display:block;}
 /* ===== BACK TO TOP ===== */
 .btt{position:fixed;bottom:32px;right:32px;z-index:9997;width:44px;height:44px;border-radius:50%;border:1px solid var(--g);background:rgba(0,230,57,.08);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:all .4s;cursor:pointer;}
 .btt.show{opacity:1;pointer-events:auto;}
-.btt:hover{background:var(--g);box-shadow:0 0 20px rgba(0,230,57,.4);}
+.btt:hover{background:var(--g);}
 .btt:hover svg{stroke:var(--dk);}
 .btt svg{stroke:var(--g);transition:stroke .3s;}
 
-/* ===== SECTION SHARED ===== */
+/* ===== SHARED ===== */
 section{position:relative;}
 .inner{max-width:var(--mx);margin:0 auto;padding:0 24px;}
 .sec-pad{padding:var(--sp) 24px;}
-
-/* ===== FULL-BLEED IMAGE SECTION ===== */
-.hero-img-sec{position:relative;width:100%;overflow:hidden;}
-.hero-img-sec img{width:100%;display:block;}
-.hero-img-sec::after{content:'';position:absolute;bottom:0;left:0;right:0;height:120px;background:linear-gradient(transparent,var(--dk));pointer-events:none;}
+.label{font-family:'Oswald',sans-serif;font-size:clamp(11px,1.2vw,13px);letter-spacing:4px;text-transform:uppercase;color:var(--g);margin-bottom:16px;}
+.sec-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,6vw,72px);letter-spacing:3px;line-height:1.1;margin-bottom:16px;}
+.sec-desc{font-size:clamp(15px,1.6vw,20px);color:var(--w7);line-height:1.9;max-width:700px;margin-bottom:40px;}
+.sec-desc strong{color:var(--dk);background:var(--g);padding:0 6px;font-weight:500;}
+.green-hr{height:1px;border:none;background:linear-gradient(90deg,transparent,var(--g),transparent);opacity:.4;margin:0;}
 
 /* ===== HERO ===== */
 #hero{position:relative;height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;}
@@ -72,18 +72,45 @@ section{position:relative;}
 .scroll-ind .arrow::after{content:'';position:absolute;top:-100%;left:0;width:100%;height:100%;background:var(--g);animation:arrowDown 1.5s infinite;}
 @keyframes arrowDown{0%{top:-100%}100%{top:100%}}
 
-/* ===== TEXT SECTIONS ===== */
-.label{font-family:'Oswald',sans-serif;font-size:clamp(11px,1.2vw,13px);letter-spacing:4px;text-transform:uppercase;color:var(--g);margin-bottom:16px;}
-.sec-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,6vw,72px);letter-spacing:3px;line-height:1.1;margin-bottom:16px;}
-.sec-desc{font-size:clamp(15px,1.6vw,20px);color:var(--w7);line-height:1.9;max-width:700px;margin-bottom:40px;}
-.sec-desc strong{color:var(--dk);background:var(--g);padding:0 6px;font-weight:500;}
-
-/* ===== TAG ROW ===== */
+/* ===== TAGS ===== */
 .tags{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:32px;}
 .tag{padding:10px 24px;border:1px solid var(--w15);font-size:clamp(13px,1.3vw,15px);letter-spacing:1px;transition:all .3s;cursor:default;background:rgba(0,230,57,.04);}
-.tag:hover{border-color:var(--g);color:var(--g);transform:translateY(-3px);box-shadow:0 0 20px rgba(0,230,57,.12);}
+.tag:hover{border-color:var(--g);color:var(--g);transform:translateY(-3px);}
 
-/* ===== STATS ROW ===== */
+/* ===== LAYERED SECTION ===== */
+.layered{position:relative;min-height:80vh;overflow:hidden;display:flex;align-items:center;}
+.layered .ly-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;}
+.layered .ly-overlay{position:absolute;inset:0;z-index:1;}
+.layered .ly-content{position:relative;z-index:3;width:100%;padding:clamp(60px,8vw,120px) 24px;}
+.layered .ly-fg{position:absolute;z-index:2;transition:transform .1s linear;}
+/* Parallax targets */
+[data-speed]{will-change:transform;}
+
+/* ===== TEAM SECTION ===== */
+.team-sec{min-height:90vh;display:flex;align-items:stretch;overflow:hidden;position:relative;}
+.team-sec .team-bg{position:absolute;inset:0;z-index:0;}
+.team-sec .team-bg img{width:100%;height:100%;object-fit:cover;filter:brightness(.3);}
+.team-sec .team-photo{position:relative;z-index:2;flex:0 0 55%;display:flex;align-items:flex-end;justify-content:center;overflow:hidden;padding-top:60px;}
+.team-sec .team-photo img{width:100%;max-height:100%;object-fit:contain;object-position:bottom;transform:translateY(40px);opacity:0;transition:transform .8s cubic-bezier(.16,1,.3,1),opacity .8s ease;}
+.team-sec.vis .team-photo img{transform:translateY(0);opacity:1;}
+.team-sec .team-info{position:relative;z-index:3;flex:1;display:flex;flex-direction:column;justify-content:center;padding:clamp(40px,6vw,80px);}
+.team-sec .team-name{font-family:'Bebas Neue',sans-serif;font-size:clamp(40px,7vw,90px);letter-spacing:4px;line-height:.95;margin-bottom:12px;-webkit-text-stroke:2px rgba(255,255,255,.3);color:transparent;}
+.team-sec .team-sub{font-size:clamp(14px,1.4vw,18px);color:var(--g);margin-bottom:8px;}
+.team-sec .team-tagline{font-size:15px;color:var(--w7);max-width:400px;line-height:1.8;}
+.team-sec .team-accent{position:absolute;bottom:40px;right:40px;font-family:'Bebas Neue',sans-serif;font-size:clamp(80px,12vw,180px);color:rgba(0,230,57,.06);z-index:1;line-height:1;}
+@media(max-width:900px){
+  .team-sec{flex-direction:column;min-height:auto;}
+  .team-sec .team-photo{flex:none;height:60vw;max-height:500px;padding-top:40px;}
+  .team-sec .team-info{padding:40px 24px 60px;}
+  .team-sec .team-accent{font-size:60px;bottom:20px;right:20px;}
+}
+
+/* ===== FULL IMAGE SECTION ===== */
+.full-img{position:relative;width:100%;overflow:hidden;}
+.full-img img{width:100%;display:block;}
+.full-img::after{content:'';position:absolute;bottom:0;left:0;right:0;height:120px;background:linear-gradient(transparent,var(--dk));pointer-events:none;}
+
+/* ===== STATS ===== */
 .stats-row{display:flex;flex-wrap:wrap;gap:clamp(24px,5vw,64px);margin-top:40px;}
 .stat .num{font-family:'Bebas Neue',sans-serif;font-size:clamp(48px,7vw,80px);line-height:1;background:linear-gradient(135deg,var(--g),var(--gb));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
 .stat .txt{font-size:13px;color:var(--w5);margin-top:4px;}
@@ -96,23 +123,35 @@ section{position:relative;}
 /* ===== BRAND CARDS ===== */
 .brand-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:32px;}
 .brand-card{position:relative;overflow:hidden;border:1px solid var(--w06);aspect-ratio:16/10;cursor:default;transition:all .4s;}
-.brand-card img{width:100%;height:100%;object-fit:cover;transition:transform .6s,filter .4s;filter:brightness(.9);}
+.brand-card img{width:100%;height:100%;object-fit:cover;transition:transform .6s,filter .4s;filter:brightness(.85);}
 .brand-card:hover img{transform:scale(1.05);filter:brightness(1);}
-.brand-card::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.6),transparent 60%);pointer-events:none;}
+.brand-card::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.7),transparent 60%);pointer-events:none;}
 .brand-card .bc-info{position:absolute;bottom:0;left:0;right:0;padding:24px;z-index:1;}
 .brand-card .bc-name{font-family:'Bebas Neue',sans-serif;font-size:clamp(24px,3vw,40px);letter-spacing:2px;}
-.brand-card .bc-sub{font-size:13px;color:var(--g);font-family:'Oswald',sans-serif;letter-spacing:1px;}
+.brand-card .bc-sub{font-size:12px;color:var(--g);font-family:'Oswald',sans-serif;letter-spacing:1px;}
 
-/* ===== CREW GRID ===== */
-.crew-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-top:24px;}
-.crew-card{text-align:center;padding:20px 12px;border:1px solid var(--w06);transition:all .3s;cursor:default;}
-.crew-card:hover{border-color:var(--g);transform:translateY(-4px);box-shadow:0 0 20px rgba(0,230,57,.1);}
-.crew-card img{width:64px;height:64px;border-radius:50%;object-fit:cover;margin:0 auto 10px;border:2px solid var(--w15);filter:grayscale(.3);transition:all .3s;}
-.crew-card:hover img{filter:grayscale(0);border-color:var(--g);}
-.crew-card .cn{font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:2px;margin-bottom:2px;}
-.crew-card .mbti{font-size:11px;color:var(--g);font-family:'Oswald',sans-serif;}
+/* ===== CREW SECTION ===== */
+.crew-main-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px;margin-top:24px;}
+.crew-card{position:relative;background:var(--d2);border:1px solid var(--w06);overflow:hidden;transition:all .4s;cursor:default;}
+.crew-card:hover{border-color:var(--g);transform:translateY(-6px);box-shadow:0 12px 40px rgba(0,0,0,.4),0 0 20px rgba(0,230,57,.08);}
+.crew-card .cc-img{width:100%;aspect-ratio:3/4;overflow:hidden;background:var(--d1);display:flex;align-items:flex-end;justify-content:center;}
+.crew-card .cc-img img{width:100%;height:100%;object-fit:contain;object-position:bottom;filter:grayscale(.2);transition:filter .4s,transform .4s;}
+.crew-card:hover .cc-img img{filter:grayscale(0);transform:scale(1.03);}
+.crew-card .cc-info{padding:12px 14px;text-align:center;border-top:1px solid var(--w06);}
+.crew-card .cn{font-family:'Oswald',sans-serif;font-size:13px;letter-spacing:2px;}
+.crew-card .mbti{font-size:11px;color:var(--g);font-family:'Oswald',sans-serif;margin-top:2px;}
 
-/* ===== PRESS LIST ===== */
+/* ALL CREW - smaller */
+.crew-all-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px;margin-top:16px;}
+.crew-sm{position:relative;background:var(--d2);border:1px solid var(--w06);overflow:hidden;transition:all .3s;cursor:default;}
+.crew-sm:hover{border-color:var(--g);transform:translateY(-4px);}
+.crew-sm .cc-img{width:100%;aspect-ratio:3/4;overflow:hidden;background:var(--d1);display:flex;align-items:flex-end;justify-content:center;}
+.crew-sm .cc-img img{width:100%;height:100%;object-fit:contain;object-position:bottom;filter:grayscale(.3);transition:filter .3s;}
+.crew-sm:hover .cc-img img{filter:grayscale(0);}
+.crew-sm .cc-info{padding:8px 10px;text-align:center;}
+.crew-sm .cn{font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:1px;color:var(--w5);}
+
+/* ===== PRESS ===== */
 .press-list{border-top:1px solid var(--w06);}
 .press-item{display:flex;justify-content:space-between;align-items:center;padding:20px 0;border-bottom:1px solid var(--w06);transition:all .3s;gap:16px;}
 .press-item:hover{padding-left:16px;}
@@ -124,39 +163,36 @@ section{position:relative;}
 /* ===== CONTACT ===== */
 .contact-btn{display:inline-block;padding:16px 48px;border:2px solid var(--g);color:var(--g);font-family:'Oswald',sans-serif;font-size:18px;letter-spacing:4px;text-transform:uppercase;transition:all .3s;position:relative;overflow:hidden;}
 .contact-btn::before{content:'';position:absolute;inset:0;background:var(--g);transform:scaleX(0);transform-origin:left;transition:transform .3s;z-index:-1;}
-.contact-btn:hover{color:var(--dk);box-shadow:0 0 30px rgba(0,230,57,.3);}
+.contact-btn:hover{color:var(--dk);}
 .contact-btn:hover::before{transform:scaleX(1);}
 
 /* ===== FOOTER ===== */
 footer{background:var(--dk);padding:80px 24px 48px;text-align:center;border-top:3px solid var(--g);}
 .footer-logo{font-family:'Bebas Neue',sans-serif;font-size:clamp(60px,12vw,140px);letter-spacing:clamp(8px,2vw,20px);-webkit-text-stroke:1px rgba(255,255,255,.1);color:transparent;line-height:1;}
-.footer-info{font-size:13px;color:var(--w5);margin-top:12px;}
+.footer-info{font-size:13px;color:var(--w5);margin-top:8px;}
 .footer-copy{font-size:12px;color:var(--w15);margin-top:8px;}
 
 /* ===== REVEAL ===== */
-.rv{opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease;}
+.rv{opacity:0;transform:translateY(40px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);}
 .rv.vis{opacity:1;transform:translateY(0);}
-.rv-d1{transition-delay:.1s}.rv-d2{transition-delay:.2s}.rv-d3{transition-delay:.3s}.rv-d4{transition-delay:.4s}
-
-/* ===== DIVIDER ===== */
-.green-hr{height:1px;border:none;background:linear-gradient(90deg,transparent,var(--g),transparent);opacity:.4;margin:0;}
+.rv-d1{transition-delay:.1s}.rv-d2{transition-delay:.2s}.rv-d3{transition-delay:.3s}
 
 /* ===== RESPONSIVE ===== */
 @media(max-width:768px){
   .brand-grid{grid-template-columns:1fr;}
-  .crew-grid{grid-template-columns:repeat(3,1fr);}
+  .crew-main-grid{grid-template-columns:repeat(3,1fr);}
+  .crew-all-grid{grid-template-columns:repeat(3,1fr);}
   .press-item{flex-direction:column;align-items:flex-start;gap:4px;}
-  .stats-row{gap:24px;}
   .btt{bottom:16px;right:16px;width:36px;height:36px;}
 }
 @media(max-width:480px){
-  .crew-grid{grid-template-columns:repeat(2,1fr);}
+  .crew-main-grid{grid-template-columns:repeat(2,1fr);}
+  .crew-all-grid{grid-template-columns:repeat(2,1fr);}
 }
 </style>
 </head>
 <body>
 
-<!-- Scroll Progress -->
 <div class="spbar" id="spbar"></div>
 
 <!-- Header -->
@@ -181,12 +217,11 @@ footer{background:var(--dk);padding:80px 24px 48px;text-align:center;border-top:
   <a href="#contact" onclick="closeMob()">CONTACT</a>
 </div>
 
-<!-- Back to Top -->
 <button class="btt" id="btt" onclick="window.scrollTo({top:0,behavior:'smooth'})">
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 15l-6-6-6 6"/></svg>
 </button>
 
-<!-- ========== HERO ========== -->
+<!-- ===== HERO ===== -->
 <section id="hero">
   <video autoplay muted loop playsinline>
     <source src="KakaoTalk_20260324_134623031.mp4" type="video/mp4">
@@ -195,13 +230,10 @@ footer{background:var(--dk);padding:80px 24px 48px;text-align:center;border-top:
     <h1 class="hero-title">LOCAL<br>ENTERTAINMENT</h1>
     <div class="hero-sub">REDEFINING LOCAL CULTURE</div>
   </div>
-  <div class="scroll-ind">
-    <span>SCROLL</span>
-    <div class="arrow"></div>
-  </div>
+  <div class="scroll-ind"><span>SCROLL</span><div class="arrow"></div></div>
 </section>
 
-<!-- ========== ABOUT UPP ========== -->
+<!-- ===== ABOUT ===== -->
 <section id="about" class="sec-pad">
   <div class="inner">
     <div class="label rv">local entertainment</div>
@@ -219,9 +251,9 @@ footer{background:var(--dk);padding:80px 24px 48px;text-align:center;border-top:
 </section>
 
 <!-- WHAT IS LOCAL ENTERTAINMENT - Full Image -->
-<div class="hero-img-sec rv"><img src="what_is_le.jpg" alt="What is Local Entertainment?" loading="lazy"></div>
+<div class="full-img rv"><img src="what_is_le.jpg" alt="What is Local Entertainment?" loading="lazy"></div>
 
-<!-- ========== LOCAL CONTENTS ========== -->
+<!-- LOCAL CONTENTS -->
 <section class="sec-pad">
   <div class="inner" style="text-align:center;">
     <div class="label rv" style="justify-content:center;">local contents</div>
@@ -237,60 +269,94 @@ footer{background:var(--dk);padding:80px 24px 48px;text-align:center;border-top:
 
 <hr class="green-hr">
 
-<!-- ========== BUSINESS 4 SECTION ========== -->
-<div class="hero-img-sec rv"><img src="biz_4section.jpg" alt="UPPTOWN Business 4 Section" loading="lazy"></div>
+<!-- ===== BUSINESS 4 SECTION ===== -->
+<div class="full-img rv"><img src="biz_4section.jpg" alt="UPPTOWN Business 4 Section" loading="lazy"></div>
 
-<!-- MARQUEE -->
 <div class="marquee"><div class="marquee-inner">TOUR &mdash; F&B &mdash; LIFE STYLE &mdash; ARTIST &mdash; TOUR &mdash; F&B &mdash; LIFE STYLE &mdash; ARTIST &mdash; TOUR &mdash; F&B &mdash; LIFE STYLE &mdash; ARTIST &mdash; </div></div>
 
-<!-- ========== TEAM SECTIONS ========== -->
+<!-- ===== TEAM LOCAL TOUR - Layered ===== -->
 <section id="biz">
-  <!-- TEAM LOCAL TOUR -->
-  <div class="hero-img-sec rv"><img src="team_tour.jpg" alt="Team Local Tour" loading="lazy"></div>
+<div class="team-sec rv" id="teamTour">
+  <div class="team-bg"><img src="images/web/brand-bangagan-bg.png" alt="" loading="lazy"></div>
+  <div class="team-photo" data-speed="0.15">
+    <img src="images/web/biz-tour-main.png" alt="Team Local Tour" loading="lazy">
+  </div>
+  <div class="team-info">
+    <div class="label">TEAM 01</div>
+    <div class="team-name">TEAM<br>LOCAL TOUR</div>
+    <div class="team-sub">로컬의 매력을 재미로 알리는 MZ팀</div>
+    <p class="team-tagline">사람들이 '재미' 때문에 로컬을 찾아오게 합니다</p>
+  </div>
+  <div class="team-accent">TOUR</div>
+</div>
 
-  <!-- LOCAL IS FUN -->
-  <div class="hero-img-sec rv"><img src="local_is_fun.jpg" alt="Local is Fun" loading="lazy"></div>
+<!-- LOCAL IS FUN -->
+<div class="full-img rv"><img src="local_is_fun.jpg" alt="Local is Fun" loading="lazy"></div>
 
-  <hr class="green-hr">
+<hr class="green-hr">
 
-  <!-- TEAM F&B -->
-  <div class="hero-img-sec rv"><img src="team_fnb.jpg" alt="Team F&B" loading="lazy"></div>
+<!-- ===== TEAM F&B - Layered with 누끼 ===== -->
+<div class="team-sec rv" id="teamFnb" style="flex-direction:row-reverse;">
+  <div class="team-bg"><img src="images/web/biz-fnb-bg.png" alt="" loading="lazy" style="filter:brightness(.2);"></div>
+  <div class="team-photo" data-speed="0.12">
+    <img src="images/web/biz-fnb-chef.png" alt="Team F&B" loading="lazy">
+  </div>
+  <div class="team-info">
+    <div class="label">TEAM 02</div>
+    <div class="team-name">TEAM<br>F&B</div>
+    <div class="team-sub">로컬의 매력을 맛으로 알리는 MZ팀 / HOT PLACE MAKING</div>
+    <p class="team-tagline">사람들이 '맛' 때문에 로컬을 찾아오게 합니다</p>
+  </div>
+  <div class="team-accent">F&B</div>
+</div>
 
-  <hr class="green-hr">
+<hr class="green-hr">
 
-  <!-- TEAM LIFESTYLE -->
-  <div class="hero-img-sec rv"><img src="team_lifestyle.jpg" alt="Team Lifestyle" loading="lazy"></div>
+<!-- ===== TEAM LIFESTYLE - Layered ===== -->
+<div class="team-sec rv" id="teamLifestyle">
+  <div class="team-bg"><img src="images/web/biz-lifestyle-main.png" alt="" loading="lazy" style="filter:brightness(.25);"></div>
+  <div class="team-photo" data-speed="0.1">
+    <img src="images/web/biz-lifestyle-detail.png" alt="Team Lifestyle" loading="lazy">
+  </div>
+  <div class="team-info">
+    <div class="label">TEAM 03</div>
+    <div class="team-name">TEAM<br>LIFE STYLE</div>
+    <div class="team-sub">로컬의 매력을 일상으로 전하는 MZ팀 / LOCAL IS HIP</div>
+    <p class="team-tagline">사람들의 '일상'으로 로컬을 스며들게 합니다</p>
+  </div>
+  <div class="team-accent">LIFE</div>
+</div>
 
-  <hr class="green-hr">
+<hr class="green-hr">
 
-  <!-- TEAM ARTIST -->
-  <div class="hero-img-sec rv"><img src="team_artist.jpg" alt="Team Artist" loading="lazy"></div>
+<!-- ===== TEAM ARTIST - Layered ===== -->
+<div class="team-sec rv" id="teamArtist" style="flex-direction:row-reverse;">
+  <div class="team-bg"><img src="images/web/biz-artist-stage.png" alt="" loading="lazy" style="filter:brightness(.2);"></div>
+  <div class="team-photo" data-speed="0.15">
+    <img src="images/web/biz-artist-main.png" alt="Team Artist" loading="lazy">
+  </div>
+  <div class="team-info">
+    <div class="label">TEAM 04</div>
+    <div class="team-name">TEAM<br>ARTIST</div>
+    <div class="team-sub">로컬의 매력을 감동으로 전하는 MZ팀 / LOCAL IS STAGE</div>
+    <p class="team-tagline">사람들의 '마음'에 로컬의 이야기를 남깁니다</p>
+  </div>
+  <div class="team-accent">STAGE</div>
+</div>
 </section>
 
 <hr class="green-hr">
 
-<!-- ========== LOCAL BRAND ========== -->
+<!-- ===== LOCAL BRAND ===== -->
 <section id="brand" class="sec-pad">
   <div class="inner">
     <div class="label rv">local brand</div>
     <p class="sec-desc rv rv-d1">지역주민과 MZ청년들의 연대로 지역 대표 브랜드들을 함께 만들어 지속가능한 로컬 주도 성장을 목표로 합니다</p>
     <div class="brand-grid rv rv-d2">
-      <div class="brand-card">
-        <img src="brand_jungmil.jpg" alt="정밀" loading="lazy">
-        <div class="bc-info"><div class="bc-sub">KOREAN TRADITIONAL FULL-COURSE MEAL</div><div class="bc-name">정밀</div></div>
-      </div>
-      <div class="brand-card">
-        <img src="brand_bangatgan.jpg" alt="방앗간" loading="lazy">
-        <div class="bc-info"><div class="bc-sub">HONGCHEON BUCKWHEAT NOODLES</div><div class="bc-name">방앗간</div></div>
-      </div>
-      <div class="brand-card">
-        <img src="brand_gangwondon.jpg" alt="강원돈" loading="lazy">
-        <div class="bc-info"><div class="bc-sub">GANGWON.逐 / KOREAN PORK DISH</div><div class="bc-name">강원돈</div></div>
-      </div>
-      <div class="brand-card">
-        <img src="brand_mombbae.jpg" alt="몸빼" loading="lazy">
-        <div class="bc-info"><div class="bc-sub">MOMBBAE / LOCAL LIFESTYLE FASHION</div><div class="bc-name">몸빼</div></div>
-      </div>
+      <div class="brand-card"><img src="brand_jungmil.jpg" alt="정밀" loading="lazy"><div class="bc-info"><div class="bc-sub">KOREAN TRADITIONAL FULL-COURSE MEAL</div><div class="bc-name">정밀</div></div></div>
+      <div class="brand-card"><img src="brand_bangatgan.jpg" alt="방앗간" loading="lazy"><div class="bc-info"><div class="bc-sub">HONGCHEON BUCKWHEAT NOODLES</div><div class="bc-name">방앗간</div></div></div>
+      <div class="brand-card"><img src="brand_gangwondon.jpg" alt="강원돈" loading="lazy"><div class="bc-info"><div class="bc-sub">GANGWON.逐 KOREAN PORK DISH</div><div class="bc-name">강원돈</div></div></div>
+      <div class="brand-card"><img src="brand_mombbae.jpg" alt="몸빼" loading="lazy"><div class="bc-info"><div class="bc-sub">MOMBBAE LOCAL LIFESTYLE FASHION</div><div class="bc-name">몸빼</div></div></div>
     </div>
     <div class="stats-row rv rv-d3">
       <div class="stat"><div class="num" data-count="6">0</div><div class="txt">brand launching</div></div>
@@ -299,34 +365,30 @@ footer{background:var(--dk);padding:80px 24px 48px;text-align:center;border-top:
   </div>
 </section>
 
-<!-- BUSINESS OUTPUT -->
-<div class="hero-img-sec rv"><img src="biz_output.jpg" alt="Business Output" loading="lazy"></div>
+<!-- OUTPUT -->
+<div class="full-img rv"><img src="biz_output.jpg" alt="Business Output" loading="lazy"></div>
+<div class="full-img rv"><img src="social_output.jpg" alt="Social Output" loading="lazy"></div>
 
-<!-- SOCIAL OUTPUT -->
-<div class="hero-img-sec rv"><img src="social_output.jpg" alt="Social Output" loading="lazy"></div>
+<div class="marquee"><div class="marquee-inner">CONNECT &mdash; SOCIALRING &mdash; MXZ PROJECT &mdash; CLYN &mdash; CONNECT &mdash; SOCIALRING &mdash; MXZ PROJECT &mdash; CLYN &mdash; </div></div>
 
-<!-- MARQUEE -->
-<div class="marquee"><div class="marquee-inner">CONNECT &mdash; SOCIALRING &mdash; MXZ PROJECT &mdash; CLYN &mdash; CONNECT &mdash; SOCIALRING &mdash; MXZ PROJECT &mdash; CLYN &mdash; CONNECT &mdash; SOCIALRING &mdash; MXZ PROJECT &mdash; CLYN &mdash; </div></div>
-
-<!-- ========== CONNECT THEORY ========== -->
+<!-- ===== CONNECT THEORY ===== -->
 <section class="sec-pad">
   <div class="inner">
     <div class="label rv">connect theory</div>
-    <h2 class="sec-title rv rv-d1" style="margin-bottom:40px;">CONNECT THEORY</h2>
+    <h2 class="sec-title rv rv-d1">CONNECT THEORY</h2>
   </div>
 </section>
-
-<div class="hero-img-sec rv"><img src="ct_problem.jpg" alt="지역 소멸 위기 - 관계 단절" loading="lazy"></div>
-<div class="hero-img-sec rv"><img src="ct_socialring.jpg" alt="소셜링을 통한 관계 에너지 획득" loading="lazy"></div>
-<div class="hero-img-sec rv"><img src="ct_mxz.jpg" alt="사회연대경제모델 MXZ 프로젝트" loading="lazy"></div>
-<div class="hero-img-sec rv"><img src="ct_clyn.jpg" alt="CLYN 관계 연결 모델" loading="lazy"></div>
-<div class="hero-img-sec rv"><img src="ct_upptown_flow.jpg" alt="UPPTOWN 프로세스" loading="lazy"></div>
+<div class="full-img rv"><img src="ct_problem.jpg" alt="지역 소멸 위기" loading="lazy"></div>
+<div class="full-img rv"><img src="ct_socialring.jpg" alt="소셜링" loading="lazy"></div>
+<div class="full-img rv"><img src="ct_mxz.jpg" alt="MXZ 프로젝트" loading="lazy"></div>
+<div class="full-img rv"><img src="ct_clyn.jpg" alt="CLYN 모델" loading="lazy"></div>
+<div class="full-img rv"><img src="ct_upptown_flow.jpg" alt="UPPTOWN 흐름" loading="lazy"></div>
 
 <hr class="green-hr">
 
-<!-- ========== CREW ========== -->
+<!-- ===== CREW ===== -->
 <section id="crew">
-  <div class="hero-img-sec rv"><img src="main_crew.jpg" alt="Main Crew" loading="lazy"></div>
+  <div class="full-img rv"><img src="main_crew.jpg" alt="Main Crew" loading="lazy"></div>
   <div class="sec-pad">
     <div class="inner">
       <div class="label rv">34+ crew</div>
@@ -340,37 +402,37 @@ footer{background:var(--dk);padding:80px 24px 48px;text-align:center;border-top:
         <span class="tag" style="padding:6px 16px;font-size:12px;border-color:var(--g);color:var(--g);">CHEF</span>
       </div>
 
-      <div class="label rv rv-d2">main crew</div>
-      <div class="crew-grid rv rv-d3">
-        <div class="crew-card"><img src="images/web/crew-doongdoong.png" alt="둥둥" loading="lazy"><div class="cn">DOONG DOONG</div><div class="mbti">ENTP</div></div>
-        <div class="crew-card"><img src="images/web/crew-jjojjo.png" alt="쪼쪼" loading="lazy"><div class="cn">JJO JJO</div><div class="mbti">ENFP</div></div>
-        <div class="crew-card"><img src="images/web/crew-niceguy.png" alt="나이스가이" loading="lazy"><div class="cn">NICE GUY</div><div class="mbti">ESTP</div></div>
-        <div class="crew-card"><img src="images/web/crew-gyeongin.png" alt="별이" loading="lazy"><div class="cn">BYEOL I</div><div class="mbti">ESTP</div></div>
-        <div class="crew-card"><img src="images/web/crew-bobo.png" alt="보보" loading="lazy"><div class="cn">BO BO</div><div class="mbti">ISTP</div></div>
-        <div class="crew-card"><img src="images/web/crew-bboomboom.png" alt="뿜뿜" loading="lazy"><div class="cn">BBOOM BBOOM</div><div class="mbti">ESFJ</div></div>
-        <div class="crew-card"><img src="images/web/crew-gamja.png" alt="감자" loading="lazy"><div class="cn">GAM JA</div><div class="mbti">ISFP</div></div>
-        <div class="crew-card"><img src="images/web/crew-all01.png" alt="돌쇠" loading="lazy"><div class="cn">DOL SOE</div><div class="mbti">ESTJ</div></div>
-        <div class="crew-card"><img src="images/web/crew-all03.png" alt="곽디" loading="lazy"><div class="cn">KWAK D</div><div class="mbti">ISFJ</div></div>
-        <div class="crew-card"><img src="images/web/crew-extra1.png" alt="조이" loading="lazy"><div class="cn">JOY</div><div class="mbti">ENFJ</div></div>
+      <div class="label rv">main crew</div>
+      <div class="crew-main-grid rv rv-d1">
+        <div class="crew-card"><div class="cc-img"><img src="images/web/crew-doongdoong.png" alt="둥둥" loading="lazy"></div><div class="cc-info"><div class="cn">DOONG DOONG</div><div class="mbti">ENTP</div></div></div>
+        <div class="crew-card"><div class="cc-img"><img src="images/web/crew-jjojjo.png" alt="쪼쪼" loading="lazy"></div><div class="cc-info"><div class="cn">JJO JJO</div><div class="mbti">ENFP</div></div></div>
+        <div class="crew-card"><div class="cc-img"><img src="images/web/crew-niceguy.png" alt="나이스가이" loading="lazy"></div><div class="cc-info"><div class="cn">NICE GUY</div><div class="mbti">ESTP</div></div></div>
+        <div class="crew-card"><div class="cc-img"><img src="images/web/crew-gyeongin.png" alt="별이" loading="lazy"></div><div class="cc-info"><div class="cn">BYEOL I</div><div class="mbti">ESTP</div></div></div>
+        <div class="crew-card"><div class="cc-img"><img src="images/web/crew-bobo.png" alt="보보" loading="lazy"></div><div class="cc-info"><div class="cn">BO BO</div><div class="mbti">ISTP</div></div></div>
+        <div class="crew-card"><div class="cc-img"><img src="images/web/crew-bboomboom.png" alt="뿜뿜" loading="lazy"></div><div class="cc-info"><div class="cn">BBOOM BBOOM</div><div class="mbti">ESFJ</div></div></div>
+        <div class="crew-card"><div class="cc-img"><img src="images/web/crew-gamja.png" alt="감자" loading="lazy"></div><div class="cc-info"><div class="cn">GAM JA</div><div class="mbti">ISFP</div></div></div>
+        <div class="crew-card"><div class="cc-img"><img src="images/web/crew-all01.png" alt="돌쇠" loading="lazy"></div><div class="cc-info"><div class="cn">DOL SOE</div><div class="mbti">ESTJ</div></div></div>
+        <div class="crew-card"><div class="cc-img"><img src="images/web/crew-all03.png" alt="곽디" loading="lazy"></div><div class="cc-info"><div class="cn">KWAK D</div><div class="mbti">ISFJ</div></div></div>
+        <div class="crew-card"><div class="cc-img"><img src="images/web/crew-extra1.png" alt="조이" loading="lazy"></div><div class="cc-info"><div class="cn">JOY</div><div class="mbti">ENFJ</div></div></div>
       </div>
 
-      <div class="label rv" style="margin-top:40px;">all crew</div>
-      <div class="crew-grid rv rv-d1">
-        <div class="crew-card"><img src="images/web/crew-all01.png" alt="crew" loading="lazy"><div class="cn">DDO LI</div></div>
-        <div class="crew-card"><img src="images/web/crew-all02.png" alt="crew" loading="lazy"><div class="cn">PE PE</div></div>
-        <div class="crew-card"><img src="images/web/crew-all04.png" alt="crew" loading="lazy"><div class="cn">HYEO NI</div></div>
-        <div class="crew-card"><img src="images/web/crew-all05.png" alt="crew" loading="lazy"><div class="cn">RO MI</div></div>
-        <div class="crew-card"><img src="images/web/crew-all06.png" alt="crew" loading="lazy"><div class="cn">BI NI</div></div>
-        <div class="crew-card"><img src="images/web/crew-all07.png" alt="crew" loading="lazy"><div class="cn">MU SU</div></div>
-        <div class="crew-card"><img src="images/web/crew-all08.png" alt="crew" loading="lazy"><div class="cn">HUN I</div></div>
-        <div class="crew-card"><img src="images/web/crew-all09.png" alt="crew" loading="lazy"><div class="cn">ASSA</div></div>
-        <div class="crew-card"><img src="images/web/crew-all10.png" alt="crew" loading="lazy"><div class="cn">TAK GI</div></div>
-        <div class="crew-card"><img src="images/web/crew-all11.png" alt="crew" loading="lazy"><div class="cn">U GI</div></div>
-        <div class="crew-card"><img src="images/web/crew-all12.png" alt="crew" loading="lazy"><div class="cn">KYU</div></div>
-        <div class="crew-card"><img src="images/web/crew-all13.png" alt="crew" loading="lazy"><div class="cn">BANG BANG</div></div>
-        <div class="crew-card"><img src="images/web/crew-all14.png" alt="crew" loading="lazy"><div class="cn">HYE PPI</div></div>
-        <div class="crew-card"><img src="images/web/crew-all15.png" alt="crew" loading="lazy"><div class="cn">PONG PONG</div></div>
-        <div class="crew-card"><img src="images/web/crew-all16.png" alt="crew" loading="lazy"><div class="cn">NU NU</div></div>
+      <div class="label rv" style="margin-top:48px;">all crew</div>
+      <div class="crew-all-grid rv rv-d1">
+        <div class="crew-sm"><div class="cc-img"><img src="images/web/crew-all02.png" alt="PE PE" loading="lazy"></div><div class="cc-info"><div class="cn">PE PE</div></div></div>
+        <div class="crew-sm"><div class="cc-img"><img src="images/web/crew-all04.png" alt="HYEO NI" loading="lazy"></div><div class="cc-info"><div class="cn">HYEO NI</div></div></div>
+        <div class="crew-sm"><div class="cc-img"><img src="images/web/crew-all05.png" alt="RO MI" loading="lazy"></div><div class="cc-info"><div class="cn">RO MI</div></div></div>
+        <div class="crew-sm"><div class="cc-img"><img src="images/web/crew-all06.png" alt="BI NI" loading="lazy"></div><div class="cc-info"><div class="cn">BI NI</div></div></div>
+        <div class="crew-sm"><div class="cc-img"><img src="images/web/crew-all07.png" alt="MU SU" loading="lazy"></div><div class="cc-info"><div class="cn">MU SU</div></div></div>
+        <div class="crew-sm"><div class="cc-img"><img src="images/web/crew-all08.png" alt="HUN I" loading="lazy"></div><div class="cc-info"><div class="cn">HUN I</div></div></div>
+        <div class="crew-sm"><div class="cc-img"><img src="images/web/crew-all09.png" alt="ASSA" loading="lazy"></div><div class="cc-info"><div class="cn">ASSA</div></div></div>
+        <div class="crew-sm"><div class="cc-img"><img src="images/web/crew-all10.png" alt="TAK GI" loading="lazy"></div><div class="cc-info"><div class="cn">TAK GI</div></div></div>
+        <div class="crew-sm"><div class="cc-img"><img src="images/web/crew-all11.png" alt="U GI" loading="lazy"></div><div class="cc-info"><div class="cn">U GI</div></div></div>
+        <div class="crew-sm"><div class="cc-img"><img src="images/web/crew-all12.png" alt="KYU" loading="lazy"></div><div class="cc-info"><div class="cn">KYU</div></div></div>
+        <div class="crew-sm"><div class="cc-img"><img src="images/web/crew-all13.png" alt="BANG BANG" loading="lazy"></div><div class="cc-info"><div class="cn">BANG BANG</div></div></div>
+        <div class="crew-sm"><div class="cc-img"><img src="images/web/crew-all14.png" alt="HYE PPI" loading="lazy"></div><div class="cc-info"><div class="cn">HYE PPI</div></div></div>
+        <div class="crew-sm"><div class="cc-img"><img src="images/web/crew-all15.png" alt="PONG PONG" loading="lazy"></div><div class="cc-info"><div class="cn">PONG PONG</div></div></div>
+        <div class="crew-sm"><div class="cc-img"><img src="images/web/crew-all16.png" alt="NU NU" loading="lazy"></div><div class="cc-info"><div class="cn">NU NU</div></div></div>
+        <div class="crew-sm"><div class="cc-img"><img src="images/web/crew-all17.png" alt="DDO LI" loading="lazy"></div><div class="cc-info"><div class="cn">DDO LI</div></div></div>
       </div>
     </div>
   </div>
@@ -378,35 +440,24 @@ footer{background:var(--dk);padding:80px 24px 48px;text-align:center;border-top:
 
 <hr class="green-hr">
 
-<!-- ========== AWARDS & MEDIA ========== -->
-<section class="sec-pad">
-  <div class="inner">
-    <div class="label rv">only.1 local entertainment</div>
-    <h2 class="sec-title rv rv-d1">AWARDS</h2>
-  </div>
-</section>
-<div class="hero-img-sec rv"><img src="awards.jpg" alt="Awards" loading="lazy"></div>
+<!-- AWARDS & MEDIA -->
+<section class="sec-pad"><div class="inner"><div class="label rv">only.1 local entertainment</div><h2 class="sec-title rv rv-d1">AWARDS</h2></div></section>
+<div class="full-img rv"><img src="awards.jpg" alt="Awards" loading="lazy"></div>
 
-<section class="sec-pad">
-  <div class="inner">
-    <div class="label rv">no.1 로컬 엔터테인먼트</div>
-    <h2 class="sec-title rv rv-d1" style="margin-bottom:0;">MEDIA</h2>
-  </div>
-</section>
-<div class="hero-img-sec rv"><img src="tv_appearances.jpg" alt="TV Appearances" loading="lazy"></div>
+<section class="sec-pad"><div class="inner"><div class="label rv">no.1 로컬 엔터테인먼트</div><h2 class="sec-title rv rv-d1">MEDIA</h2></div></section>
+<div class="full-img rv"><img src="tv_appearances.jpg" alt="Media" loading="lazy"></div>
 
 <hr class="green-hr">
 
-<!-- ========== VISION ========== -->
-<div class="hero-img-sec rv"><img src="vision.jpg" alt="Vision - Local Complex Cultural Town" loading="lazy"></div>
+<!-- VISION -->
+<div class="full-img rv"><img src="vision.jpg" alt="Vision" loading="lazy"></div>
 
-<!-- ========== ENDING ========== -->
-<div class="hero-img-sec rv"><img src="crew_ending.jpg" alt="UPPTOWN Crew" loading="lazy"></div>
+<!-- ENDING -->
+<div class="full-img rv"><img src="crew_ending.jpg" alt="UPPTOWN Crew" loading="lazy"></div>
 
-<!-- MARQUEE -->
 <div class="marquee"><div class="marquee-inner">ONLY 1 MZ LOCAL CREATOR UPPTOWN &mdash; ONLY 1 MZ LOCAL CREATOR UPPTOWN &mdash; ONLY 1 MZ LOCAL CREATOR UPPTOWN &mdash; ONLY 1 MZ LOCAL CREATOR UPPTOWN &mdash; </div></div>
 
-<!-- ========== CONTACT ========== -->
+<!-- CONTACT -->
 <section id="contact" class="sec-pad" style="text-align:center;">
   <div class="inner">
     <div class="label rv" style="justify-content:center;">get in touch</div>
@@ -415,7 +466,7 @@ footer{background:var(--dk);padding:80px 24px 48px;text-align:center;border-top:
   </div>
 </section>
 
-<!-- ========== PRESS ========== -->
+<!-- PRESS -->
 <section id="press" class="sec-pad">
   <div class="inner">
     <div class="label rv">press</div>
@@ -430,12 +481,12 @@ footer{background:var(--dk);padding:80px 24px 48px;text-align:center;border-top:
   </div>
 </section>
 
-<!-- ========== FOOTER ========== -->
+<!-- FOOTER -->
 <footer>
   <div class="inner">
     <div class="footer-logo">UPPTOWN</div>
     <div class="footer-info">070.8064.9082 | 대표 이은석</div>
-    <div class="footer-info" style="margin-top:4px;">개인정보처리방침 &nbsp;&nbsp;&nbsp; 비즈니스 문의</div>
+    <div class="footer-info">개인정보처리방침 &nbsp;&nbsp;&nbsp; 비즈니스 문의</div>
     <div class="footer-copy">UPPTOWN의 모든 컨텐츠는 저작권의 보호를 받고 있습니다. &copy;UPPTOWN ALL RIGHTS RESERVED.</div>
   </div>
 </footer>
@@ -446,23 +497,34 @@ const hamburger=document.getElementById('hamburger'),mobMenu=document.getElement
 hamburger.addEventListener('click',()=>{hamburger.classList.toggle('open');mobMenu.classList.toggle('open');});
 function closeMob(){hamburger.classList.remove('open');mobMenu.classList.remove('open');}
 
-// Scroll progress + header + back to top
+// Scroll: progress + header + btt
 const spbar=document.getElementById('spbar'),btt=document.getElementById('btt'),hdr=document.getElementById('hdr');
-const navLinks=document.querySelectorAll('.hdr nav a'),sections=document.querySelectorAll('section[id]');
+const navLinks=document.querySelectorAll('.hdr nav a'),secs=document.querySelectorAll('section[id]');
+
 window.addEventListener('scroll',()=>{
   const h=document.documentElement.scrollHeight-window.innerHeight;
   spbar.style.width=(window.scrollY/h*100)+'%';
   if(window.scrollY>400){btt.classList.add('show');hdr.classList.add('scrolled');}
   else{btt.classList.remove('show');hdr.classList.remove('scrolled');}
-  let cur='';sections.forEach(s=>{if(window.scrollY>=s.offsetTop-200)cur=s.id;});
+  let cur='';secs.forEach(s=>{if(window.scrollY>=s.offsetTop-200)cur=s.id;});
   navLinks.forEach(a=>{a.classList.remove('active');if(a.getAttribute('href')==='#'+cur)a.classList.add('active');});
 });
 
-// Reveal on scroll
+// Reveal + team slide-up
 const obs=new IntersectionObserver(entries=>{
   entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('vis');obs.unobserve(e.target);}});
-},{threshold:0.1,rootMargin:'0px 0px -40px 0px'});
+},{threshold:0.08,rootMargin:'0px 0px -30px 0px'});
 document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
+
+// Parallax on team photos
+window.addEventListener('scroll',()=>{
+  document.querySelectorAll('[data-speed]').forEach(el=>{
+    const rect=el.getBoundingClientRect();
+    const speed=parseFloat(el.dataset.speed);
+    const y=(rect.top-window.innerHeight)*speed;
+    el.style.transform='translateY('+y+'px)';
+  });
+},{passive:true});
 
 // Count-up
 const cobs=new IntersectionObserver(entries=>{
@@ -470,13 +532,27 @@ const cobs=new IntersectionObserver(entries=>{
     if(!e.isIntersecting)return;
     const el=e.target,target=parseInt(el.dataset.count);
     if(!target)return;
-    let cur=0;const dur=1600,step=target/dur*16;
+    let cur=0;const step=target/100;
     const fmt=n=>n>=10000?Math.floor(n/1000).toLocaleString()+','+String(n%1000).padStart(3,'0'):n.toLocaleString();
     const tick=()=>{cur+=step;if(cur>=target){el.textContent=fmt(target);cobs.unobserve(el);return;}el.textContent=fmt(Math.floor(cur));requestAnimationFrame(tick);};
     requestAnimationFrame(tick);
   });
 },{threshold:0.5});
 document.querySelectorAll('[data-count]').forEach(el=>cobs.observe(el));
+
+// Stagger crew cards
+const stObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting)return;
+    e.target.querySelectorAll('.crew-card,.crew-sm').forEach((c,i)=>{
+      c.style.transitionDelay=(i*0.05)+'s';
+      c.style.opacity='0';c.style.transform='translateY(20px)';
+      setTimeout(()=>{c.style.transition='all .5s cubic-bezier(.16,1,.3,1)';c.style.opacity='1';c.style.transform='translateY(0)';},i*50);
+    });
+    stObs.unobserve(e.target);
+  });
+},{threshold:0.1});
+document.querySelectorAll('.crew-main-grid,.crew-all-grid').forEach(g=>stObs.observe(g));
 </script>
 </body>
 </html>
