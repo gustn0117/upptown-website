@@ -77,6 +77,16 @@ section{position:relative;}
 .tag{padding:10px 24px;border:1px solid var(--w15);font-size:clamp(13px,1.3vw,15px);letter-spacing:1px;transition:all .3s;cursor:default;background:rgba(0,230,57,.04);}
 .tag:hover{border-color:var(--g);color:var(--g);transform:translateY(-3px);}
 
+/* ===== WHAT WE DO ICON GRID ===== */
+.wwd-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:clamp(12px,2vw,24px);margin:40px 0;}
+.wwd-item{text-align:center;cursor:default;transition:transform .3s;}
+.wwd-item:hover{transform:translateY(-8px);}
+.wwd-circle{width:clamp(70px,10vw,120px);height:clamp(70px,10vw,120px);border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;box-shadow:0 4px 20px rgba(0,0,0,.2);transition:box-shadow .3s;}
+.wwd-item:hover .wwd-circle{box-shadow:0 8px 30px rgba(0,230,57,.2);}
+.wwd-circle img{width:55%;height:55%;object-fit:contain;}
+.wwd-label{font-size:clamp(12px,1.3vw,15px);font-weight:500;letter-spacing:1px;}
+@media(max-width:600px){.wwd-grid{grid-template-columns:repeat(5,1fr);gap:8px;}.wwd-label{font-size:11px;}}
+
 /* ===== LAYERED SECTION ===== */
 .layered{position:relative;min-height:80vh;overflow:hidden;display:flex;align-items:center;}
 .layered .ly-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;}
@@ -279,10 +289,18 @@ footer{background:var(--dk);padding:80px 24px 48px;text-align:center;border-top:
       다양한 재능을 보유한 <strong>LOCAL ARTIST</strong> 들과
       새로운 기획을 통해 지속가능한 지역 주도 성장을 지향합니다
     </p>
-    <h2 class="sec-title rv rv-d2" style="-webkit-text-stroke:1px var(--w);color:transparent;">WHAT WE DO?</h2>
-    <div class="tags rv rv-d3">
-      <span class="tag">강연</span><span class="tag">워크샵</span><span class="tag">페스티벌</span><span class="tag">박람회</span><span class="tag">행사</span>
-      <span class="tag">로컬 투어</span><span class="tag">브랜딩</span><span class="tag">F&B</span><span class="tag">공간 기획</span><span class="tag">컨설팅</span>
+    <h2 class="sec-title rv rv-d2" style="color:var(--g);">WHAT WE DO?</h2>
+    <div class="wwd-grid rv rv-d3">
+      <div class="wwd-item"><div class="wwd-circle"><img src="images/web/icons/icon-lecture.png" alt="강연"></div><div class="wwd-label">강연</div></div>
+      <div class="wwd-item"><div class="wwd-circle"><img src="images/web/icons/icon-workshop.png" alt="워크샵"></div><div class="wwd-label">워크샵</div></div>
+      <div class="wwd-item"><div class="wwd-circle"><img src="images/web/icons/icon-festival.png" alt="페스티벌"></div><div class="wwd-label">페스티벌</div></div>
+      <div class="wwd-item"><div class="wwd-circle"><img src="images/web/icons/icon-expo.png" alt="박람회"></div><div class="wwd-label">박람회</div></div>
+      <div class="wwd-item"><div class="wwd-circle"><img src="images/web/icons/icon-event.png" alt="행사"></div><div class="wwd-label">행사</div></div>
+      <div class="wwd-item"><div class="wwd-circle"><img src="images/web/icons/icon-tour.png" alt="로컬 투어"></div><div class="wwd-label">로컬 투어</div></div>
+      <div class="wwd-item"><div class="wwd-circle"><img src="images/web/icons/icon-branding.png" alt="브랜딩"></div><div class="wwd-label">브랜딩</div></div>
+      <div class="wwd-item"><div class="wwd-circle"><img src="images/web/icons/icon-fnb.png" alt="F&B"></div><div class="wwd-label">F&B</div></div>
+      <div class="wwd-item"><div class="wwd-circle"><img src="images/web/icons/icon-space.png" alt="공간 기획"></div><div class="wwd-label">공간 기획</div></div>
+      <div class="wwd-item"><div class="wwd-circle"><img src="images/web/icons/icon-consulting.png" alt="컨설팅"></div><div class="wwd-label">컨설팅</div></div>
     </div>
   </div>
 </section>
