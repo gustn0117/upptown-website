@@ -77,6 +77,21 @@ section{position:relative;}
 .tag{padding:10px 24px;border:1px solid var(--w15);font-size:clamp(13px,1.3vw,15px);letter-spacing:1px;transition:all .3s;cursor:default;background:rgba(0,230,57,.04);}
 .tag:hover{border-color:var(--g);color:var(--g);transform:translateY(-3px);}
 
+/* ===== ABOUT HERO ===== */
+.about-hero{position:relative;min-height:80vh;overflow:hidden;display:flex;align-items:center;background:var(--dk);}
+.about-hero .ah-bg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:0;}
+.about-hero .ah-bg img{width:50%;max-width:500px;opacity:.25;filter:brightness(.6);}
+.about-hero .ah-content{position:relative;z-index:2;width:100%;padding:clamp(80px,10vw,140px) 24px;text-align:center;}
+.about-hero .ah-local{width:clamp(200px,40vw,500px);margin:0 auto;display:block;}
+.about-hero .ah-ent{width:clamp(300px,55vw,700px);margin:12px auto 0;display:block;opacity:.9;}
+.about-hero .ah-redesign{margin-top:clamp(24px,4vw,48px);position:relative;display:flex;align-items:center;justify-content:center;gap:clamp(12px,2vw,24px);}
+.about-hero .ah-redesign .ah-photo{width:clamp(100px,16vw,200px);border-radius:12px;overflow:hidden;border:2px solid var(--w06);}
+.about-hero .ah-redesign .ah-photo img{width:100%;display:block;}
+.about-hero .ah-redesign .ah-txt{font-family:'Noto Sans KR',sans-serif;font-size:clamp(20px,4vw,48px);font-weight:900;line-height:1.3;}
+.about-hero .ah-redesign .ah-txt .green{color:var(--g);}
+.about-hero .ah-deco{position:absolute;z-index:1;opacity:.6;transition:transform .1s linear;}
+.about-hero .ah-sub{margin-top:clamp(24px,3vw,40px);font-family:'Oswald',sans-serif;font-size:clamp(14px,1.6vw,20px);letter-spacing:4px;color:var(--w5);}
+
 /* ===== WHAT WE DO ICON GRID ===== */
 .wwd-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:clamp(12px,2vw,24px);margin:40px 0;}
 .wwd-item{text-align:center;cursor:default;transition:transform .3s;}
@@ -280,17 +295,41 @@ footer{background:var(--dk);padding:80px 24px 48px;text-align:center;border-top:
   <div class="scroll-ind"><span>SCROLL</span><div class="arrow"></div></div>
 </section>
 
-<!-- ===== ABOUT ===== -->
-<section id="about" class="sec-pad">
+<!-- ===== ABOUT - PSD 순서 ===== -->
+<!-- 1. LOCAL ENTERTAINMENT 큰 타이틀 + 로컬을 새롭게 디자인하다 -->
+<section id="about" class="about-hero">
+  <div class="ah-bg"><img src="images/web/about-photo-tour.png" alt="" loading="lazy"></div>
+  <!-- 데코 이미지 (패럴랙스) -->
+  <img class="ah-deco" src="images/web/about-deco-cart.png" alt="" style="width:clamp(80px,12vw,160px);bottom:10%;left:5%;" data-speed="0.2" loading="lazy">
+  <img class="ah-deco" src="images/web/about-deco-people.png" alt="" style="width:clamp(60px,10vw,140px);top:15%;right:5%;" data-speed="0.15" loading="lazy">
+  <div class="ah-content">
+    <img class="ah-local rv" src="images/web/txt-local.png" alt="LOCAL" loading="lazy">
+    <img class="ah-ent rv rv-d1" src="images/web/txt-entertainment.png" alt="ENTERTAINMENT" loading="lazy">
+    <div class="ah-redesign rv rv-d2">
+      <div class="ah-photo"><img src="images/web/about-photo-outdoor.png" alt="업타운" loading="lazy"></div>
+      <div class="ah-txt"><span class="green">로컬</span>을<br><span class="green">새롭게</span><br>디자인하다</div>
+      <div class="ah-photo"><img src="images/web/about-photo-tour.png" alt="업타운" loading="lazy"></div>
+    </div>
+    <div class="ah-sub rv rv-d3">UPPTOWN : 로컬 엔터테인먼트 기업</div>
+  </div>
+</section>
+
+<!-- 2. 미션 텍스트 -->
+<section class="sec-pad">
   <div class="inner">
-    <div class="label rv">local entertainment</div>
-    <p class="sec-desc rv rv-d1">
+    <p class="sec-desc rv" style="font-size:clamp(16px,2vw,22px);line-height:2;max-width:800px;">
       업타운은 <strong>'로컬을 새롭게 디자인하다'</strong>라는 미션하에
       다양한 재능을 보유한 <strong>LOCAL ARTIST</strong> 들과
       새로운 기획을 통해 지속가능한 지역 주도 성장을 지향합니다
     </p>
-    <h2 class="sec-title rv rv-d2" style="color:var(--g);">WHAT WE DO?</h2>
-    <div class="wwd-grid rv rv-d3">
+  </div>
+</section>
+
+<!-- 3. WHAT WE DO? 아이콘 그리드 -->
+<section class="sec-pad" style="background:var(--d1);">
+  <div class="inner">
+    <h2 class="sec-title rv" style="color:var(--g);text-align:center;">WHAT WE DO?</h2>
+    <div class="wwd-grid rv rv-d1">
       <div class="wwd-item"><div class="wwd-circle"><img src="images/web/icons/icon-lecture.png" alt="강연"></div><div class="wwd-label">강연</div></div>
       <div class="wwd-item"><div class="wwd-circle"><img src="images/web/icons/icon-workshop.png" alt="워크샵"></div><div class="wwd-label">워크샵</div></div>
       <div class="wwd-item"><div class="wwd-circle"><img src="images/web/icons/icon-festival.png" alt="페스티벌"></div><div class="wwd-label">페스티벌</div></div>
