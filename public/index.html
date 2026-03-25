@@ -77,25 +77,24 @@ section{position:relative;}
 .tag{padding:10px 24px;border:1px solid var(--w15);font-size:clamp(13px,1.3vw,15px);letter-spacing:1px;transition:all .3s;cursor:default;background:rgba(0,230,57,.04);}
 .tag:hover{border-color:var(--g);color:var(--g);transform:translateY(-3px);}
 
-/* ===== PSD SECTION WITH OVERLAYS ===== */
-.psd-sec{position:relative;overflow:hidden;}
-.psd-sec .psd-bg{width:100%;display:block;}
-.psd-sec .psd-overlay{position:absolute;z-index:2;opacity:0;transform:translateY(30px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);}
-.psd-sec.vis .psd-overlay{opacity:1;transform:translateY(0);}
-.psd-sec .psd-overlay img{width:100%;display:block;}
-/* Stagger delays */
-.psd-sec .od1{transition-delay:.15s}
-.psd-sec .od2{transition-delay:.3s}
-.psd-sec .od3{transition-delay:.45s}
-.psd-sec .od4{transition-delay:.6s}
-.psd-sec .od5{transition-delay:.75s}
-/* Scale-in variant */
-.psd-sec .psd-scale{transform:scale(.85);opacity:0;transition:opacity .6s ease,transform .6s cubic-bezier(.16,1,.3,1);}
-.psd-sec.vis .psd-scale{transform:scale(1);opacity:1;}
-/* Slide from left/right */
-.psd-sec .psd-left{transform:translateX(-40px);opacity:0;transition:opacity .7s ease,transform .7s cubic-bezier(.16,1,.3,1);}
-.psd-sec .psd-right{transform:translateX(40px);opacity:0;transition:opacity .7s ease,transform .7s cubic-bezier(.16,1,.3,1);}
-.psd-sec.vis .psd-left,.psd-sec.vis .psd-right{transform:translateX(0);opacity:1;}
+/* ===== PSD LAYER SYSTEM ===== */
+.L{position:relative;width:100%;height:var(--h,80vw);overflow:hidden;}
+.P{position:absolute;inset:0;background:var(--bg,var(--dk));}
+.A{position:absolute;display:block;opacity:0;transform:translateY(40px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);}
+.A.vis{opacity:1;transform:translate(0);}
+/* Delays */
+.od1{transition-delay:.12s}.od2{transition-delay:.24s}.od3{transition-delay:.36s}
+.od4{transition-delay:.48s}.od5{transition-delay:.6s}
+/* Variants */
+.sc{transform:scale(.8);}.sc.vis{transform:scale(1);}
+.sl{transform:translateX(-50px);}.sl.vis{transform:translateX(0);}
+.sr{transform:translateX(50px);}.sr.vis{transform:translateX(0);}
+.su{transform:translateY(60px);}.su.vis{transform:translateY(0);}
+@media(max-width:768px){
+  .L{height:auto;min-height:80vw;padding-bottom:20px;}
+  .L .P{position:relative;}
+  .A{position:relative!important;width:80%!important;margin:8px auto;left:auto!important;right:auto!important;top:auto!important;}
+}
 
 /* ===== WHAT WE DO ICON GRID ===== */
 .wwd-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:clamp(12px,2vw,24px);margin:40px 0;}
@@ -300,14 +299,70 @@ footer{background:var(--dk);padding:80px 24px 48px;text-align:center;border-top:
   <div class="scroll-ind"><span>SCROLL</span><div class="arrow"></div></div>
 </section>
 
-<!-- ===== ABOUT - PSD 컴포짓 (오버레이 없음) ===== -->
+<!-- ===== ABOUT - PSD 레이어 배치 ===== -->
 <section id="about">
-  <div class="full-img rv"><img src="images/web/sections/about-1-hero.png" alt="LOCAL ENTERTAINMENT" loading="lazy"></div>
-  <div class="full-img rv"><img src="images/web/sections/about-2-redesign.png" alt="로컬을 새롭게 디자인하다" loading="lazy"></div>
-  <div class="full-img rv"><img src="images/web/sections/about-3-mission.png" alt="UPPTOWN 미션" loading="lazy"></div>
-  <div class="full-img rv"><img src="images/web/sections/about-4-whatwedo.png" alt="WHAT WE DO?" loading="lazy"></div>
-  <div class="full-img rv"><img src="images/web/sections/about-5-contents.png" alt="Local Contents" loading="lazy"></div>
-  <div class="full-img rv"><img src="images/web/sections/about-6-brand.png" alt="Local Brand" loading="lazy"></div>
+  <div class="L" style="--h:130vw;"><!-- PSD ~0-1800: 히어로 -->
+    <div class="P" style="--bg:var(--dk);">
+      <img class="A rv" src="images/web/about-layers/photo-hero.png" style="width:54%;top:23%;left:30%;" loading="lazy">
+      <img class="A rv od1" src="images/web/about-layers/local.png" style="width:51%;top:18%;left:5%;" loading="lazy">
+      <img class="A rv od2" src="images/web/about-layers/le-sub.png" style="width:29%;top:55%;left:46%;" loading="lazy">
+      <img class="A rv od3" src="images/web/about-layers/entertainment.png" style="width:65%;top:63%;left:28%;" loading="lazy">
+    </div>
+  </div>
+
+  <div class="L" style="--h:90vw;"><!-- PSD ~1800-3500: 로컬을 새롭게 디자인하다 -->
+    <div class="P" style="--bg:var(--dk);">
+      <img class="A rv sl" src="images/web/about-layers/redesign-group.png" style="width:57%;top:5%;left:18%;" loading="lazy">
+      <img class="A rv od2 sr" src="images/web/about-layers/upptown.png" style="width:36%;top:68%;right:5%;" loading="lazy">
+    </div>
+  </div>
+
+  <div class="L" style="--h:80vw;"><!-- PSD ~3300-4500: 미션 -->
+    <div class="P" style="--bg:var(--dk);">
+      <img class="A rv" src="images/web/about-layers/photo-crew.png" style="width:44%;top:5%;left:3%;" loading="lazy">
+      <img class="A rv od1" src="images/web/about-layers/bar1.png" style="width:43%;top:52%;left:42%;" loading="lazy">
+      <img class="A rv od1" src="images/web/about-layers/bar2.png" style="width:39%;top:60%;left:50%;" loading="lazy">
+      <img class="A rv od1" src="images/web/about-layers/bar3.png" style="width:20%;top:68%;left:62%;" loading="lazy">
+      <img class="A rv od1" src="images/web/about-layers/bar4.png" style="width:36%;top:75%;left:44%;" loading="lazy">
+      <img class="A rv od2" src="images/web/about-layers/mission1.png" style="width:36%;top:52%;left:44%;" loading="lazy">
+      <img class="A rv od3" src="images/web/about-layers/mission2.png" style="width:33%;top:60%;left:55%;" loading="lazy">
+      <img class="A rv od4" src="images/web/about-layers/mission3.png" style="width:14%;top:68%;left:65%;" loading="lazy">
+      <img class="A rv od5" src="images/web/about-layers/mission4.png" style="width:30%;top:75%;left:47%;" loading="lazy">
+      <img class="A rv sc od1" src="images/web/about-layers/upptown-sub.png" style="width:27%;top:42%;left:52%;" loading="lazy">
+    </div>
+  </div>
+
+  <div class="L" style="--h:75vw;"><!-- PSD ~4400-5800: WHAT WE DO -->
+    <div class="P" style="--bg:#222;">
+      <img class="A rv sc" src="images/web/about-layers/whatwedo.png" style="width:54%;top:4%;left:10%;" loading="lazy">
+      <img class="A rv od1 su" src="images/web/about-layers/icons-row2.png" style="width:76%;top:30%;left:7%;" loading="lazy">
+      <img class="A rv od2 su" src="images/web/about-layers/icons-row1.png" style="width:76%;top:55%;left:7%;" loading="lazy">
+    </div>
+  </div>
+
+  <div class="L" style="--h:100vw;"><!-- PSD ~5800-7400: local contents -->
+    <div class="P" style="--bg:var(--dk);">
+      <img class="A rv sc" src="images/web/about-layers/localcontents.png" style="width:60%;top:2%;left:14%;" loading="lazy">
+      <img class="A rv od1" src="images/web/about-layers/socialing-desc.png" style="width:39%;top:10%;left:24%;" loading="lazy">
+      <img class="A rv od2 su" src="images/web/about-layers/brand-photos.png" style="width:89%;top:18%;left:2%;" loading="lazy">
+      <img class="A rv od3" src="images/web/about-layers/stat-label1.png" style="width:10%;top:65%;left:3%;" loading="lazy">
+      <img class="A rv od3" src="images/web/about-layers/stat-label2.png" style="width:11%;top:65%;left:22%;" loading="lazy">
+      <img class="A rv od3" src="images/web/about-layers/stat-label3.png" style="width:10%;top:65%;left:45%;" loading="lazy">
+      <img class="A rv od3" src="images/web/about-layers/stat-label4.png" style="width:12%;top:65%;left:72%;" loading="lazy">
+      <img class="A rv od4 sc" src="images/web/about-layers/stat-130.png" style="width:14%;top:72%;left:1%;" loading="lazy">
+      <img class="A rv od4 sc" src="images/web/about-layers/stat-3000.png" style="width:20%;top:72%;left:19%;" loading="lazy">
+      <img class="A rv od4 sc" src="images/web/about-layers/stat-40000.png" style="width:24%;top:72%;left:43%;" loading="lazy">
+      <img class="A rv od4 sc" src="images/web/about-layers/stat-80.png" style="width:11%;top:72%;left:73%;" loading="lazy">
+    </div>
+  </div>
+
+  <div class="L" style="--h:80vw;"><!-- PSD ~7200-9200: local brand -->
+    <div class="P" style="--bg:#1a1a1a;">
+      <img class="A rv sc" src="images/web/about-layers/localbrand.png" style="width:47%;top:8%;left:18%;" loading="lazy">
+      <img class="A rv od1" src="images/web/about-layers/brand-desc.png" style="width:48%;top:18%;left:18%;" loading="lazy">
+      <img class="A rv od2" src="images/web/about-layers/brand-stats.png" style="width:39%;top:78%;left:24%;" loading="lazy">
+    </div>
+  </div>
 </section>
 
 <!-- ===== HOW IT WORKS ===== -->
