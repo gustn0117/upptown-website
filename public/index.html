@@ -159,7 +159,30 @@ background-size:6px 6px;}
 #hero .hero-scanlines{position:absolute;inset:0;z-index:2;pointer-events:none;opacity:.06;
 background:repeating-linear-gradient(0deg,transparent,transparent 1px,rgba(0,230,57,.3) 1px,rgba(0,230,57,.3) 2px);}
 .hero-c{position:relative;z-index:3;text-align:center;width:100%;}
-.hero-top{position:fixed;top:28px;right:36px;z-index:100;font-family:'Bebas Neue',sans-serif;font-size:clamp(20px,2.5vw,32px);letter-spacing:3px;color:var(--w);mix-blend-mode:difference;}
+/* ========== HEADER NAV ========== */
+.site-header{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:20px 36px;transition:background .4s,backdrop-filter .4s;}
+.site-header.scrolled{background:rgba(9,9,9,.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);}
+.site-header .logo{font-family:'Bebas Neue',sans-serif;font-size:clamp(20px,2.5vw,28px);letter-spacing:3px;color:var(--w);text-decoration:none;}
+.site-header nav{display:flex;gap:clamp(16px,3vw,36px);align-items:center;}
+.site-header nav a{font-family:'Oswald',sans-serif;font-size:clamp(11px,1.1vw,13px);letter-spacing:2px;text-transform:uppercase;color:var(--w5);text-decoration:none;transition:color .3s;position:relative;}
+.site-header nav a:hover,.site-header nav a.active{color:var(--w);}
+.site-header nav a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:var(--g);transition:width .3s;}
+.site-header nav a:hover::after,.site-header nav a.active::after{width:100%;}
+/* Mobile hamburger */
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;z-index:101;}
+.hamburger span{width:24px;height:2px;background:var(--w);transition:.3s;}
+.hamburger.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px);}
+.hamburger.open span:nth-child(2){opacity:0;}
+.hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px);}
+.mobile-menu{display:none;position:fixed;inset:0;background:rgba(9,9,9,.95);backdrop-filter:blur(20px);z-index:99;flex-direction:column;align-items:center;justify-content:center;gap:32px;}
+.mobile-menu.open{display:flex;}
+.mobile-menu a{font-family:'Oswald',sans-serif;font-size:24px;letter-spacing:4px;text-transform:uppercase;color:var(--w);text-decoration:none;transition:color .3s;}
+.mobile-menu a:hover{color:var(--g);}
+@media(max-width:768px){
+  .site-header nav{display:none;}
+  .hamburger{display:flex;}
+}
+.hero-top{display:none;}
 .hero-sub{display:none;}
 .hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(60px,15vw,200px);letter-spacing:clamp(4px,1vw,12px);line-height:.9;
 color:var(--w);
@@ -558,6 +581,30 @@ footer{background:var(--dk);padding:80px 24px 48px;text-align:center;position:re
 
 <!-- Scroll Progress -->
 <div class="spbar" id="spbar"></div>
+
+<!-- Header Navigation -->
+<header class="site-header" id="siteHeader">
+  <a href="#hero" class="logo">UPPTOWN</a>
+  <nav>
+    <a href="#about">ABOUT UPP</a>
+    <a href="#biz4">BUSINESS</a>
+    <a href="#brand">BRAND</a>
+    <a href="#crew">CREW</a>
+    <a href="#press">PRESS</a>
+    <a href="#contact">CONTACT</a>
+  </nav>
+  <div class="hamburger" id="hamburger">
+    <span></span><span></span><span></span>
+  </div>
+</header>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#about" onclick="closeMobile()">ABOUT UPP</a>
+  <a href="#biz4" onclick="closeMobile()">BUSINESS</a>
+  <a href="#brand" onclick="closeMobile()">BRAND</a>
+  <a href="#crew" onclick="closeMobile()">CREW</a>
+  <a href="#press" onclick="closeMobile()">PRESS</a>
+  <a href="#contact" onclick="closeMobile()">CONTACT</a>
+</div>
 
 <!-- Side Navigation -->
 <nav class="side-nav" id="sideNav">
@@ -1371,6 +1418,16 @@ footer{background:var(--dk);padding:80px 24px 48px;text-align:center;position:re
 </footer>
 
 <script>
+// Mobile menu
+const hamburger=document.getElementById('hamburger');
+const mobileMenu=document.getElementById('mobileMenu');
+hamburger.addEventListener('click',()=>{hamburger.classList.toggle('open');mobileMenu.classList.toggle('open');});
+function closeMobile(){hamburger.classList.remove('open');mobileMenu.classList.remove('open');}
+
+// Header scroll effect + active nav links
+const siteHeader=document.getElementById('siteHeader');
+const headerLinks=document.querySelectorAll('.site-header nav a');
+
 // Scroll progress bar + back to top + side nav + parallax
 const spbar=document.getElementById('spbar');
 const backTop=document.getElementById('backTop');
@@ -1383,8 +1440,12 @@ window.addEventListener('scroll',()=>{
   spbar.style.width=pct+'%';
 
   // Back to top visibility
-  if(window.scrollY>600) backTop.classList.add('show');
-  else backTop.classList.remove('show');
+  if(window.scrollY>600){backTop.classList.add('show');siteHeader.classList.add('scrolled');}
+  else{backTop.classList.remove('show');siteHeader.classList.remove('scrolled');}
+  // Header nav active state
+  let currentSection='';
+  sections.forEach(s=>{if(window.scrollY>=s.offsetTop-200)currentSection=s.id;});
+  headerLinks.forEach(a=>{a.classList.remove('active');if(a.getAttribute('href')==='#'+currentSection)a.classList.add('active');});
 
   // Side nav active state
   let current='';
