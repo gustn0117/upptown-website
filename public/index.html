@@ -77,20 +77,25 @@ section{position:relative;}
 .tag{padding:10px 24px;border:1px solid var(--w15);font-size:clamp(13px,1.3vw,15px);letter-spacing:1px;transition:all .3s;cursor:default;background:rgba(0,230,57,.04);}
 .tag:hover{border-color:var(--g);color:var(--g);transform:translateY(-3px);}
 
-/* ===== ABOUT HERO ===== */
-.about-hero{position:relative;min-height:80vh;overflow:hidden;display:flex;align-items:center;background:var(--dk);}
-.about-hero .ah-bg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:0;}
-.about-hero .ah-bg img{width:50%;max-width:500px;opacity:.25;filter:brightness(.6);}
-.about-hero .ah-content{position:relative;z-index:2;width:100%;padding:clamp(80px,10vw,140px) 24px;text-align:center;}
-.about-hero .ah-local{width:clamp(200px,40vw,500px);margin:0 auto;display:block;}
-.about-hero .ah-ent{width:clamp(300px,55vw,700px);margin:12px auto 0;display:block;opacity:.9;}
-.about-hero .ah-redesign{margin-top:clamp(24px,4vw,48px);position:relative;display:flex;align-items:center;justify-content:center;gap:clamp(12px,2vw,24px);}
-.about-hero .ah-redesign .ah-photo{width:clamp(100px,16vw,200px);border-radius:12px;overflow:hidden;border:2px solid var(--w06);}
-.about-hero .ah-redesign .ah-photo img{width:100%;display:block;}
-.about-hero .ah-redesign .ah-txt{font-family:'Noto Sans KR',sans-serif;font-size:clamp(20px,4vw,48px);font-weight:900;line-height:1.3;}
-.about-hero .ah-redesign .ah-txt .green{color:var(--g);}
-.about-hero .ah-deco{position:absolute;z-index:1;opacity:.6;transition:transform .1s linear;}
-.about-hero .ah-sub{margin-top:clamp(24px,3vw,40px);font-family:'Oswald',sans-serif;font-size:clamp(14px,1.6vw,20px);letter-spacing:4px;color:var(--w5);}
+/* ===== PSD SECTION WITH OVERLAYS ===== */
+.psd-sec{position:relative;overflow:hidden;}
+.psd-sec .psd-bg{width:100%;display:block;}
+.psd-sec .psd-overlay{position:absolute;z-index:2;opacity:0;transform:translateY(30px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);}
+.psd-sec.vis .psd-overlay{opacity:1;transform:translateY(0);}
+.psd-sec .psd-overlay img{width:100%;display:block;}
+/* Stagger delays */
+.psd-sec .od1{transition-delay:.15s}
+.psd-sec .od2{transition-delay:.3s}
+.psd-sec .od3{transition-delay:.45s}
+.psd-sec .od4{transition-delay:.6s}
+.psd-sec .od5{transition-delay:.75s}
+/* Scale-in variant */
+.psd-sec .psd-scale{transform:scale(.85);opacity:0;transition:opacity .6s ease,transform .6s cubic-bezier(.16,1,.3,1);}
+.psd-sec.vis .psd-scale{transform:scale(1);opacity:1;}
+/* Slide from left/right */
+.psd-sec .psd-left{transform:translateX(-40px);opacity:0;transition:opacity .7s ease,transform .7s cubic-bezier(.16,1,.3,1);}
+.psd-sec .psd-right{transform:translateX(40px);opacity:0;transition:opacity .7s ease,transform .7s cubic-bezier(.16,1,.3,1);}
+.psd-sec.vis .psd-left,.psd-sec.vis .psd-right{transform:translateX(0);opacity:1;}
 
 /* ===== WHAT WE DO ICON GRID ===== */
 .wwd-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:clamp(12px,2vw,24px);margin:40px 0;}
@@ -295,23 +300,47 @@ footer{background:var(--dk);padding:80px 24px 48px;text-align:center;border-top:
   <div class="scroll-ind"><span>SCROLL</span><div class="arrow"></div></div>
 </section>
 
-<!-- ===== ABOUT - PSD 컴포짓 섹션 (어바웃upp.psd 그대로) ===== -->
+<!-- ===== ABOUT - PSD 배경 + 텍스트 레이어 오버레이 ===== -->
 <section id="about">
   <!-- 1. LOCAL ENTERTAINMENT 히어로 -->
-  <div class="full-img rv"><img src="images/web/sections/about-1-hero.png" alt="LOCAL ENTERTAINMENT" loading="lazy"></div>
+  <div class="psd-sec rv">
+    <img class="psd-bg" src="images/web/sections/about-1-hero.png" alt="" loading="lazy">
+    <div class="psd-overlay od1" style="top:18%;left:5%;width:48%;"><img src="images/web/sections/txt-local-big.png" alt="LOCAL"></div>
+    <div class="psd-overlay od2" style="top:60%;left:28%;width:60%;"><img src="images/web/sections/txt-ent-big.png" alt="ENTERTAINMENT"></div>
+    <div class="psd-overlay psd-scale od3" style="top:50%;left:50%;width:22%;transform-origin:center;margin-left:-11%;"><img src="images/web/sections/txt-le-sub.png" alt="LOCAL ENTERTAINMENT"></div>
+  </div>
+
   <!-- 2. 로컬을 새롭게 디자인하다 -->
-  <div class="full-img rv"><img src="images/web/sections/about-2-redesign.png" alt="로컬을 새롭게 디자인하다" loading="lazy"></div>
+  <div class="psd-sec rv">
+    <img class="psd-bg" src="images/web/sections/about-2-redesign.png" alt="" loading="lazy">
+    <div class="psd-overlay psd-left od1" style="top:8%;left:10%;width:55%;"><img src="images/web/sections/txt-redesign.png" alt="로컬을 새롭게 디자인하다"></div>
+    <div class="psd-overlay psd-right od2" style="top:22%;right:5%;width:30%;"><img src="images/web/sections/txt-saerob-brush.png" alt="새롭게"></div>
+    <div class="psd-overlay psd-scale od3" style="bottom:5%;right:8%;width:35%;"><img src="images/web/sections/txt-upptown.png" alt="UPPTOWN"></div>
+  </div>
+
   <!-- 3. UPPTOWN 미션 -->
-  <div class="full-img rv"><img src="images/web/sections/about-3-mission.png" alt="UPPTOWN 미션" loading="lazy"></div>
+  <div class="psd-sec rv">
+    <img class="psd-bg" src="images/web/sections/about-3-mission.png" alt="" loading="lazy">
+  </div>
+
   <!-- 4. WHAT WE DO? -->
-  <div class="full-img rv"><img src="images/web/sections/about-4-whatwedo.png" alt="WHAT WE DO?" loading="lazy"></div>
+  <div class="psd-sec rv">
+    <img class="psd-bg" src="images/web/sections/about-4-whatwedo.png" alt="" loading="lazy">
+    <div class="psd-overlay psd-scale od1" style="top:5%;left:10%;width:55%;"><img src="images/web/sections/txt-whatwedo.png" alt="WHAT WE DO?"></div>
+  </div>
 </section>
 
-<!-- 5. LOCAL CONTENTS + 포스터 + 통계 (PSD 컴포짓) -->
-<div class="full-img rv"><img src="images/web/sections/about-5-contents.png" alt="Local Contents" loading="lazy"></div>
+<!-- 5. LOCAL CONTENTS + 포스터 + 통계 -->
+<div class="psd-sec rv">
+  <img class="psd-bg" src="images/web/sections/about-5-contents.png" alt="" loading="lazy">
+  <div class="psd-overlay od1" style="top:3%;left:10%;width:60%;"><img src="images/web/sections/txt-localcontents.png" alt="local contents"></div>
+</div>
 
-<!-- 6. LOCAL BRAND (PSD 컴포짓) -->
-<div class="full-img rv"><img src="images/web/sections/about-6-brand.png" alt="Local Brand" loading="lazy"></div>
+<!-- 6. LOCAL BRAND -->
+<div class="psd-sec rv">
+  <img class="psd-bg" src="images/web/sections/about-6-brand.png" alt="" loading="lazy">
+  <div class="psd-overlay od1" style="top:18%;left:12%;width:48%;"><img src="images/web/sections/txt-localbrand.png" alt="local brand"></div>
+</div>
 
 <!-- ===== HOW IT WORKS ===== -->
 <section class="sec-pad" style="background:var(--d1);">
