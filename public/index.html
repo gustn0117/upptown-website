@@ -12,6 +12,8 @@
   --g:#00e639;--gb:#00ff41;--dk:#090909;--d1:#111;--d2:#1a1a1a;
   --w:#fff;--w5:rgba(255,255,255,.5);--w15:rgba(255,255,255,.15);--w06:rgba(255,255,255,.06);
   --mx:1200px;--sp:clamp(100px,10vw,180px);
+  --glow:0 0 20px rgba(0,230,57,.4),0 0 40px rgba(0,230,57,.2);
+  --glow-sm:0 0 10px rgba(0,230,57,.3);
 }
 html{scroll-behavior:smooth;}
 body{font-family:'Noto Sans KR',sans-serif;background:var(--dk);color:var(--w);overflow-x:hidden;line-height:1.6;}
@@ -20,262 +22,376 @@ a{color:inherit;text-decoration:none;}
 .bn{font-family:'Bebas Neue',sans-serif;}
 
 /* Scroll progress */
-.spbar{position:fixed;top:0;left:0;width:0%;height:3px;background:var(--g);z-index:9999;box-shadow:0 0 10px var(--g);}
+.spbar{position:fixed;top:0;left:0;width:0%;height:3px;background:var(--g);z-index:9999;box-shadow:var(--glow);}
 
 /* Noise overlay */
 body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9998;opacity:.04;
 background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 background-size:128px 128px;}
 
-/* Reveal animations */
-.rv{opacity:0;transform:translateY(40px);transition:opacity .8s,transform .8s;}
+/* ========== SIDE NAV ========== */
+.side-nav{position:fixed;right:20px;top:50%;transform:translateY(-50%);z-index:9997;display:flex;flex-direction:column;gap:12px;align-items:center;}
+.side-nav a{display:block;width:10px;height:10px;border-radius:50%;border:1px solid var(--w15);background:transparent;transition:all .3s ease;position:relative;}
+.side-nav a.active{background:var(--g);border-color:var(--g);box-shadow:var(--glow-sm);}
+.side-nav a:hover{border-color:var(--g);}
+.side-nav a::before{content:attr(data-label);position:absolute;right:20px;top:50%;transform:translateY(-50%);font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:2px;color:var(--g);opacity:0;transition:opacity .3s;white-space:nowrap;pointer-events:none;}
+.side-nav a:hover::before{opacity:1;}
+@media(max-width:768px){.side-nav{display:none;}}
+
+/* ========== BACK TO TOP ========== */
+.back-top{position:fixed;bottom:32px;right:32px;z-index:9997;width:44px;height:44px;border-radius:50%;border:1px solid var(--g);background:rgba(0,230,57,.1);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:all .4s ease;cursor:pointer;}
+.back-top.show{opacity:1;pointer-events:auto;}
+.back-top:hover{background:var(--g);box-shadow:var(--glow);}
+.back-top:hover svg{stroke:var(--dk);}
+.back-top svg{stroke:var(--g);transition:stroke .3s;}
+
+/* ========== INLINE SVG ICONS ========== */
+.svg-icon{display:inline-block;vertical-align:middle;flex-shrink:0;}
+.svg-icon-sm{width:24px;height:24px;}
+.svg-icon-md{width:32px;height:32px;}
+.svg-icon-lg{width:48px;height:48px;}
+
+/* ========== STARBURST ========== */
+.starburst{display:inline-block;margin-right:12px;vertical-align:middle;animation:starPulse 2s ease-in-out infinite;}
+@keyframes starPulse{0%,100%{opacity:.7;transform:scale(1);}50%{opacity:1;transform:scale(1.15);}}
+
+/* ========== FLOATING PARTICLES ========== */
+.particles{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:1;}
+.particle{position:absolute;width:4px;height:4px;background:var(--g);border-radius:50%;opacity:.4;animation:floatParticle linear infinite;}
+@keyframes floatParticle{
+  0%{transform:translate(0,0);opacity:0;}
+  10%{opacity:.4;}
+  90%{opacity:.4;}
+  100%{transform:translate(var(--dx),var(--dy));opacity:0;}
+}
+
+/* ========== REVEAL ANIMATIONS ========== */
+.rv{opacity:0;transform:translateY(40px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);}
 .rv.vis{opacity:1;transform:translateY(0);}
 .rv-d1{transition-delay:.1s}.rv-d2{transition-delay:.2s}.rv-d3{transition-delay:.3s}.rv-d4{transition-delay:.4s}
+.rv-d5{transition-delay:.5s}.rv-d6{transition-delay:.6s}.rv-d7{transition-delay:.7s}
 
-/* Section shared */
+/* ========== SPLIT TEXT REVEAL ========== */
+.split-text .char{display:inline-block;opacity:0;transform:translateY(30px);transition:opacity .4s ease,transform .4s ease;}
+.split-text.vis .char{opacity:1;transform:translateY(0);}
+
+/* ========== SECTION SHARED ========== */
 section{padding:var(--sp) 24px;position:relative;}
 .inner{max-width:var(--mx);margin:0 auto;}
-.label{font-family:'Oswald',sans-serif;font-size:clamp(11px,1.2vw,13px);letter-spacing:4px;text-transform:uppercase;color:var(--g);margin-bottom:16px;}
+.label{font-family:'Oswald',sans-serif;font-size:clamp(11px,1.2vw,13px);letter-spacing:4px;text-transform:uppercase;color:var(--g);margin-bottom:16px;display:flex;align-items:center;gap:8px;text-shadow:var(--glow-sm);}
 
-/* ==================== 1. HERO ==================== */
+/* ========== GLASSMORPHISM CARD ========== */
+.glass{background:rgba(255,255,255,.03);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.08);}
+
+/* ========== ANIMATED GRADIENT BORDER ========== */
+.gradient-border{position:relative;overflow:hidden;}
+.gradient-border::before{content:'';position:absolute;inset:-2px;background:conic-gradient(from 0deg,var(--g),transparent,var(--g),transparent,var(--g));opacity:0;transition:opacity .4s;animation:rotateBorder 4s linear infinite;z-index:-1;border-radius:inherit;}
+.gradient-border:hover::before{opacity:1;}
+@keyframes rotateBorder{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+.gradient-border::after{content:'';position:absolute;inset:1px;background:var(--d1);border-radius:inherit;z-index:-1;}
+
+/* ========== CARD TILT ========== */
+.tilt-card{transition:transform .4s ease,box-shadow .4s ease;perspective:800px;}
+.tilt-card:hover{transform:perspective(800px) rotateX(2deg) rotateY(-2deg) translateY(-6px);box-shadow:0 20px 40px rgba(0,0,0,.3),0 0 30px rgba(0,230,57,.08);}
+
+/* ========== NEON GLOW ========== */
+.neon{text-shadow:0 0 10px rgba(0,230,57,.5),0 0 20px rgba(0,230,57,.3),0 0 40px rgba(0,230,57,.15);}
+
+/* ========== GRADIENT TEXT ========== */
+.grad-text{background:linear-gradient(135deg,var(--g),var(--gb),#80ff80);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+
+/* ========== PULSING DOT ========== */
+.pulse-dot{display:inline-block;width:8px;height:8px;background:var(--g);border-radius:50%;position:relative;margin-right:12px;}
+.pulse-dot::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:1px solid var(--g);animation:pulseDot 2s ease-out infinite;opacity:0;}
+@keyframes pulseDot{0%{transform:scale(.5);opacity:.8}100%{transform:scale(2);opacity:0}}
+
+/* ========== GREEN HR DIVIDER ========== */
+.green-hr{height:1px;border:none;background:linear-gradient(90deg,transparent,var(--g),transparent);margin:0;opacity:.5;}
+
+/* ========== SVG WAVE DIVIDER ========== */
+.wave-divider{width:100%;overflow:hidden;line-height:0;padding:0;}
+.wave-divider svg{width:100%;height:40px;}
+
+/* ========== SECTION MARKER ========== */
+.section-marker{position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:60px;background:linear-gradient(to bottom,transparent,var(--g),transparent);opacity:.3;}
+
+/* ========== 1. HERO ========== */
 #hero{position:relative;height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;}
 #hero video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.45;}
 #hero::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(9,9,9,.3),rgba(9,9,9,.8));}
 .hero-c{position:relative;z-index:2;text-align:center;}
 .hero-top{position:fixed;top:28px;right:36px;z-index:100;font-family:'Bebas Neue',sans-serif;font-size:clamp(20px,2.5vw,32px);letter-spacing:3px;color:var(--w);}
-.hero-sub{font-family:'Oswald',sans-serif;font-size:clamp(14px,1.5vw,18px);letter-spacing:6px;color:var(--g);margin-bottom:8px;}
-.hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(48px,10vw,120px);letter-spacing:8px;line-height:1;animation:glitch 3s infinite;}
+.hero-sub{font-family:'Oswald',sans-serif;font-size:clamp(14px,1.5vw,18px);letter-spacing:6px;color:var(--g);margin-bottom:8px;text-shadow:var(--glow-sm);}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(48px,10vw,120px);letter-spacing:8px;line-height:1;animation:glitch 3s infinite;-webkit-text-stroke:1px rgba(255,255,255,.15);}
 .hero-sub2{font-family:'Oswald',sans-serif;font-size:clamp(13px,1.4vw,16px);letter-spacing:8px;color:var(--w5);margin-top:12px;}
-.scroll-ind{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:8px;}
+.scroll-ind{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:8px;animation:scrollBounce 2s ease-in-out infinite;}
+@keyframes scrollBounce{0%,100%{transform:translateX(-50%) translateY(0);}50%{transform:translateX(-50%) translateY(8px);}}
 .scroll-ind span{font-size:11px;letter-spacing:3px;color:var(--w5);font-family:'Oswald',sans-serif;}
 .scroll-ind .arrow{width:1px;height:40px;background:var(--w15);position:relative;overflow:hidden;}
 .scroll-ind .arrow::after{content:'';position:absolute;top:-100%;left:0;width:100%;height:100%;background:var(--g);animation:scrollDown 1.5s infinite;}
 @keyframes scrollDown{0%{top:-100%}100%{top:100%}}
 @keyframes glitch{0%,90%,100%{text-shadow:none}92%{text-shadow:-2px 0 var(--g),2px 0 #ff0040}94%{text-shadow:2px 0 var(--g),-2px 0 #ff0040}96%{text-shadow:-1px 2px var(--g),1px -2px #ff0040}98%{text-shadow:1px -1px var(--g),-1px 1px #ff0040}}
 
-/* ==================== 2. ABOUT ==================== */
+/* ========== 2. ABOUT ========== */
 #about{background:var(--dk);}
 .about-mission{font-size:clamp(16px,2vw,22px);line-height:1.9;font-weight:300;max-width:700px;color:var(--w5);margin-bottom:60px;}
 .about-mission strong{color:var(--w);font-weight:500;}
-.wwd-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,5vw,64px);letter-spacing:3px;margin-bottom:32px;}
+.wwd-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,5vw,64px);letter-spacing:3px;margin-bottom:32px;-webkit-text-stroke:0.5px rgba(255,255,255,.1);}
 .tag-row{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:16px;}
-.tag{padding:10px 24px;border:1px solid var(--w15);border-radius:30px;font-size:clamp(13px,1.3vw,15px);transition:.3s;letter-spacing:1px;}
-.tag:hover{border-color:var(--g);color:var(--g);box-shadow:0 0 20px rgba(0,230,57,.15);}
+.tag{padding:10px 24px;border:1px solid var(--w15);border-radius:30px;font-size:clamp(13px,1.3vw,15px);transition:all .3s ease;letter-spacing:1px;cursor:default;position:relative;overflow:hidden;}
+.tag::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,230,57,.1),transparent);opacity:0;transition:opacity .3s;}
+.tag:hover{border-color:var(--g);color:var(--g);box-shadow:0 0 20px rgba(0,230,57,.15);transform:translateY(-2px);}
+.tag:hover::before{opacity:1;}
 
-/* ==================== 3. WHAT IS LOCAL ENTERTAINMENT ==================== */
+/* ========== 3. WHAT IS LOCAL ENTERTAINMENT ========== */
 #what-le{background:var(--d1);padding-top:var(--sp);padding-bottom:var(--sp);}
 .wle-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(32px,6vw,80px);letter-spacing:4px;line-height:1.1;
-text-shadow:3px 3px 0 rgba(0,230,57,.15),-1px -1px 0 rgba(255,255,255,.05);margin-bottom:12px;}
+text-shadow:3px 3px 0 rgba(0,230,57,.15),-1px -1px 0 rgba(255,255,255,.05);margin-bottom:12px;-webkit-text-stroke:0.5px rgba(255,255,255,.08);}
 .wle-sub{font-size:clamp(14px,1.4vw,18px);color:var(--w5);margin-bottom:60px;}
 .kw-flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0;position:relative;}
-.kw-item{padding:40px 32px;position:relative;border-left:2px solid var(--w06);}
-.kw-item:first-child{border-left:2px solid var(--g);}
-.kw-item .kw-en{font-family:'Bebas Neue',sans-serif;font-size:clamp(28px,3.5vw,48px);color:var(--g);letter-spacing:2px;}
+.kw-item{padding:40px 32px;position:relative;border-left:2px solid var(--w06);transition:all .3s ease;}
+.kw-item:first-child{border-left:2px solid var(--g);box-shadow:inset 4px 0 20px rgba(0,230,57,.1);}
+.kw-item:hover{background:rgba(0,230,57,.03);}
+.kw-item .kw-en{font-family:'Bebas Neue',sans-serif;font-size:clamp(28px,3.5vw,48px);color:var(--g);letter-spacing:2px;text-shadow:var(--glow-sm);}
 .kw-item .kw-ko{font-size:14px;color:var(--w5);margin-top:8px;}
+.kw-item .kw-dot{position:absolute;top:50%;left:-5px;width:8px;height:8px;background:var(--g);border-radius:50%;box-shadow:var(--glow-sm);}
 .kw-item::after{content:'';position:absolute;top:50%;right:-12px;width:20px;height:2px;background:var(--g);opacity:.5;}
 .kw-item:last-child::after{display:none;}
 
-/* ==================== 4. HOW IT WORKS ==================== */
+/* ========== 4. HOW IT WORKS ========== */
 #how{background:var(--dk);}
 .how-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;margin-top:48px;}
-.how-card{position:relative;padding:48px 32px 40px;border:1px solid var(--w06);border-radius:4px;overflow:hidden;transition:.3s;}
-.how-card:hover{border-color:var(--g);transform:translateY(-4px);}
+.how-card{position:relative;padding:48px 32px 40px;border:1px solid var(--w06);border-radius:4px;overflow:hidden;transition:all .3s ease;background:rgba(255,255,255,.02);backdrop-filter:blur(5px);}
+.how-card:hover{border-color:var(--g);transform:perspective(800px) rotateX(1deg) rotateY(-1deg) translateY(-6px);box-shadow:0 20px 40px rgba(0,0,0,.3),0 0 30px rgba(0,230,57,.1);}
 .how-num{font-family:'Bebas Neue',sans-serif;font-size:120px;position:absolute;top:-20px;right:16px;color:rgba(255,255,255,.03);line-height:1;}
-.how-card h3{font-family:'Oswald',sans-serif;font-size:clamp(18px,2vw,24px);letter-spacing:2px;margin-bottom:16px;color:var(--g);}
+.how-card h3{font-family:'Oswald',sans-serif;font-size:clamp(18px,2vw,24px);letter-spacing:2px;margin-bottom:16px;color:var(--g);display:flex;align-items:center;gap:8px;}
 .how-card p{font-size:14px;color:var(--w5);line-height:1.8;}
-.how-arrow{display:flex;align-items:center;justify-content:center;font-size:24px;color:var(--g);opacity:.5;}
+.how-card .pulse-dot{margin-right:0;}
 
-/* ==================== 5. LOCAL CONTENTS ==================== */
+/* ========== 5. LOCAL CONTENTS ========== */
 #contents{background:var(--d1);}
 .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:32px;margin-top:48px;}
-.stat-card{text-align:center;padding:40px 20px;border:1px solid var(--w06);border-radius:4px;transition:.3s;}
-.stat-card:hover{border-color:var(--g);box-shadow:0 0 30px rgba(0,230,57,.1);}
-.stat-num{font-family:'Bebas Neue',sans-serif;font-size:clamp(40px,5vw,64px);color:var(--g);line-height:1;}
-.stat-plus{font-family:'Oswald',sans-serif;color:var(--g);}
-.stat-en{font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:3px;color:var(--w5);margin-top:8px;text-transform:uppercase;}
+.stat-card{text-align:center;padding:48px 20px;border:1px solid var(--w06);border-radius:4px;transition:all .3s ease;position:relative;overflow:hidden;}
+.stat-card::before{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--g),var(--gb));transform:scaleX(0);transition:transform .4s ease;transform-origin:left;}
+.stat-card:hover::before{transform:scaleX(1);}
+.stat-card:hover{border-color:var(--g);box-shadow:0 0 30px rgba(0,230,57,.1);transform:translateY(-4px);}
+.stat-num{font-family:'Bebas Neue',sans-serif;font-size:clamp(56px,7vw,88px);line-height:1;background:linear-gradient(135deg,var(--g),var(--gb),#80ff80);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.stat-plus{font-family:'Oswald',sans-serif;font-size:clamp(24px,3vw,36px);background:linear-gradient(135deg,var(--g),var(--gb));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.stat-en{font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:3px;color:var(--w5);margin-top:12px;text-transform:uppercase;}
 .stat-ko{font-size:13px;color:var(--w5);margin-top:4px;}
+.stat-underline{width:40px;height:2px;background:linear-gradient(90deg,var(--g),transparent);margin:8px auto 0;animation:underlinePulse 2s ease-in-out infinite;}
+@keyframes underlinePulse{0%,100%{width:40px;opacity:.5}50%{width:60px;opacity:1}}
 
-/* ==================== 6. BUSINESS 4 SECTION ==================== */
+/* ========== 6. BUSINESS 4 SECTION ========== */
 #biz4{background:var(--dk);}
 .biz4-head{margin-bottom:48px;}
-.biz4-head .small{font-family:'Oswald',sans-serif;font-size:14px;letter-spacing:4px;color:var(--g);}
+.biz4-head .small{font-family:'Oswald',sans-serif;font-size:14px;letter-spacing:4px;color:var(--g);text-shadow:var(--glow-sm);}
 .biz4-head .big{font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,6vw,72px);letter-spacing:3px;line-height:1.1;}
 .biz4-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;}
-.biz4-card{position:relative;padding:48px 36px;background:linear-gradient(135deg,var(--d2),var(--d1));border:1px solid var(--w06);border-radius:4px;overflow:hidden;transition:.4s;min-height:220px;}
-.biz4-card:hover{border-color:var(--g);box-shadow:0 0 40px rgba(0,230,57,.12);transform:scale(1.02);}
+.biz4-card{position:relative;padding:48px 36px;background:linear-gradient(135deg,var(--d2),var(--d1));border:1px solid var(--w06);border-radius:4px;overflow:hidden;transition:all .4s ease;min-height:220px;}
+.biz4-card::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 10px,rgba(0,230,57,.03) 10px,rgba(0,230,57,.03) 20px);opacity:0;transition:opacity .4s;}
+.biz4-card:hover::before{opacity:1;}
+.biz4-card:hover{border-color:var(--g);box-shadow:0 0 40px rgba(0,230,57,.12);transform:perspective(800px) rotateX(1deg) rotateY(-1deg) scale(1.02);}
 .biz4-card .card-num{font-family:'Bebas Neue',sans-serif;font-size:clamp(80px,10vw,140px);position:absolute;top:-10px;right:20px;color:rgba(255,255,255,.03);line-height:1;}
 .biz4-card h3{font-family:'Bebas Neue',sans-serif;font-size:clamp(28px,3.5vw,44px);letter-spacing:3px;position:relative;z-index:1;}
 .biz4-card .ko{font-size:14px;color:var(--g);margin-top:8px;position:relative;z-index:1;}
 
-/* ==================== 7. TEAM SECTIONS ==================== */
+/* ========== 7. TEAM SECTIONS ========== */
 .team-section{padding:var(--sp) 24px;position:relative;overflow:hidden;}
 .team-section:nth-child(odd){background:var(--d1);}
 .team-section:nth-child(even){background:var(--dk);}
+/* Background dot pattern */
+.team-section::before{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(0,230,57,.06) 1px,transparent 1px);background-size:30px 30px;pointer-events:none;}
 .team-bg-text{font-family:'Bebas Neue',sans-serif;font-size:clamp(60px,12vw,160px);position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:rgba(255,255,255,.02);white-space:nowrap;pointer-events:none;}
-.team-label{font-family:'Oswald',sans-serif;font-size:clamp(11px,1.2vw,13px);letter-spacing:4px;color:var(--g);margin-bottom:12px;}
+.team-label{font-family:'Oswald',sans-serif;font-size:clamp(11px,1.2vw,13px);letter-spacing:4px;color:var(--g);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
 .team-name{font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,7vw,80px);letter-spacing:4px;line-height:1;
-text-shadow:2px 2px 0 rgba(0,230,57,.1);margin-bottom:8px;}
+text-shadow:2px 2px 0 rgba(0,230,57,.1);margin-bottom:8px;-webkit-text-stroke:0.5px rgba(255,255,255,.05);}
 .team-desc{font-size:clamp(14px,1.4vw,18px);color:var(--w5);margin-bottom:8px;max-width:600px;}
 .team-tagline{font-size:15px;color:var(--w);font-weight:500;margin-bottom:32px;}
 .team-members{display:flex;flex-wrap:wrap;gap:12px;}
-.member-tag{padding:8px 20px;border:1px solid var(--w15);border-radius:30px;font-family:'Oswald',sans-serif;font-size:13px;letter-spacing:2px;transition:.3s;}
-.member-tag:hover{border-color:var(--g);color:var(--g);box-shadow:0 0 15px rgba(0,230,57,.15);}
+.member-tag{padding:8px 20px;border:1px solid var(--w15);border-radius:30px;font-family:'Oswald',sans-serif;font-size:13px;letter-spacing:2px;transition:all .3s ease;cursor:default;}
+.member-tag:hover{border-color:var(--g);color:var(--g);box-shadow:0 0 15px rgba(0,230,57,.15);transform:translateY(-2px);}
 
-/* ==================== 8. LOCAL IS FUN ==================== */
+/* ========== 8. LOCAL IS FUN ========== */
 #fun{background:var(--d2);text-align:center;position:relative;overflow:hidden;}
 .fun-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(48px,8vw,100px);letter-spacing:4px;line-height:1;
-background:linear-gradient(135deg,var(--g),var(--gb));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:40px;}
+background:linear-gradient(135deg,var(--g),var(--gb));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:40px;-webkit-text-stroke:0;}
 .fun-stats{display:flex;justify-content:center;gap:clamp(24px,5vw,64px);flex-wrap:wrap;margin-bottom:32px;}
-.fun-stat .num{font-family:'Bebas Neue',sans-serif;font-size:clamp(32px,4vw,56px);color:var(--g);}
+.fun-stat .num{font-family:'Bebas Neue',sans-serif;font-size:clamp(32px,4vw,56px);background:linear-gradient(135deg,var(--g),var(--gb));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
 .fun-stat .txt{font-size:13px;color:var(--w5);}
 .fun-desc{font-size:15px;color:var(--w5);max-width:500px;margin:0 auto;}
 /* Sparkle deco */
-.sparkle{position:absolute;width:20px;height:20px;opacity:.3;}
+.sparkle{position:absolute;width:20px;height:20px;opacity:.3;animation:sparkleFloat 6s ease-in-out infinite;}
 .sparkle::before,.sparkle::after{content:'';position:absolute;background:var(--g);}
 .sparkle::before{width:100%;height:2px;top:50%;left:0;transform:translateY(-50%);}
 .sparkle::after{width:2px;height:100%;left:50%;top:0;transform:translateX(-50%);}
+@keyframes sparkleFloat{0%,100%{transform:translateY(0) rotate(0deg);opacity:.3}50%{transform:translateY(-10px) rotate(45deg);opacity:.6}}
 
-/* ==================== 9. LOCAL BRAND ==================== */
+/* ========== 9. LOCAL BRAND ========== */
 #brand{background:var(--dk);}
 .brand-scroll{display:flex;gap:24px;overflow-x:auto;padding-bottom:20px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;}
 .brand-scroll::-webkit-scrollbar{height:4px;}.brand-scroll::-webkit-scrollbar-track{background:var(--d1);}.brand-scroll::-webkit-scrollbar-thumb{background:var(--g);border-radius:2px;}
-.brand-card{min-width:300px;max-width:340px;flex-shrink:0;scroll-snap-align:start;padding:36px 28px;background:var(--d1);border:1px solid var(--w06);border-radius:4px;transition:.3s;}
-.brand-card:hover{border-color:var(--g);transform:translateY(-4px);}
+.brand-card{min-width:300px;max-width:340px;flex-shrink:0;scroll-snap-align:start;padding:0;background:var(--d1);border:1px solid var(--w06);border-radius:4px;transition:all .3s ease;overflow:hidden;}
+.brand-card:hover{border-color:var(--g);transform:translateY(-6px);box-shadow:0 20px 40px rgba(0,0,0,.3),0 0 20px rgba(0,230,57,.08);}
+.brand-card-top{height:4px;background:linear-gradient(90deg,var(--g),var(--gb),var(--g));width:100%;}
+.brand-card-inner{padding:36px 28px;}
 .brand-card .bname{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px;margin-bottom:4px;}
 .brand-card .bname-ko{font-size:20px;font-weight:700;margin-bottom:12px;}
 .brand-card .bsub{font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:2px;color:var(--g);margin-bottom:16px;text-transform:uppercase;}
 .brand-card p{font-size:13px;color:var(--w5);line-height:1.8;margin-bottom:8px;}
 .brand-card .bstat{font-family:'Oswald',sans-serif;font-size:12px;color:var(--g);letter-spacing:1px;}
 .brand-summary{display:flex;gap:48px;margin-top:48px;justify-content:center;flex-wrap:wrap;}
-.brand-summary .bs-item .bs-num{font-family:'Bebas Neue',sans-serif;font-size:48px;color:var(--g);}
+.brand-summary .bs-item .bs-num{font-family:'Bebas Neue',sans-serif;font-size:48px;background:linear-gradient(135deg,var(--g),var(--gb));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
 .brand-summary .bs-item .bs-txt{font-size:13px;color:var(--w5);}
 
-/* ==================== 10. BUSINESS OUTPUT ==================== */
+/* ========== 10. BUSINESS OUTPUT ========== */
 #biz-out{background:var(--d1);text-align:center;}
 .bout-title{font-size:clamp(16px,2vw,22px);color:var(--w5);margin-bottom:8px;}
-.bout-big{font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,6vw,72px);letter-spacing:4px;margin-bottom:48px;}
+.bout-big{font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,6vw,72px);letter-spacing:4px;margin-bottom:48px;-webkit-text-stroke:0.5px rgba(255,255,255,.08);}
 .bout-stats{display:flex;justify-content:center;gap:clamp(32px,6vw,80px);flex-wrap:wrap;}
-.bout-stat .num{font-family:'Bebas Neue',sans-serif;font-size:clamp(40px,5vw,64px);color:var(--g);}
+.bout-stat .num{font-family:'Bebas Neue',sans-serif;font-size:clamp(40px,5vw,64px);background:linear-gradient(135deg,var(--g),var(--gb));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
 .bout-stat .txt{font-size:14px;color:var(--w5);margin-top:4px;}
 
-/* ==================== 11. SOCIAL OUTPUT ==================== */
+/* ========== 11. SOCIAL OUTPUT ========== */
 #social-out{background:var(--dk);text-align:center;}
 .sout-grid{display:flex;justify-content:center;gap:clamp(32px,6vw,80px);flex-wrap:wrap;margin-top:48px;position:relative;}
 .sout-stat{position:relative;padding:0 24px;}
-.sout-stat:not(:last-child)::after{content:'';position:absolute;right:-16px;top:20%;height:60%;width:1px;background:var(--g);opacity:.3;}
-.sout-stat .num{font-family:'Bebas Neue',sans-serif;font-size:clamp(40px,5vw,64px);color:var(--g);}
+.sout-stat:not(:last-child)::after{content:'';position:absolute;right:-16px;top:20%;height:60%;width:1px;background:linear-gradient(to bottom,transparent,var(--g),transparent);opacity:.5;}
+.sout-stat .num{font-family:'Bebas Neue',sans-serif;font-size:clamp(40px,5vw,64px);background:linear-gradient(135deg,var(--g),var(--gb));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
 .sout-stat .txt{font-size:14px;color:var(--w5);margin-top:4px;}
 
-/* ==================== 12. CONNECT THEORY ==================== */
+/* ========== 12. CONNECT THEORY ========== */
 #connect{background:var(--d1);}
 .ct-block{margin-bottom:80px;}
 .ct-block:last-child{margin-bottom:0;}
-.ct-title{font-family:'Oswald',sans-serif;font-size:clamp(20px,2.5vw,30px);letter-spacing:2px;margin-bottom:24px;}
+.ct-title{font-family:'Oswald',sans-serif;font-size:clamp(20px,2.5vw,30px);letter-spacing:2px;margin-bottom:24px;display:flex;align-items:center;gap:10px;}
 .ct-desc{font-size:15px;color:var(--w5);line-height:1.9;margin-bottom:32px;max-width:700px;}
-/* Diagram styles */
-.diagram{padding:40px;border:1px solid var(--w06);border-radius:8px;background:rgba(0,0,0,.3);position:relative;}
+.diagram{padding:40px;border:1px solid var(--w06);border-radius:8px;background:rgba(0,0,0,.3);position:relative;backdrop-filter:blur(5px);}
 .diagram-row{display:flex;align-items:center;justify-content:center;gap:24px;flex-wrap:wrap;}
-.diagram-box{padding:16px 28px;border:1px solid var(--w15);border-radius:4px;font-family:'Oswald',sans-serif;font-size:14px;letter-spacing:2px;text-align:center;transition:.3s;}
-.diagram-box.green{border-color:var(--g);color:var(--g);}
-.diagram-arrow{color:var(--g);font-size:20px;opacity:.6;}
+.diagram-box{padding:16px 28px;border:1px solid var(--w15);border-radius:4px;font-family:'Oswald',sans-serif;font-size:14px;letter-spacing:2px;text-align:center;transition:all .3s ease;}
+.diagram-box:hover{transform:translateY(-2px);box-shadow:0 4px 15px rgba(0,0,0,.3);}
+.diagram-box.green{border-color:var(--g);color:var(--g);box-shadow:0 0 15px rgba(0,230,57,.1);}
+.diagram-arrow-svg{display:flex;align-items:center;justify-content:center;opacity:.6;animation:arrowPulse 2s ease-in-out infinite;}
+@keyframes arrowPulse{0%,100%{opacity:.6;transform:translateX(0)}50%{opacity:1;transform:translateX(3px)}}
 .diagram-stamp{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-12deg);font-family:'Bebas Neue',sans-serif;font-size:clamp(24px,4vw,48px);color:#ff2040;border:3px solid #ff2040;padding:8px 24px;opacity:.3;pointer-events:none;letter-spacing:4px;}
-/* Triangle */
-.tri-diagram{display:flex;flex-direction:column;align-items:center;gap:24px;padding:48px;}
+.tri-diagram{display:flex;flex-direction:column;align-items:center;gap:24px;padding:48px;position:relative;}
 .tri-top{text-align:center;}
 .tri-bottom{display:flex;gap:48px;justify-content:center;flex-wrap:wrap;}
-.tri-node{padding:20px 28px;border:1px solid var(--w15);border-radius:4px;text-align:center;transition:.3s;min-width:160px;}
-.tri-node:hover{border-color:var(--g);}
+.tri-node{padding:20px 28px;border:1px solid var(--w15);border-radius:4px;text-align:center;transition:all .3s ease;min-width:160px;}
+.tri-node:hover{border-color:var(--g);box-shadow:0 0 20px rgba(0,230,57,.1);transform:translateY(-3px);}
 .tri-node .tn-title{font-family:'Oswald',sans-serif;font-size:16px;letter-spacing:2px;margin-bottom:4px;}
 .tri-node .tn-sub{font-size:12px;color:var(--g);font-family:'Oswald',sans-serif;letter-spacing:1px;}
-.tri-center{padding:16px 32px;background:var(--g);color:var(--dk);border-radius:4px;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:3px;}
+.tri-center{padding:16px 32px;background:var(--g);color:var(--dk);border-radius:4px;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:3px;box-shadow:0 0 30px rgba(0,230,57,.3);}
 .tri-center-sub{font-size:11px;font-family:'Oswald',sans-serif;letter-spacing:2px;color:var(--dk);opacity:.7;}
-/* CLYN */
+/* Connecting lines SVG */
+.connect-lines{position:absolute;inset:0;pointer-events:none;z-index:0;}
+.connect-lines line{stroke:var(--g);stroke-width:1;opacity:.15;stroke-dasharray:4 4;animation:dashMove 2s linear infinite;}
+@keyframes dashMove{0%{stroke-dashoffset:0}100%{stroke-dashoffset:-16}}
 .clyn-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
-.clyn-card{padding:24px;border:1px solid var(--w06);border-radius:4px;text-align:center;transition:.3s;}
-.clyn-card:hover{border-color:var(--g);}
+.clyn-card{padding:24px;border:1px solid var(--w06);border-radius:4px;text-align:center;transition:all .3s ease;position:relative;overflow:hidden;}
+.clyn-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--g),transparent);transform:scaleX(0);transition:transform .3s;}
+.clyn-card:hover::before{transform:scaleX(1);}
+.clyn-card:hover{border-color:var(--g);box-shadow:0 0 20px rgba(0,230,57,.08);}
 .clyn-card .cc-code{font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--g);letter-spacing:2px;}
 .clyn-card .cc-desc{font-size:13px;color:var(--w5);margin-top:8px;}
 .clyn-outcome{display:flex;justify-content:center;gap:24px;margin-top:32px;flex-wrap:wrap;}
-.clyn-outcome span{padding:8px 20px;border:1px solid var(--g);border-radius:20px;font-size:13px;color:var(--g);}
+.clyn-outcome span{padding:8px 20px;border:1px solid var(--g);border-radius:20px;font-size:13px;color:var(--g);transition:all .3s;cursor:default;}
+.clyn-outcome span:hover{background:rgba(0,230,57,.1);box-shadow:var(--glow-sm);}
 
-/* ==================== 13. CREW ==================== */
-#crew{background:var(--dk);}
-.crew-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,6vw,72px);letter-spacing:3px;margin-bottom:8px;}
+/* ========== 13. CREW ========== */
+#crew{background:var(--dk);position:relative;overflow:hidden;}
+#crew::before{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(0,230,57,.04) 1px,transparent 1px);background-size:24px 24px;pointer-events:none;}
+.crew-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,6vw,72px);letter-spacing:3px;margin-bottom:8px;display:flex;align-items:center;gap:16px;}
 .crew-sub{font-size:16px;color:var(--w5);margin-bottom:12px;}
 .crew-roles{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:48px;}
-.crew-role{padding:6px 16px;border:1px solid var(--g);border-radius:20px;font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:2px;color:var(--g);}
+.crew-role{padding:6px 16px;border:1px solid var(--g);border-radius:20px;font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:2px;color:var(--g);transition:all .3s;cursor:default;}
+.crew-role:hover{background:rgba(0,230,57,.15);box-shadow:var(--glow-sm);transform:translateY(-2px);}
 .crew-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px;margin-bottom:48px;}
-.crew-card{padding:24px 16px;background:var(--d1);border:1px solid var(--w06);border-radius:4px;text-align:center;transition:.3s;}
-.crew-card:hover{border-color:var(--g);box-shadow:0 0 20px rgba(0,230,57,.1);}
-.crew-avatar{width:48px;height:48px;border-radius:50%;background:var(--d2);border:1px solid var(--w15);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--g);}
+.crew-card{padding:24px 16px;background:var(--d1);border:1px solid var(--w06);border-radius:4px;text-align:center;transition:all .3s ease;}
+.crew-card:hover{border-color:var(--g);box-shadow:0 0 20px rgba(0,230,57,.1);transform:translateY(-4px);}
+.crew-avatar{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,rgba(0,230,57,.2),rgba(0,230,57,.05));border:2px solid rgba(0,230,57,.3);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--g);text-shadow:var(--glow-sm);transition:all .3s;}
+.crew-card:hover .crew-avatar{border-color:var(--g);box-shadow:0 0 20px rgba(0,230,57,.2);}
 .crew-card .cn{font-family:'Oswald',sans-serif;font-size:14px;letter-spacing:2px;margin-bottom:4px;}
 .crew-card .mbti{font-size:11px;color:var(--g);font-family:'Oswald',sans-serif;letter-spacing:1px;}
 .allcrew{display:flex;flex-wrap:wrap;gap:10px;}
-.allcrew span{padding:6px 16px;border:1px solid var(--w06);border-radius:20px;font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:1px;color:var(--w5);transition:.3s;}
-.allcrew span:hover{border-color:var(--g);color:var(--g);}
+.allcrew span{padding:6px 16px;border:1px solid var(--w06);border-radius:20px;font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:1px;color:var(--w5);transition:all .3s;cursor:default;}
+.allcrew span:hover{border-color:var(--g);color:var(--g);transform:translateY(-2px);}
 
-/* ==================== 14. AWARDS ==================== */
+/* ========== 14. AWARDS ========== */
 #awards{background:var(--d1);text-align:center;}
 .award-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px;margin-top:48px;}
-.award-card{padding:40px 24px;border:1px solid var(--w06);border-radius:4px;transition:.3s;}
-.award-card:hover{border-color:var(--g);transform:translateY(-4px);}
-.award-icon{font-size:36px;margin-bottom:16px;opacity:.7;}
+.award-card{padding:40px 24px;border:1px solid var(--w06);border-radius:4px;transition:all .3s ease;position:relative;overflow:hidden;}
+.award-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#c9a835,var(--g),#c9a835);opacity:.8;}
+.award-card:hover{border-color:var(--g);transform:translateY(-6px);box-shadow:0 20px 40px rgba(0,0,0,.3),0 0 20px rgba(0,230,57,.08);}
+.award-icon{margin-bottom:16px;display:flex;justify-content:center;}
 .award-card h4{font-family:'Oswald',sans-serif;font-size:16px;letter-spacing:1px;margin-bottom:8px;}
 .award-card p{font-size:13px;color:var(--w5);}
 
-/* ==================== 15. MEDIA ==================== */
+/* ========== 15. MEDIA ========== */
 #media{background:var(--dk);}
 .media-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-top:48px;}
-.media-card{padding:36px 28px;background:var(--d1);border:1px solid var(--w06);border-radius:4px;transition:.3s;min-height:160px;display:flex;flex-direction:column;justify-content:flex-end;}
-.media-card:hover{border-color:var(--g);box-shadow:0 0 30px rgba(0,230,57,.1);transform:translateY(-4px);}
-.media-card h4{font-family:'Oswald',sans-serif;font-size:18px;letter-spacing:1px;}
+.media-card{padding:36px 28px;background:var(--d1);border:1px solid var(--w06);border-radius:4px;transition:all .4s ease;min-height:160px;display:flex;flex-direction:column;justify-content:flex-end;position:relative;overflow:hidden;}
+.media-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,230,57,.05),transparent);opacity:0;transition:opacity .3s;}
+.media-card:hover::before{opacity:1;}
+.media-card:hover{border-color:var(--g);box-shadow:0 0 30px rgba(0,230,57,.1);transform:translateY(-6px) translateX(4px);}
+.media-card h4{font-family:'Oswald',sans-serif;font-size:18px;letter-spacing:1px;display:flex;align-items:center;gap:8px;}
 .media-card p{font-size:13px;color:var(--w5);margin-top:4px;}
 
-/* ==================== 16. VISION ==================== */
+/* ========== 16. VISION ========== */
 #vision{background:var(--d2);text-align:center;position:relative;overflow:hidden;}
-.vision-big{font-family:'Bebas Neue',sans-serif;font-size:clamp(28px,5vw,56px);letter-spacing:4px;margin-bottom:12px;}
+.vision-bg-svg{position:absolute;bottom:0;left:50%;transform:translateX(-50%);opacity:.03;pointer-events:none;}
+.vision-big{font-family:'Bebas Neue',sans-serif;font-size:clamp(28px,5vw,56px);letter-spacing:4px;margin-bottom:12px;-webkit-text-stroke:0.5px rgba(255,255,255,.08);}
 .vision-desc{font-size:clamp(15px,1.6vw,20px);color:var(--w5);margin-bottom:48px;max-width:600px;margin-left:auto;margin-right:auto;}
 .vision-stats{display:flex;justify-content:center;gap:clamp(24px,5vw,64px);flex-wrap:wrap;}
-.vision-stat .v-num{font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,4vw,56px);color:var(--g);}
+.vision-stat .v-num{font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,4vw,56px);background:linear-gradient(135deg,var(--g),var(--gb));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
 .vision-stat .v-label{font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:2px;color:var(--w5);text-transform:uppercase;margin-top:4px;}
 .vision-stat .v-ko{font-size:13px;color:var(--w5);}
 
-/* ==================== 17. ENDING ==================== */
+/* ========== 17. ENDING ========== */
 #ending{background:var(--dk);text-align:center;padding:var(--sp) 24px 60px;}
 .ending-text{font-size:clamp(15px,1.8vw,20px);color:var(--w5);max-width:700px;margin:0 auto 48px;line-height:2;}
 .ending-text strong{color:var(--w);font-weight:500;}
-/* Marquee */
-.marquee{overflow:hidden;white-space:nowrap;padding:24px 0;border-top:1px solid var(--w06);border-bottom:1px solid var(--w06);margin-bottom:48px;}
+.marquee{overflow:hidden;white-space:nowrap;padding:24px 0;border-top:1px solid var(--w06);border-bottom:1px solid var(--w06);margin-bottom:48px;position:relative;-webkit-mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);}
 .marquee-inner{display:inline-block;animation:marqueeScroll 20s linear infinite;font-family:'Bebas Neue',sans-serif;font-size:clamp(24px,4vw,48px);letter-spacing:6px;color:var(--w15);}
 @keyframes marqueeScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 .ending-final{font-size:clamp(20px,3vw,32px);font-weight:700;}
-.ending-final span{color:var(--g);}
+.ending-final span{color:var(--g);text-shadow:var(--glow-sm);}
 
-/* ==================== 18. CONTACT ==================== */
+/* ========== 18. CONTACT ========== */
 #contact{background:var(--d1);text-align:center;padding:80px 24px;}
-.contact-btn{display:inline-block;padding:16px 48px;border:2px solid var(--g);color:var(--g);font-family:'Oswald',sans-serif;font-size:18px;letter-spacing:4px;text-transform:uppercase;transition:.3s;border-radius:4px;}
-.contact-btn:hover{background:var(--g);color:var(--dk);}
+.contact-btn{display:inline-block;padding:16px 48px;border:2px solid var(--g);color:var(--g);font-family:'Oswald',sans-serif;font-size:18px;letter-spacing:4px;text-transform:uppercase;transition:all .3s ease;border-radius:4px;position:relative;overflow:hidden;}
+.contact-btn::before{content:'';position:absolute;inset:0;background:var(--g);transform:scaleX(0);transform-origin:left;transition:transform .3s ease;z-index:-1;}
+.contact-btn:hover{color:var(--dk);box-shadow:var(--glow);}
+.contact-btn:hover::before{transform:scaleX(1);}
 
-/* ==================== 19. PRESS ==================== */
+/* ========== 19. PRESS ========== */
 #press{background:var(--dk);}
 .press-list{border-top:1px solid var(--w06);}
-.press-item{display:flex;justify-content:space-between;align-items:center;padding:20px 0;border-bottom:1px solid var(--w06);transition:.3s;gap:16px;}
-.press-item:hover{padding-left:12px;border-bottom-color:var(--g);}
-.press-item .pt{flex:1;font-size:15px;}
+.press-item{display:flex;justify-content:space-between;align-items:center;padding:20px 0;border-bottom:1px solid var(--w06);transition:all .3s ease;gap:16px;position:relative;}
+.press-item::before{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:var(--g);transform:scaleX(0);transform-origin:left;transition:transform .4s ease;}
+.press-item:hover::before{transform:scaleX(1);}
+.press-item:hover{padding-left:16px;}
+.press-item .pt{flex:1;font-size:15px;transition:color .3s;}
+.press-item:hover .pt{color:var(--g);}
 .press-item .pa{font-size:13px;color:var(--w5);white-space:nowrap;}
 .press-item .pd{font-family:'Oswald',sans-serif;font-size:13px;color:var(--w5);letter-spacing:1px;white-space:nowrap;}
 
-/* ==================== 20. FOOTER ==================== */
-footer{background:var(--dk);border-top:1px solid var(--w06);padding:48px 24px;text-align:center;}
+/* ========== 20. FOOTER ========== */
+footer{background:var(--dk);padding:48px 24px;text-align:center;position:relative;}
+.footer-green-line{height:2px;background:linear-gradient(90deg,transparent,var(--g),transparent);position:absolute;top:0;left:0;right:0;}
 .footer-logo{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:4px;margin-bottom:12px;}
 .footer-info{font-size:13px;color:var(--w5);margin-bottom:4px;}
 .footer-copy{font-size:12px;color:var(--w15);margin-top:12px;}
 
-/* ==================== MARQUEE DIVIDERS ==================== */
-.marquee-div{overflow:hidden;white-space:nowrap;padding:16px 0;border-top:1px solid var(--w06);border-bottom:1px solid var(--w06);}
+/* ========== MARQUEE DIVIDERS ========== */
+.marquee-div{overflow:hidden;white-space:nowrap;padding:16px 0;border-top:1px solid var(--w06);border-bottom:1px solid var(--w06);-webkit-mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);}
 .marquee-div .md-inner{display:inline-block;animation:marqueeScroll 25s linear infinite;font-family:'Bebas Neue',sans-serif;font-size:clamp(16px,2vw,24px);letter-spacing:8px;color:var(--w15);}
 
-/* ==================== RESPONSIVE ==================== */
+/* ========== ZIGZAG DIVIDER ========== */
+.zigzag-divider{width:100%;height:20px;overflow:hidden;position:relative;}
+.zigzag-divider svg{width:100%;height:100%;}
+
+/* ========== RESPONSIVE ========== */
 @media(max-width:768px){
   .how-grid{grid-template-columns:1fr;}
   .stats-grid{grid-template-columns:repeat(2,1fr);}
@@ -288,6 +404,7 @@ footer{background:var(--dk);border-top:1px solid var(--w06);padding:48px 24px;te
   .kw-item::after{display:none;}
   .sout-stat:not(:last-child)::after{display:none;}
   .press-item{flex-direction:column;align-items:flex-start;gap:4px;}
+  .back-top{bottom:16px;right:16px;width:36px;height:36px;}
 }
 @media(max-width:480px){
   .stats-grid{grid-template-columns:1fr;}
@@ -301,14 +418,42 @@ footer{background:var(--dk);border-top:1px solid var(--w06);padding:48px 24px;te
 <!-- Scroll Progress -->
 <div class="spbar" id="spbar"></div>
 
+<!-- Side Navigation -->
+<nav class="side-nav" id="sideNav">
+  <a href="#hero" data-label="HERO" class="active"></a>
+  <a href="#about" data-label="ABOUT"></a>
+  <a href="#what-le" data-label="LOCAL ENT"></a>
+  <a href="#how" data-label="HOW"></a>
+  <a href="#contents" data-label="CONTENTS"></a>
+  <a href="#biz4" data-label="BUSINESS"></a>
+  <a href="#fun" data-label="FUN"></a>
+  <a href="#brand" data-label="BRAND"></a>
+  <a href="#connect" data-label="CONNECT"></a>
+  <a href="#crew" data-label="CREW"></a>
+  <a href="#awards" data-label="AWARDS"></a>
+  <a href="#media" data-label="MEDIA"></a>
+  <a href="#vision" data-label="VISION"></a>
+  <a href="#press" data-label="PRESS"></a>
+  <a href="#contact" data-label="CONTACT"></a>
+</nav>
+
+<!-- Back to Top -->
+<button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 15l-6-6-6 6"/></svg>
+</button>
+
 <!-- HERO -->
 <section id="hero">
+  <div class="particles" id="heroParticles"></div>
   <div class="hero-top">UPPTOWN</div>
   <video autoplay muted loop playsinline>
     <source src="KakaoTalk_20260324_134623031.mp4" type="video/mp4">
   </video>
   <div class="hero-c">
-    <div class="hero-sub">대한민국 NO.1</div>
+    <div class="hero-sub">
+      <svg class="svg-icon svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="#00e639" stroke-width="2" style="margin-right:4px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      대한민국 NO.1
+    </div>
     <h1 class="hero-title">LOCAL<br>ENTERTAINMENT</h1>
     <div class="hero-sub2">REDEFINING LOCAL CULTURE</div>
   </div>
@@ -321,7 +466,10 @@ footer{background:var(--dk);border-top:1px solid var(--w06);padding:48px 24px;te
 <!-- ABOUT -->
 <section id="about">
   <div class="inner">
-    <div class="label rv">local entertainment</div>
+    <div class="label rv">
+      <svg class="starburst svg-icon svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="#00e639" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+      local entertainment
+    </div>
     <p class="about-mission rv rv-d1">
       업타운은 <strong>'로컬을 새롭게 디자인하다'</strong>라는 미션하에
       다양한 재능을 보유한 <strong>LOCAL ARTIST</strong> 들과
@@ -344,21 +492,25 @@ footer{background:var(--dk);border-top:1px solid var(--w06);padding:48px 24px;te
 <section id="what-le">
   <div class="inner">
     <div class="wle-sub rv">우리가 말하는 엔터테인먼트는</div>
-    <h2 class="wle-title rv rv-d1">WHAT IS LOCAL<br>ENTERTAINMENT?</h2>
+    <h2 class="wle-title rv rv-d1 split-text">WHAT IS LOCAL<br>ENTERTAINMENT?</h2>
     <div class="kw-flow">
       <div class="kw-item rv">
+        <div class="kw-dot"></div>
         <div class="kw-en">TRAFFIC</div>
         <div class="kw-ko">사람을 모으고</div>
       </div>
       <div class="kw-item rv rv-d1">
+        <div class="kw-dot"></div>
         <div class="kw-en">EMOTION</div>
         <div class="kw-ko">감정을 움직이고</div>
       </div>
       <div class="kw-item rv rv-d2">
+        <div class="kw-dot"></div>
         <div class="kw-en">CONSUME</div>
         <div class="kw-ko">소비를 만들고</div>
       </div>
       <div class="kw-item rv rv-d3">
+        <div class="kw-dot"></div>
         <div class="kw-en">BRAND</div>
         <div class="kw-ko">브랜드를 남기는 산업 구조입니다</div>
       </div>
@@ -366,25 +518,31 @@ footer{background:var(--dk);border-top:1px solid var(--w06);padding:48px 24px;te
   </div>
 </section>
 
+<!-- GREEN HR DIVIDER -->
+<hr class="green-hr">
+
 <!-- HOW IT WORKS -->
 <section id="how">
   <div class="inner">
-    <div class="label rv">how it works</div>
+    <div class="label rv">
+      <svg class="starburst svg-icon svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="#00e639" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+      how it works
+    </div>
     <h2 class="wwd-title rv rv-d1">LOCAL SOLUTION SYSTEM</h2>
     <div class="how-grid">
-      <div class="how-card rv">
+      <div class="how-card tilt-card rv">
         <div class="how-num">01</div>
-        <h3>01 TRAFFIC CREATE</h3>
+        <h3><span class="pulse-dot"></span>01 TRAFFIC CREATE</h3>
         <p>소셜링 기반 트래픽 그룹의 트래픽 요소 생성</p>
       </div>
-      <div class="how-card rv rv-d1">
+      <div class="how-card tilt-card rv rv-d1">
         <div class="how-num">02</div>
-        <h3>02 CONNECT LOCAL</h3>
+        <h3><span class="pulse-dot"></span>02 CONNECT LOCAL</h3>
         <p>로컬과 소비자 연결, 지역에 직접적인 소비 생태계 제공</p>
       </div>
-      <div class="how-card rv rv-d2">
+      <div class="how-card tilt-card rv rv-d2">
         <div class="how-num">03</div>
-        <h3>03 BRAND LOOP</h3>
+        <h3><span class="pulse-dot"></span>03 BRAND LOOP</h3>
         <p>소비자가 다시 와야하는 이유, 브랜드를 통해 지속하는 선순환 생태</p>
       </div>
     </div>
@@ -394,26 +552,34 @@ footer{background:var(--dk);border-top:1px solid var(--w06);padding:48px 24px;te
 <!-- LOCAL CONTENTS -->
 <section id="contents">
   <div class="inner">
-    <div class="label rv">local contents</div>
+    <div class="label rv">
+      <!-- Chart/growth icon -->
+      <svg class="svg-icon svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="#00e639" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      local contents
+    </div>
     <p class="about-mission rv rv-d1" style="margin-bottom:32px;">소셜링을 기반으로 오고 싶은 지역을 만들어 나갑니다</p>
     <div class="stats-grid">
       <div class="stat-card rv">
         <div class="stat-num" data-count="130">0</div><span class="stat-plus">+</span>
+        <div class="stat-underline"></div>
         <div class="stat-en">contents production</div>
         <div class="stat-ko">콘텐츠 프로덕션</div>
       </div>
       <div class="stat-card rv rv-d1">
         <div class="stat-num" data-count="3000">0</div><span class="stat-plus">+</span>
+        <div class="stat-underline"></div>
         <div class="stat-en">contents management</div>
         <div class="stat-ko">콘텐츠 매니지먼트</div>
       </div>
       <div class="stat-card rv rv-d2">
         <div class="stat-num" data-count="40000">0</div><span class="stat-plus">+</span>
+        <div class="stat-underline"></div>
         <div class="stat-en">total customers</div>
         <div class="stat-ko">누적 고객</div>
       </div>
       <div class="stat-card rv rv-d3">
         <div class="stat-num" data-count="80">0</div><span class="stat-plus">+</span>
+        <div class="stat-underline"></div>
         <div class="stat-en">collaboration project</div>
         <div class="stat-ko">협업 프로젝트</div>
       </div>
@@ -421,13 +587,20 @@ footer{background:var(--dk);border-top:1px solid var(--w06);padding:48px 24px;te
   </div>
 </section>
 
+<!-- ZIGZAG DIVIDER -->
+<div class="zigzag-divider">
+  <svg viewBox="0 0 1200 20" preserveAspectRatio="none" fill="none" stroke="#00e639" stroke-width="1" opacity=".3">
+    <polyline points="0,10 30,2 60,18 90,2 120,18 150,2 180,18 210,2 240,18 270,2 300,18 330,2 360,18 390,2 420,18 450,2 480,18 510,2 540,18 570,2 600,18 630,2 660,18 690,2 720,18 750,2 780,18 810,2 840,18 870,2 900,18 930,2 960,18 990,2 1020,18 1050,2 1080,18 1110,2 1140,18 1170,2 1200,10"/>
+  </svg>
+</div>
+
 <!-- BUSINESS 4 SECTION -->
 <section id="biz4">
   <div class="inner">
     <div class="biz4-head rv">
       <div class="small">LOCAL DESIGN?</div>
       <div class="big">UPPTOWN BUSINESS</div>
-      <div class="big" style="color:var(--g);">4 SECTION</div>
+      <div class="big" style="color:var(--g);text-shadow:0 0 30px rgba(0,230,57,.3);">4 SECTION</div>
     </div>
     <div class="biz4-grid">
       <div class="biz4-card rv">
@@ -461,7 +634,10 @@ footer{background:var(--dk);border-top:1px solid var(--w06);padding:48px 24px;te
 <div class="team-section" id="team-tour">
   <div class="team-bg-text">LOCAL TOUR</div>
   <div class="inner">
-    <div class="team-label rv">TEAM 01</div>
+    <div class="team-label rv">
+      <svg class="starburst svg-icon svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="#00e639" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+      TEAM 01
+    </div>
     <h2 class="team-name rv rv-d1">TEAM<br>LOCAL TOUR</h2>
     <p class="team-desc rv rv-d2">로컬의 매력을 재미로 알리는 MZ팀</p>
     <p class="team-tagline rv rv-d2">사람들이 '재미' 때문에 로컬을 찾아오게 합니다</p>
@@ -475,30 +651,45 @@ footer{background:var(--dk);border-top:1px solid var(--w06);padding:48px 24px;te
   </div>
 </div>
 
+<hr class="green-hr">
+
 <div class="team-section" id="team-fnb">
   <div class="team-bg-text">F&B</div>
   <div class="inner">
-    <div class="team-label rv">TEAM 02</div>
+    <div class="team-label rv">
+      <svg class="starburst svg-icon svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="#00e639" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+      TEAM 02
+    </div>
     <h2 class="team-name rv rv-d1">TEAM<br>F&B</h2>
     <p class="team-desc rv rv-d2">로컬의 매력을 맛으로 알리는 MZ팀 / HOT PLACE MAKING</p>
     <p class="team-tagline rv rv-d2">사람들이 '맛' 때문에 로컬을 찾아오게 합니다</p>
   </div>
 </div>
 
+<hr class="green-hr">
+
 <div class="team-section" id="team-lifestyle">
   <div class="team-bg-text">LIFESTYLE</div>
   <div class="inner">
-    <div class="team-label rv">TEAM 03</div>
+    <div class="team-label rv">
+      <svg class="starburst svg-icon svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="#00e639" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+      TEAM 03
+    </div>
     <h2 class="team-name rv rv-d1">TEAM<br>LIFESTYLE</h2>
     <p class="team-desc rv rv-d2">로컬의 매력을 일상으로 전하는 MZ팀 / LOCAL IS HIP</p>
     <p class="team-tagline rv rv-d2">LOCAL IS LIFE</p>
   </div>
 </div>
 
+<hr class="green-hr">
+
 <div class="team-section" id="team-artist">
   <div class="team-bg-text">ARTIST</div>
   <div class="inner">
-    <div class="team-label rv">TEAM 04</div>
+    <div class="team-label rv">
+      <svg class="starburst svg-icon svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="#00e639" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+      TEAM 04
+    </div>
     <h2 class="team-name rv rv-d1">TEAM<br>ARTIST</h2>
     <p class="team-desc rv rv-d2">로컬의 매력을 감동으로 전하는 MZ팀 / LOCAL IS STAGE</p>
     <p class="team-tagline rv rv-d2">사람들의 '마음'에 로컬의 이야기를 남깁니다</p>
@@ -509,6 +700,13 @@ footer{background:var(--dk);border-top:1px solid var(--w06);padding:48px 24px;te
       <span class="member-tag">PERFORMANCE</span>
     </div>
   </div>
+</div>
+
+<!-- WAVE DIVIDER -->
+<div class="wave-divider">
+  <svg viewBox="0 0 1200 40" preserveAspectRatio="none" fill="none" stroke="#00e639" stroke-width="1.5" opacity=".25">
+    <path d="M0,20 Q150,0 300,20 Q450,40 600,20 Q750,0 900,20 Q1050,40 1200,20"/>
+  </svg>
 </div>
 
 <!-- LOCAL IS FUN -->
@@ -537,36 +735,55 @@ footer{background:var(--dk);border-top:1px solid var(--w06);padding:48px 24px;te
   </div>
 </section>
 
+<!-- GREEN HR DIVIDER -->
+<hr class="green-hr">
+
 <!-- LOCAL BRAND -->
 <section id="brand">
   <div class="inner">
-    <div class="label rv">local brand</div>
+    <div class="label rv">
+      <!-- Map pin icon -->
+      <svg class="svg-icon svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="#00e639" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      local brand
+    </div>
     <p class="about-mission rv rv-d1">지역주민과 MZ청년들의 연대로 지역 대표 브랜드를 함께 만들어 지속가능한 로컬 주도 성장을 목표로 합니다</p>
     <div class="brand-scroll rv rv-d2">
       <div class="brand-card">
-        <div class="bname-ko">정밀</div>
-        <div class="bsub">Korean Traditional Full-Course Meal</div>
-        <p>인천 그린벨트 재배 농산물 활용 한식 브랜드</p>
-        <p class="bstat">연매출 24억 / MASTER OF KOREAN CUISINE</p>
+        <div class="brand-card-top"></div>
+        <div class="brand-card-inner">
+          <div class="bname-ko">정밀</div>
+          <div class="bsub">Korean Traditional Full-Course Meal</div>
+          <p>인천 그린벨트 재배 농산물 활용 한식 브랜드</p>
+          <p class="bstat">연매출 24억 / MASTER OF KOREAN CUISINE</p>
+        </div>
       </div>
       <div class="brand-card">
-        <div class="bname-ko">방앗간</div>
-        <div class="bsub">Hongcheon Buckwheat Noodles</div>
-        <p>홍천 메밀을 활용한 막국수 브랜드<br>청년농부 한승재</p>
-        <p class="bstat">사회적 자본창출 30억 / 연매출 10억 / 연방문 8만명 / 투자유치 10억</p>
+        <div class="brand-card-top"></div>
+        <div class="brand-card-inner">
+          <div class="bname-ko">방앗간</div>
+          <div class="bsub">Hongcheon Buckwheat Noodles</div>
+          <p>홍천 메밀을 활용한 막국수 브랜드<br>청년농부 한승재</p>
+          <p class="bstat">사회적 자본창출 30억 / 연매출 10억 / 연방문 8만명 / 투자유치 10억</p>
+        </div>
       </div>
       <div class="brand-card">
-        <div class="bname-ko">강원돈</div>
-        <div class="bsub">Gangwon.逐 / Korean Pork Dish</div>
-        <p>강원도 돼지를 활용한 프리미엄 돈카츠 브랜드</p>
-        <p class="bstat">1 STORE 홍천 / 2 STORE 춘천 / BLACK MOUNTAIN GANGWON</p>
+        <div class="brand-card-top"></div>
+        <div class="brand-card-inner">
+          <div class="bname-ko">강원돈</div>
+          <div class="bsub">Gangwon.逐 / Korean Pork Dish</div>
+          <p>강원도 돼지를 활용한 프리미엄 돈카츠 브랜드</p>
+          <p class="bstat">1 STORE 홍천 / 2 STORE 춘천 / BLACK MOUNTAIN GANGWON</p>
+        </div>
       </div>
       <div class="brand-card">
-        <div class="bname-ko">몸빼</div>
-        <div class="bsub">MOMBBAE / Local Lifestyle Fashion</div>
-        <p>로컬 라이프스타일 패션 브랜드</p>
-        <p>HOODIE, SUNCAP, PANTS, GLOVES, SOCKS, T-SHIRT, BAG</p>
-        <p class="bstat">OFFLINE STORE / POP UP STORE</p>
+        <div class="brand-card-top"></div>
+        <div class="brand-card-inner">
+          <div class="bname-ko">몸빼</div>
+          <div class="bsub">MOMBBAE / Local Lifestyle Fashion</div>
+          <p>로컬 라이프스타일 패션 브랜드</p>
+          <p>HOODIE, SUNCAP, PANTS, GLOVES, SOCKS, T-SHIRT, BAG</p>
+          <p class="bstat">OFFLINE STORE / POP UP STORE</p>
+        </div>
       </div>
     </div>
     <div class="brand-summary rv rv-d3">
@@ -607,7 +824,11 @@ footer{background:var(--dk);border-top:1px solid var(--w06);padding:48px 24px;te
 <!-- SOCIAL OUTPUT -->
 <section id="social-out">
   <div class="inner">
-    <div class="label rv">local impact</div>
+    <div class="label rv">
+      <!-- Chart icon -->
+      <svg class="svg-icon svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="#00e639" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      local impact
+    </div>
     <h2 class="bout-big rv rv-d1">SOCIAL OUTPUT</h2>
     <div class="sout-grid">
       <div class="sout-stat rv">
@@ -632,61 +853,81 @@ footer{background:var(--dk);border-top:1px solid var(--w06);padding:48px 24px;te
 <!-- CONNECT THEORY -->
 <section id="connect">
   <div class="inner">
-    <div class="label rv">about upp</div>
+    <div class="label rv">
+      <!-- Heart/connection icon -->
+      <svg class="svg-icon svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="#00e639" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+      about upp
+    </div>
     <h2 class="wwd-title rv rv-d1" style="margin-bottom:60px;">CONNECT THEORY</h2>
 
-    <!-- A: 관계 단절 -->
+    <!-- A -->
     <div class="ct-block">
-      <h3 class="ct-title rv">지역 소멸 위기 &mdash; 본질적 문제는 '관계 단절'</h3>
-      <div class="diagram rv rv-d1">
+      <h3 class="ct-title rv">
+        <svg class="svg-icon svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="#00e639" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        지역 소멸 위기 &mdash; 본질적 문제는 '관계 단절'
+      </h3>
+      <div class="diagram glass rv rv-d1">
         <div class="diagram-row">
           <div class="diagram-box">도시</div>
-          <div class="diagram-arrow">&#10230;</div>
+          <div class="diagram-arrow-svg"><svg width="32" height="16" viewBox="0 0 32 16" fill="none" stroke="#00e639" stroke-width="2"><line x1="0" y1="8" x2="28" y2="8"/><polyline points="24,3 29,8 24,13"/></svg></div>
           <div class="diagram-box" style="border-color:#ff2040;color:#ff2040;">DISCONNECTED</div>
-          <div class="diagram-arrow">&#10230;</div>
+          <div class="diagram-arrow-svg"><svg width="32" height="16" viewBox="0 0 32 16" fill="none" stroke="#00e639" stroke-width="2"><line x1="0" y1="8" x2="28" y2="8"/><polyline points="24,3 29,8 24,13"/></svg></div>
           <div class="diagram-box">로컬</div>
         </div>
         <div class="diagram-row" style="margin-top:20px;">
           <div class="diagram-box">청년</div>
-          <div class="diagram-arrow">&#10230;</div>
+          <div class="diagram-arrow-svg"><svg width="32" height="16" viewBox="0 0 32 16" fill="none" stroke="#00e639" stroke-width="2"><line x1="0" y1="8" x2="28" y2="8"/><polyline points="24,3 29,8 24,13"/></svg></div>
           <div class="diagram-box" style="border-color:#ff2040;color:#ff2040;">DISCONNECTED</div>
-          <div class="diagram-arrow">&#10230;</div>
+          <div class="diagram-arrow-svg"><svg width="32" height="16" viewBox="0 0 32 16" fill="none" stroke="#00e639" stroke-width="2"><line x1="0" y1="8" x2="28" y2="8"/><polyline points="24,3 29,8 24,13"/></svg></div>
           <div class="diagram-box">장년층</div>
         </div>
       </div>
     </div>
 
-    <!-- B: 소셜링 -->
+    <!-- B -->
     <div class="ct-block">
-      <h3 class="ct-title rv">소셜링을 통한 관계 에너지 획득</h3>
-      <div class="diagram rv rv-d1">
+      <h3 class="ct-title rv">
+        <svg class="svg-icon svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="#00e639" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+        소셜링을 통한 관계 에너지 획득
+      </h3>
+      <div class="diagram glass rv rv-d1">
         <div class="diagram-row">
           <div class="diagram-box green">SOCIALRING</div>
-          <div class="diagram-arrow">&#10230;</div>
-          <div class="diagram-box">사람 &#8596; 사람</div>
-          <div class="diagram-arrow">&#10230;</div>
+          <div class="diagram-arrow-svg"><svg width="32" height="16" viewBox="0 0 32 16" fill="none" stroke="#00e639" stroke-width="2"><line x1="0" y1="8" x2="28" y2="8"/><polyline points="24,3 29,8 24,13"/></svg></div>
+          <div class="diagram-box">사람 &harr; 사람</div>
+          <div class="diagram-arrow-svg"><svg width="32" height="16" viewBox="0 0 32 16" fill="none" stroke="#00e639" stroke-width="2"><line x1="0" y1="8" x2="28" y2="8"/><polyline points="24,3 29,8 24,13"/></svg></div>
           <div class="diagram-box green">관계 에너지</div>
-          <div class="diagram-arrow">&#10230;</div>
+          <div class="diagram-arrow-svg"><svg width="32" height="16" viewBox="0 0 32 16" fill="none" stroke="#00e639" stroke-width="2"><line x1="0" y1="8" x2="28" y2="8"/><polyline points="24,3 29,8 24,13"/></svg></div>
           <div class="diagram-box">행복의 필수 재화<br><small style="color:var(--g);">사회적 자본의 핵심</small></div>
         </div>
       </div>
     </div>
 
-    <!-- C: MXZ -->
+    <!-- C -->
     <div class="ct-block">
-      <h3 class="ct-title rv">사회연대경제모델: MXZ 프로젝트</h3>
-      <div class="tri-diagram rv rv-d1">
-        <div class="tri-top">
+      <h3 class="ct-title rv">
+        <svg class="svg-icon svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="#00e639" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        사회연대경제모델: MXZ 프로젝트
+      </h3>
+      <div class="tri-diagram rv rv-d1" style="position:relative;">
+        <!-- Animated connecting lines -->
+        <svg class="connect-lines" width="100%" height="100%" style="position:absolute;inset:0;">
+          <line x1="50%" y1="25%" x2="35%" y2="75%" />
+          <line x1="50%" y1="25%" x2="65%" y2="75%" />
+          <line x1="35%" y1="80%" x2="65%" y2="80%" />
+          <line x1="50%" y1="25%" x2="50%" y2="50%" />
+        </svg>
+        <div class="tri-top" style="position:relative;z-index:1;">
           <div class="tri-node">
             <div class="tn-title">청년</div>
             <div class="tn-sub">IDEA / PLANNING</div>
           </div>
         </div>
-        <div style="text-align:center;">
+        <div style="text-align:center;position:relative;z-index:1;">
           <div class="tri-center">UPPTOWN</div>
           <div class="tri-center-sub" style="margin-top:4px;color:var(--w5);font-size:11px;">TRANSLATE / CONNECT / PLAN</div>
         </div>
-        <div class="tri-bottom">
+        <div class="tri-bottom" style="position:relative;z-index:1;">
           <div class="tri-node">
             <div class="tn-title">주민</div>
             <div class="tn-sub">SKILL / DNA</div>
@@ -699,9 +940,12 @@ footer{background:var(--dk);border-top:1px solid var(--w06);padding:48px 24px;te
       </div>
     </div>
 
-    <!-- D: CLYN -->
+    <!-- D -->
     <div class="ct-block">
-      <h3 class="ct-title rv">CLYN 관계 연결 모델</h3>
+      <h3 class="ct-title rv">
+        <svg class="svg-icon svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="#00e639" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+        CLYN 관계 연결 모델
+      </h3>
       <div class="clyn-grid rv rv-d1">
         <div class="clyn-card">
           <div class="cc-code">CL-R</div>
@@ -725,10 +969,17 @@ footer{background:var(--dk);border-top:1px solid var(--w06);padding:48px 24px;te
   </div>
 </section>
 
+<!-- GREEN HR DIVIDER -->
+<hr class="green-hr">
+
 <!-- 34+ CREW -->
 <section id="crew">
   <div class="inner">
-    <h2 class="crew-title rv">34+ CREW</h2>
+    <h2 class="crew-title rv">
+      <!-- People/group icon -->
+      <svg class="svg-icon svg-icon-lg" viewBox="0 0 24 24" fill="none" stroke="#00e639" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+      34+ CREW
+    </h2>
     <p class="crew-sub rv rv-d1">34+ 명의 CREW가 함께합니다</p>
     <div class="crew-roles rv rv-d2">
       <span class="crew-role">PD</span>
@@ -739,16 +990,16 @@ footer{background:var(--dk);border-top:1px solid var(--w06);padding:48px 24px;te
     </div>
     <div class="label rv">main crew</div>
     <div class="crew-grid" style="margin-top:16px;">
-      <div class="crew-card rv"><div class="crew-avatar">D</div><div class="cn">DOONG DOONG</div><div class="mbti">ENTP</div></div>
-      <div class="crew-card rv"><div class="crew-avatar">J</div><div class="cn">JJO JJO</div><div class="mbti">ENFP</div></div>
-      <div class="crew-card rv"><div class="crew-avatar">M</div><div class="cn">MUGUJOY</div><div class="mbti">ESFP</div></div>
-      <div class="crew-card rv"><div class="crew-avatar">B</div><div class="cn">BYEOL YEE</div><div class="mbti">ESTP</div></div>
-      <div class="crew-card rv"><div class="crew-avatar">B</div><div class="cn">BO BO</div><div class="mbti">ISTP</div></div>
-      <div class="crew-card rv"><div class="crew-avatar">B</div><div class="cn">BBOOM BBOOM</div><div class="mbti">ESFJ</div></div>
-      <div class="crew-card rv"><div class="crew-avatar">G</div><div class="cn">GAM JA</div><div class="mbti">ISFP</div></div>
-      <div class="crew-card rv"><div class="crew-avatar">C</div><div class="cn">COL SOE</div><div class="mbti">ISTJ</div></div>
-      <div class="crew-card rv"><div class="crew-avatar">K</div><div class="cn">KWAKIE D</div><div class="mbti">ISG</div></div>
-      <div class="crew-card rv"><div class="crew-avatar">J</div><div class="cn">JOY</div><div class="mbti">ENFJ</div></div>
+      <div class="crew-card tilt-card rv"><div class="crew-avatar">D</div><div class="cn">DOONG DOONG</div><div class="mbti">ENTP</div></div>
+      <div class="crew-card tilt-card rv"><div class="crew-avatar">J</div><div class="cn">JJO JJO</div><div class="mbti">ENFP</div></div>
+      <div class="crew-card tilt-card rv"><div class="crew-avatar">M</div><div class="cn">MUGUJOY</div><div class="mbti">ESFP</div></div>
+      <div class="crew-card tilt-card rv"><div class="crew-avatar">B</div><div class="cn">BYEOL YEE</div><div class="mbti">ESTP</div></div>
+      <div class="crew-card tilt-card rv"><div class="crew-avatar">B</div><div class="cn">BO BO</div><div class="mbti">ISTP</div></div>
+      <div class="crew-card tilt-card rv"><div class="crew-avatar">B</div><div class="cn">BBOOM BBOOM</div><div class="mbti">ESFJ</div></div>
+      <div class="crew-card tilt-card rv"><div class="crew-avatar">G</div><div class="cn">GAM JA</div><div class="mbti">ISFP</div></div>
+      <div class="crew-card tilt-card rv"><div class="crew-avatar">C</div><div class="cn">COL SOE</div><div class="mbti">ISTJ</div></div>
+      <div class="crew-card tilt-card rv"><div class="crew-avatar">K</div><div class="cn">KWAKIE D</div><div class="mbti">ISG</div></div>
+      <div class="crew-card tilt-card rv"><div class="crew-avatar">J</div><div class="cn">JOY</div><div class="mbti">ENFJ</div></div>
     </div>
     <div class="label rv" style="margin-top:40px;">all crew</div>
     <div class="allcrew rv rv-d1" style="margin-top:12px;">
@@ -758,29 +1009,48 @@ footer{background:var(--dk);border-top:1px solid var(--w06);padding:48px 24px;te
   </div>
 </section>
 
+<!-- WAVE DIVIDER -->
+<div class="wave-divider">
+  <svg viewBox="0 0 1200 40" preserveAspectRatio="none" fill="none" stroke="#00e639" stroke-width="1.5" opacity=".25">
+    <path d="M0,20 Q150,0 300,20 Q450,40 600,20 Q750,0 900,20 Q1050,40 1200,20"/>
+  </svg>
+</div>
+
 <!-- AWARDS -->
 <section id="awards">
   <div class="inner">
-    <div class="label rv">only.1 local entertainment</div>
+    <div class="label rv">
+      <!-- Trophy icon -->
+      <svg class="svg-icon svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="#00e639" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 010-5H6"/><path d="M18 9h1.5a2.5 2.5 0 000-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0012 0V2z"/></svg>
+      only.1 local entertainment
+    </div>
     <h2 class="bout-big rv rv-d1">AWARDS</h2>
     <div class="award-grid">
-      <div class="award-card rv">
-        <div class="award-icon">&#127942;</div>
+      <div class="award-card tilt-card rv">
+        <div class="award-icon">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#c9a835" stroke-width="1.5"><path d="M6 9H4.5a2.5 2.5 0 010-5H6"/><path d="M18 9h1.5a2.5 2.5 0 000-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0012 0V2z"/></svg>
+        </div>
         <h4>대통령 청년타운홀</h4>
         <p>JTBC</p>
       </div>
-      <div class="award-card rv rv-d1">
-        <div class="award-icon">&#127897;</div>
+      <div class="award-card tilt-card rv rv-d1">
+        <div class="award-icon">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#c9a835" stroke-width="1.5"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+        </div>
         <h4>로컬혁신 우수사례 강연</h4>
         <p>Local Innovation</p>
       </div>
-      <div class="award-card rv rv-d2">
-        <div class="award-icon">&#127941;</div>
+      <div class="award-card tilt-card rv rv-d2">
+        <div class="award-icon">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#c9a835" stroke-width="1.5"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
+        </div>
         <h4>행정안전부 장관상</h4>
         <p>Minister of the Interior</p>
       </div>
-      <div class="award-card rv rv-d3">
-        <div class="award-icon">&#127941;</div>
+      <div class="award-card tilt-card rv rv-d3">
+        <div class="award-icon">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#c9a835" stroke-width="1.5"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
+        </div>
         <h4>농림축산식품부 장관상</h4>
         <p>Minister of Agriculture</p>
       </div>
@@ -788,36 +1058,75 @@ footer{background:var(--dk);border-top:1px solid var(--w06);padding:48px 24px;te
   </div>
 </section>
 
+<!-- GREEN HR DIVIDER -->
+<hr class="green-hr">
+
 <!-- MEDIA -->
 <section id="media">
   <div class="inner">
-    <div class="label rv">no.1 로컬 엔터테인먼트</div>
+    <div class="label rv">
+      <!-- TV/monitor icon -->
+      <svg class="svg-icon svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="#00e639" stroke-width="2"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/></svg>
+      no.1 로컬 엔터테인먼트
+    </div>
     <p class="about-mission rv rv-d1">MZ들이 사랑하는 NO.1 로컬 엔터테인먼트</p>
     <div class="media-grid">
       <div class="media-card rv">
-        <h4>폭스클럽</h4>
+        <h4>
+          <svg class="svg-icon svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="#00e639" stroke-width="2" style="opacity:.5"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/></svg>
+          폭스클럽
+        </h4>
         <p>FOX CLUB</p>
       </div>
       <div class="media-card rv rv-d1">
-        <h4>트와이스 지효 [세입자]</h4>
+        <h4>
+          <svg class="svg-icon svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="#00e639" stroke-width="2" style="opacity:.5"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/></svg>
+          트와이스 지효 [세입자]
+        </h4>
         <p>TWICE JIHYO</p>
       </div>
       <div class="media-card rv rv-d2">
-        <h4>인피니트 성규 [투어요정]</h4>
+        <h4>
+          <svg class="svg-icon svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="#00e639" stroke-width="2" style="opacity:.5"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/></svg>
+          인피니트 성규 [투어요정]
+        </h4>
         <p>INFINITE SUNGGYU</p>
       </div>
       <div class="media-card rv rv-d3">
-        <h4>KBS 아침마당</h4>
+        <h4>
+          <svg class="svg-icon svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="#00e639" stroke-width="2" style="opacity:.5"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/></svg>
+          KBS 아침마당
+        </h4>
         <p>KBS MORNING</p>
       </div>
     </div>
   </div>
 </section>
 
+<!-- ZIGZAG DIVIDER -->
+<div class="zigzag-divider">
+  <svg viewBox="0 0 1200 20" preserveAspectRatio="none" fill="none" stroke="#00e639" stroke-width="1" opacity=".3">
+    <polyline points="0,10 30,2 60,18 90,2 120,18 150,2 180,18 210,2 240,18 270,2 300,18 330,2 360,18 390,2 420,18 450,2 480,18 510,2 540,18 570,2 600,18 630,2 660,18 690,2 720,18 750,2 780,18 810,2 840,18 870,2 900,18 930,2 960,18 990,2 1020,18 1050,2 1080,18 1110,2 1140,18 1170,2 1200,10"/>
+  </svg>
+</div>
+
 <!-- VISION -->
 <section id="vision">
+  <!-- Background building SVG decoration -->
+  <svg class="vision-bg-svg" width="800" height="400" viewBox="0 0 800 400" fill="none" stroke="white" stroke-width="0.5">
+    <rect x="50" y="100" width="80" height="300"/><rect x="55" y="110" width="15" height="20"/><rect x="75" y="110" width="15" height="20"/><rect x="95" y="110" width="15" height="20"/><rect x="55" y="140" width="15" height="20"/><rect x="75" y="140" width="15" height="20"/><rect x="95" y="140" width="15" height="20"/><rect x="55" y="170" width="15" height="20"/><rect x="75" y="170" width="15" height="20"/><rect x="95" y="170" width="15" height="20"/>
+    <rect x="160" y="50" width="100" height="350"/><rect x="170" y="65" width="18" height="25"/><rect x="195" y="65" width="18" height="25"/><rect x="220" y="65" width="18" height="25"/><rect x="170" y="100" width="18" height="25"/><rect x="195" y="100" width="18" height="25"/><rect x="220" y="100" width="18" height="25"/><rect x="170" y="135" width="18" height="25"/><rect x="195" y="135" width="18" height="25"/><rect x="220" y="135" width="18" height="25"/>
+    <rect x="290" y="150" width="70" height="250"/><rect x="297" y="160" width="12" height="18"/><rect x="315" y="160" width="12" height="18"/><rect x="333" y="160" width="12" height="18"/><rect x="297" y="185" width="12" height="18"/><rect x="315" y="185" width="12" height="18"/><rect x="333" y="185" width="12" height="18"/>
+    <rect x="390" y="80" width="120" height="320"/><rect x="400" y="95" width="20" height="25"/><rect x="430" y="95" width="20" height="25"/><rect x="460" y="95" width="20" height="25"/><rect x="400" y="130" width="20" height="25"/><rect x="430" y="130" width="20" height="25"/><rect x="460" y="130" width="20" height="25"/><rect x="400" y="165" width="20" height="25"/><rect x="430" y="165" width="20" height="25"/><rect x="460" y="165" width="20" height="25"/>
+    <rect x="540" y="180" width="60" height="220"/><rect x="548" y="190" width="10" height="15"/><rect x="565" y="190" width="10" height="15"/><rect x="580" y="190" width="10" height="15"/>
+    <rect x="630" y="120" width="90" height="280"/><rect x="640" y="135" width="15" height="20"/><rect x="660" y="135" width="15" height="20"/><rect x="680" y="135" width="15" height="20"/><rect x="640" y="165" width="15" height="20"/><rect x="660" y="165" width="15" height="20"/><rect x="680" y="165" width="15" height="20"/>
+  </svg>
   <div class="inner">
-    <div class="label rv">vision</div>
+    <div class="label rv">
+      <!-- Building icon -->
+      <svg class="svg-icon svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="#00e639" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"/><path d="M9 22V12h6v10"/><path d="M8 6h.01M16 6h.01M12 6h.01M8 10h.01M16 10h.01M12 10h.01"/></svg>
+      vision
+    </div>
     <h2 class="vision-big rv rv-d1">LOCAL COMPLEX<br>CULTURAL TOWN</h2>
     <p class="vision-desc rv rv-d2">우리는 앞으로 로컬 복합 문화 타운을 만들 것입니다</p>
     <div class="vision-stats">
@@ -864,7 +1173,11 @@ footer{background:var(--dk);border-top:1px solid var(--w06);padding:48px 24px;te
 <!-- PRESS -->
 <section id="press">
   <div class="inner">
-    <div class="label rv">press</div>
+    <div class="label rv">
+      <!-- Newspaper icon -->
+      <svg class="svg-icon svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="#00e639" stroke-width="2"><path d="M4 22h16a2 2 0 002-2V4a2 2 0 00-2-2H8a2 2 0 00-2 2v16a2 2 0 01-2 2zm0 0a2 2 0 01-2-2v-9c0-1.1.9-2 2-2h2"/><line x1="10" y1="6" x2="18" y2="6"/><line x1="10" y1="10" x2="18" y2="10"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
+      press
+    </div>
     <h2 class="wwd-title rv rv-d1" style="margin-bottom:32px;">NEWS</h2>
     <div class="press-list rv rv-d2">
       <div class="press-item">
@@ -898,6 +1211,7 @@ footer{background:var(--dk);border-top:1px solid var(--w06);padding:48px 24px;te
 
 <!-- FOOTER -->
 <footer>
+  <div class="footer-green-line"></div>
   <div class="inner">
     <div class="footer-logo">UPPTOWN</div>
     <div class="footer-info">070.8064.9082 | 대표 이은석</div>
@@ -906,10 +1220,31 @@ footer{background:var(--dk);border-top:1px solid var(--w06);padding:48px 24px;te
 </footer>
 
 <script>
-// Scroll progress bar
+// Scroll progress bar + back to top + side nav
+const spbar=document.getElementById('spbar');
+const backTop=document.getElementById('backTop');
+const sideLinks=document.querySelectorAll('.side-nav a');
+const sections=document.querySelectorAll('section[id]');
+
 window.addEventListener('scroll',()=>{
   const h=document.documentElement.scrollHeight-window.innerHeight;
-  document.getElementById('spbar').style.width=(window.scrollY/h*100)+'%';
+  const pct=window.scrollY/h*100;
+  spbar.style.width=pct+'%';
+
+  // Back to top visibility
+  if(window.scrollY>600) backTop.classList.add('show');
+  else backTop.classList.remove('show');
+
+  // Side nav active state
+  let current='';
+  sections.forEach(s=>{
+    const top=s.offsetTop-300;
+    if(window.scrollY>=top) current=s.id;
+  });
+  sideLinks.forEach(l=>{
+    l.classList.remove('active');
+    if(l.getAttribute('href')==='#'+current) l.classList.add('active');
+  });
 });
 
 // Intersection Observer for reveal animations
@@ -943,6 +1278,50 @@ const countObs=new IntersectionObserver((entries)=>{
   });
 },{threshold:0.5});
 document.querySelectorAll('[data-count]').forEach(el=>countObs.observe(el));
+
+// Hero floating particles
+(function(){
+  const container=document.getElementById('heroParticles');
+  if(!container)return;
+  for(let i=0;i<30;i++){
+    const p=document.createElement('div');
+    p.className='particle';
+    const size=Math.random()*3+2;
+    p.style.width=size+'px';
+    p.style.height=size+'px';
+    p.style.left=Math.random()*100+'%';
+    p.style.top=Math.random()*100+'%';
+    p.style.setProperty('--dx',(Math.random()*200-100)+'px');
+    p.style.setProperty('--dy',(Math.random()*200-100)+'px');
+    p.style.animationDuration=(Math.random()*10+8)+'s';
+    p.style.animationDelay=(Math.random()*8)+'s';
+    container.appendChild(p);
+  }
+})();
+
+// Staggered animation for grid items
+const staggerObs=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const cards=e.target.querySelectorAll('.tilt-card,.crew-card,.award-card,.stat-card,.biz4-card,.media-card');
+      cards.forEach((c,i)=>{
+        c.style.transitionDelay=(i*0.08)+'s';
+      });
+      staggerObs.unobserve(e.target);
+    }
+  });
+},{threshold:0.1});
+document.querySelectorAll('.how-grid,.crew-grid,.award-grid,.stats-grid,.biz4-grid,.media-grid').forEach(g=>staggerObs.observe(g));
+
+// Parallax-like subtle scroll speed difference
+window.addEventListener('scroll',()=>{
+  const scrolled=window.scrollY;
+  document.querySelectorAll('.team-bg-text').forEach(el=>{
+    const rect=el.parentElement.getBoundingClientRect();
+    const speed=0.15;
+    el.style.transform='translate(-50%,-50%) translateY('+(rect.top*speed)+'px)';
+  });
+});
 </script>
 </body>
 </html>
