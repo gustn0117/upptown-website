@@ -38,14 +38,6 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:9997;
 background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(255,255,255,.05) 2px,rgba(255,255,255,.05) 4px);
 }
 
-/* ========== SIDE NAV ========== */
-.side-nav{position:fixed;right:20px;top:50%;transform:translateY(-50%);z-index:9997;display:flex;flex-direction:column;gap:12px;align-items:center;}
-.side-nav a{display:block;width:10px;height:10px;border-radius:50%;border:1px solid var(--w15);background:transparent;transition:all .3s ease;position:relative;}
-.side-nav a.active{background:var(--g);border-color:var(--g);box-shadow:var(--glow-sm);}
-.side-nav a:hover{border-color:var(--g);}
-.side-nav a::before{content:attr(data-label);position:absolute;right:20px;top:50%;transform:translateY(-50%);font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:2px;color:var(--g);opacity:0;transition:opacity .3s;white-space:nowrap;pointer-events:none;}
-.side-nav a:hover::before{opacity:1;}
-@media(max-width:768px){.side-nav{display:none;}}
 
 /* ========== BACK TO TOP ========== */
 .back-top{position:fixed;bottom:32px;right:32px;z-index:9997;width:44px;height:44px;border-radius:50%;border:1px solid var(--g);background:rgba(0,230,57,.1);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:all .4s ease;cursor:pointer;}
@@ -606,24 +598,6 @@ footer{background:var(--dk);padding:80px 24px 48px;text-align:center;position:re
   <a href="#contact" onclick="closeMobile()">CONTACT</a>
 </div>
 
-<!-- Side Navigation -->
-<nav class="side-nav" id="sideNav">
-  <a href="#hero" data-label="HERO" class="active"></a>
-  <a href="#about" data-label="ABOUT"></a>
-  <a href="#what-le" data-label="LOCAL ENT"></a>
-  <a href="#how" data-label="HOW"></a>
-  <a href="#contents" data-label="CONTENTS"></a>
-  <a href="#biz4" data-label="BUSINESS"></a>
-  <a href="#fun" data-label="FUN"></a>
-  <a href="#brand" data-label="BRAND"></a>
-  <a href="#connect" data-label="CONNECT"></a>
-  <a href="#crew" data-label="CREW"></a>
-  <a href="#awards" data-label="AWARDS"></a>
-  <a href="#media" data-label="MEDIA"></a>
-  <a href="#vision" data-label="VISION"></a>
-  <a href="#press" data-label="PRESS"></a>
-  <a href="#contact" data-label="CONTACT"></a>
-</nav>
 
 <!-- Back to Top -->
 <button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">
@@ -1431,7 +1405,6 @@ const headerLinks=document.querySelectorAll('.site-header nav a');
 // Scroll progress bar + back to top + side nav + parallax
 const spbar=document.getElementById('spbar');
 const backTop=document.getElementById('backTop');
-const sideLinks=document.querySelectorAll('.side-nav a');
 const sections=document.querySelectorAll('section[id]');
 
 window.addEventListener('scroll',()=>{
@@ -1439,24 +1412,12 @@ window.addEventListener('scroll',()=>{
   const pct=window.scrollY/h*100;
   spbar.style.width=pct+'%';
 
-  // Back to top visibility
   if(window.scrollY>600){backTop.classList.add('show');siteHeader.classList.add('scrolled');}
   else{backTop.classList.remove('show');siteHeader.classList.remove('scrolled');}
-  // Header nav active state
+
   let currentSection='';
   sections.forEach(s=>{if(window.scrollY>=s.offsetTop-200)currentSection=s.id;});
   headerLinks.forEach(a=>{a.classList.remove('active');if(a.getAttribute('href')==='#'+currentSection)a.classList.add('active');});
-
-  // Side nav active state
-  let current='';
-  sections.forEach(s=>{
-    const top=s.offsetTop-300;
-    if(window.scrollY>=top) current=s.id;
-  });
-  sideLinks.forEach(l=>{
-    l.classList.remove('active');
-    if(l.getAttribute('href')==='#'+current) l.classList.add('active');
-  });
 });
 
 // Intersection Observer for reveal animations
