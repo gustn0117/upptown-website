@@ -10,605 +10,147 @@
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{
   --g:#00e639;--gb:#00ff41;--dk:#090909;--d1:#111;--d2:#1a1a1a;
-  --w:#fff;--w5:rgba(255,255,255,.75);--w15:rgba(255,255,255,.15);--w06:rgba(255,255,255,.06);
-  --mx:1200px;--sp:clamp(100px,10vw,180px);
-  --glow:0 0 20px rgba(0,230,57,.4),0 0 40px rgba(0,230,57,.2);
-  --glow-sm:0 0 10px rgba(0,230,57,.3);
-  --pink:#00e639;--gold:#ffd700;
+  --w:#fff;--w7:rgba(255,255,255,.7);--w5:rgba(255,255,255,.5);--w15:rgba(255,255,255,.15);--w06:rgba(255,255,255,.06);
+  --mx:1200px;--sp:clamp(80px,8vw,140px);
 }
-@property --gradient-angle{syntax:'<angle>';initial-value:0deg;inherits:false;}
-@keyframes rotateGradient{to{--gradient-angle:360deg;}}
-
 html{scroll-behavior:smooth;}
 body{font-family:'Noto Sans KR',sans-serif;background:var(--dk);color:var(--w);overflow-x:hidden;line-height:1.6;}
 a{color:inherit;text-decoration:none;}
-.os{font-family:'Oswald',sans-serif;}
-.bn{font-family:'Bebas Neue',sans-serif;}
+img{max-width:100%;display:block;}
 
-/* Scroll progress */
-.spbar{position:fixed;top:0;left:0;width:0%;height:3px;background:var(--g);z-index:9999;box-shadow:var(--glow);}
+/* ===== SCROLL PROGRESS ===== */
+.spbar{position:fixed;top:0;left:0;width:0%;height:3px;background:var(--g);z-index:9999;box-shadow:0 0 20px rgba(0,230,57,.4);}
 
-/* Noise overlay */
-body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9998;opacity:.04;
-background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-background-size:128px 128px;}
-
-/* Scanline overlay */
-body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:9997;opacity:.03;
-background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(255,255,255,.05) 2px,rgba(255,255,255,.05) 4px);
-}
-
-
-/* ========== BACK TO TOP ========== */
-.back-top{position:fixed;bottom:32px;right:32px;z-index:9997;width:44px;height:44px;border-radius:50%;border:1px solid var(--g);background:rgba(0,230,57,.1);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:all .4s ease;cursor:pointer;}
-.back-top.show{opacity:1;pointer-events:auto;}
-.back-top:hover{background:var(--g);box-shadow:var(--glow);transform:scale(1.1) rotate(-5deg);}
-.back-top:hover svg{stroke:var(--dk);}
-.back-top svg{stroke:var(--g);transition:stroke .3s;}
-
-/* ========== INLINE SVG ICONS ========== */
-.svg-icon{display:inline-block;vertical-align:middle;flex-shrink:0;}
-.svg-icon-sm{width:24px;height:24px;}
-.svg-icon-md{width:32px;height:32px;}
-.svg-icon-lg{width:48px;height:48px;}
-
-/* ========== STARBURST ========== */
-.starburst{display:inline-block;margin-right:12px;vertical-align:middle;animation:starPulse 2s ease-in-out infinite;}
-@keyframes starPulse{0%,100%{opacity:.7;transform:scale(1);}50%{opacity:1;transform:scale(1.15);}}
-
-/* ========== FLOATING PARTICLES ========== */
-.particles{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:1;}
-.particle{position:absolute;width:4px;height:4px;background:var(--g);border-radius:50%;opacity:.4;animation:floatParticle linear infinite;}
-@keyframes floatParticle{
-  0%{transform:translate(0,0);opacity:0;}
-  10%{opacity:.4;}
-  90%{opacity:.4;}
-  100%{transform:translate(var(--dx),var(--dy));opacity:0;}
-}
-
-/* ========== REVEAL ANIMATIONS ========== */
-.rv{opacity:0;transform:translateY(40px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);}
-.rv.vis{opacity:1;transform:translateY(0);}
-.rv-d1{transition-delay:.1s}.rv-d2{transition-delay:.2s}.rv-d3{transition-delay:.3s}.rv-d4{transition-delay:.4s}
-.rv-d5{transition-delay:.5s}.rv-d6{transition-delay:.6s}.rv-d7{transition-delay:.7s}
-
-/* ========== SPLIT TEXT REVEAL ========== */
-.split-text .char{display:inline-block;opacity:0;transform:translateY(30px);transition:opacity .4s ease,transform .4s ease;}
-.split-text.vis .char{opacity:1;transform:translateY(0);}
-
-/* ========== SECTION SHARED ========== */
-section{padding:var(--sp) 24px;position:relative;}
-.inner{max-width:var(--mx);margin:0 auto;}
-.label{font-family:'Oswald',sans-serif;font-size:clamp(11px,1.2vw,13px);letter-spacing:4px;text-transform:uppercase;color:var(--g);margin-bottom:16px;display:flex;align-items:center;gap:8px;text-shadow:var(--glow-sm);}
-
-/* ========== GLASSMORPHISM CARD ========== */
-.glass{background:rgba(255,255,255,.03);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.08);}
-
-/* ========== ANIMATED GRADIENT BORDER ========== */
-.gradient-border{position:relative;overflow:hidden;}
-.gradient-border::before{content:'';position:absolute;inset:-2px;background:conic-gradient(from var(--gradient-angle),var(--g),transparent,var(--g),transparent,var(--g));opacity:0;transition:opacity .4s;animation:rotateGradient 4s linear infinite;z-index:-1;border-radius:inherit;}
-.gradient-border:hover::before{opacity:1;}
-.gradient-border::after{content:'';position:absolute;inset:1px;background:var(--d1);border-radius:inherit;z-index:-1;}
-
-/* ========== CARD TILT ========== */
-.tilt-card{transition:transform .4s ease,box-shadow .4s ease;perspective:800px;}
-.tilt-card:hover{transform:perspective(800px) rotateX(2deg) rotateY(-2deg) translateY(-6px) scale(1.02);box-shadow:0 20px 40px rgba(0,0,0,.3),0 0 30px rgba(0,230,57,.08);}
-
-/* ========== NEON GLOW ========== */
-.neon{text-shadow:0 0 10px rgba(0,230,57,.5),0 0 20px rgba(0,230,57,.3),0 0 40px rgba(0,230,57,.15);}
-
-/* ========== GRADIENT TEXT ========== */
-.grad-text{background:linear-gradient(135deg,var(--g),var(--gb),#80ff80);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-
-/* ========== PULSING DOT ========== */
-.pulse-dot{display:inline-block;width:8px;height:8px;background:var(--g);border-radius:50%;position:relative;margin-right:12px;}
-.pulse-dot::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:1px solid var(--g);animation:pulseDot 2s ease-out infinite;opacity:0;}
-@keyframes pulseDot{0%{transform:scale(.5);opacity:.8}100%{transform:scale(2);opacity:0}}
-
-/* ========== GREEN HR DIVIDER ========== */
-.green-hr{height:1px;border:none;background:linear-gradient(90deg,transparent,var(--g),var(--g),var(--g),transparent);margin:0;opacity:.5;}
-
-/* ========== SVG WAVE DIVIDER ========== */
-.wave-divider{width:100%;overflow:hidden;line-height:0;padding:0;}
-.wave-divider svg{width:100%;height:40px;}
-
-/* ========== SECTION MARKER ========== */
-.section-marker{position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:60px;background:linear-gradient(to bottom,transparent,var(--g),transparent);opacity:.3;}
-
-/* ========== VERTICAL SIDE TEXT ========== */
-.side-text{position:absolute;font-family:'Bebas Neue',sans-serif;font-size:12px;letter-spacing:6px;color:var(--w15);writing-mode:vertical-rl;text-orientation:mixed;transform:rotate(180deg);right:20px;top:50%;z-index:1;}
-
-/* ========== CHROMATIC TEXT ========== */
-.chromatic{text-shadow:2px 0 var(--g),-2px 0 #00bfff,0 0 0 var(--w);}
-
-/* ========== STAMP / BADGE ========== */
-.stamp-badge{display:inline-block;padding:8px 20px;border:3px solid var(--g);border-radius:0;font-family:'Bebas Neue',sans-serif;font-size:clamp(14px,2vw,20px);letter-spacing:4px;color:var(--g);transform:rotate(-8deg);position:relative;text-shadow:var(--glow-sm);}
-.stamp-badge::before{content:'';position:absolute;inset:3px;border:1px solid var(--g);opacity:.4;}
-
-/* ========== TAPE LABEL ========== */
-.tape-label{display:inline-block;padding:6px 24px;background:var(--g);color:var(--dk);font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:3px;text-transform:uppercase;transform:rotate(-2deg);clip-path:polygon(2% 0%,98% 3%,100% 97%,1% 100%);}
-
-/* ========== CORNER MARKERS ========== */
-.corner-marks{position:relative;}
-.corner-marks::before,.corner-marks::after{content:'';position:absolute;width:20px;height:20px;border-color:var(--g);border-style:solid;opacity:.4;pointer-events:none;}
-.corner-marks::before{top:-4px;left:-4px;border-width:2px 0 0 2px;}
-.corner-marks::after{bottom:-4px;right:-4px;border-width:0 2px 2px 0;}
-
-/* ========== HALFTONE BG ========== */
-.halftone-bg{position:relative;}
-.halftone-bg::after{content:'';position:absolute;inset:0;pointer-events:none;opacity:.03;
-background-image:radial-gradient(circle,var(--g) 1px,transparent 1px);
-background-size:6px 6px;}
-
-/* ========== BREATHING GLOW ========== */
-@keyframes breathGlow{0%,100%{box-shadow:0 0 30px rgba(0,230,57,.05)}50%{box-shadow:0 0 60px rgba(0,230,57,.12),0 0 100px rgba(0,230,57,.05)}}
-
-/* ========== 1. HERO ========== */
-#hero{position:relative;height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;}
-#hero video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.35;filter:hue-rotate(30deg) saturate(1.4) contrast(1.1);}
-#hero::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(9,9,9,.2),rgba(9,9,9,.85));z-index:1;}
-/* Scanlines on hero */
-#hero .hero-scanlines{position:absolute;inset:0;z-index:2;pointer-events:none;opacity:.06;
-background:repeating-linear-gradient(0deg,transparent,transparent 1px,rgba(0,230,57,.3) 1px,rgba(0,230,57,.3) 2px);}
-.hero-c{position:relative;z-index:3;text-align:center;width:100%;}
-/* ========== HEADER NAV ========== */
-.site-header{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:20px 36px;transition:background .4s,backdrop-filter .4s;}
-.site-header.scrolled{background:rgba(9,9,9,.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);}
-.site-header .logo{font-family:'Bebas Neue',sans-serif;font-size:clamp(20px,2.5vw,28px);letter-spacing:3px;color:var(--w);text-decoration:none;}
-.site-header nav{display:flex;gap:clamp(16px,3vw,36px);align-items:center;}
-.site-header nav a{font-family:'Oswald',sans-serif;font-size:clamp(11px,1.1vw,13px);letter-spacing:2px;text-transform:uppercase;color:var(--w5);text-decoration:none;transition:color .3s;position:relative;}
-.site-header nav a:hover,.site-header nav a.active{color:var(--w);}
-.site-header nav a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:var(--g);transition:width .3s;}
-.site-header nav a:hover::after,.site-header nav a.active::after{width:100%;}
-/* Mobile hamburger */
+/* ===== HEADER ===== */
+.hdr{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:20px 36px;transition:all .4s;}
+.hdr.scrolled{background:rgba(9,9,9,.92);backdrop-filter:blur(16px);}
+.hdr .logo{font-family:'Bebas Neue',sans-serif;font-size:clamp(20px,2.5vw,28px);letter-spacing:3px;}
+.hdr nav{display:flex;gap:clamp(16px,3vw,36px);}
+.hdr nav a{font-family:'Oswald',sans-serif;font-size:clamp(11px,1.1vw,13px);letter-spacing:2px;text-transform:uppercase;color:var(--w5);transition:color .3s;position:relative;}
+.hdr nav a:hover,.hdr nav a.active{color:var(--w);}
+.hdr nav a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:var(--g);transition:width .3s;}
+.hdr nav a:hover::after,.hdr nav a.active::after{width:100%;}
 .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;z-index:101;}
 .hamburger span{width:24px;height:2px;background:var(--w);transition:.3s;}
 .hamburger.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px);}
 .hamburger.open span:nth-child(2){opacity:0;}
 .hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px);}
-.mobile-menu{display:none;position:fixed;inset:0;background:rgba(9,9,9,.95);backdrop-filter:blur(20px);z-index:99;flex-direction:column;align-items:center;justify-content:center;gap:32px;}
-.mobile-menu.open{display:flex;}
-.mobile-menu a{font-family:'Oswald',sans-serif;font-size:24px;letter-spacing:4px;text-transform:uppercase;color:var(--w);text-decoration:none;transition:color .3s;}
-.mobile-menu a:hover{color:var(--g);}
-@media(max-width:768px){
-  .site-header nav{display:none;}
-  .hamburger{display:flex;}
-}
-.hero-top{display:none;}
-.hero-sub{display:none;}
-.hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(60px,15vw,200px);letter-spacing:clamp(4px,1vw,12px);line-height:.9;
-color:var(--w);
-text-shadow:4px 4px 0 rgba(0,230,57,.15),-2px -2px 0 rgba(255,0,102,.1);
-animation:glitch 3s infinite;}
-.hero-title-bg{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Bebas Neue',sans-serif;font-size:clamp(80px,20vw,280px);letter-spacing:20px;color:rgba(0,230,57,.04);white-space:nowrap;pointer-events:none;z-index:2;}
-.hero-sub2{font-family:'Oswald',sans-serif;font-size:clamp(13px,1.4vw,16px);letter-spacing:8px;color:var(--w5);margin-top:16px;}
-.scroll-ind{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);z-index:3;display:flex;flex-direction:column;align-items:center;gap:8px;animation:scrollBounce 2s ease-in-out infinite;}
-@keyframes scrollBounce{0%,100%{transform:translateX(-50%) translateY(0);}50%{transform:translateX(-50%) translateY(8px);}}
+.mob-menu{display:none;position:fixed;inset:0;background:rgba(9,9,9,.95);backdrop-filter:blur(20px);z-index:99;flex-direction:column;align-items:center;justify-content:center;gap:32px;}
+.mob-menu.open{display:flex;}
+.mob-menu a{font-family:'Oswald',sans-serif;font-size:24px;letter-spacing:4px;text-transform:uppercase;transition:color .3s;}
+.mob-menu a:hover{color:var(--g);}
+@media(max-width:768px){.hdr nav{display:none;}.hamburger{display:flex;}}
+
+/* ===== BACK TO TOP ===== */
+.btt{position:fixed;bottom:32px;right:32px;z-index:9997;width:44px;height:44px;border-radius:50%;border:1px solid var(--g);background:rgba(0,230,57,.08);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:all .4s;cursor:pointer;}
+.btt.show{opacity:1;pointer-events:auto;}
+.btt:hover{background:var(--g);box-shadow:0 0 20px rgba(0,230,57,.4);}
+.btt:hover svg{stroke:var(--dk);}
+.btt svg{stroke:var(--g);transition:stroke .3s;}
+
+/* ===== SECTION SHARED ===== */
+section{position:relative;}
+.inner{max-width:var(--mx);margin:0 auto;padding:0 24px;}
+.sec-pad{padding:var(--sp) 24px;}
+
+/* ===== FULL-BLEED IMAGE SECTION ===== */
+.hero-img-sec{position:relative;width:100%;overflow:hidden;}
+.hero-img-sec img{width:100%;display:block;}
+.hero-img-sec::after{content:'';position:absolute;bottom:0;left:0;right:0;height:120px;background:linear-gradient(transparent,var(--dk));pointer-events:none;}
+
+/* ===== HERO ===== */
+#hero{position:relative;height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+#hero video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.35;filter:saturate(1.3) contrast(1.1);}
+#hero::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(9,9,9,.1),rgba(9,9,9,.8));z-index:1;}
+.hero-c{position:relative;z-index:3;text-align:center;}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(60px,15vw,200px);letter-spacing:clamp(4px,1vw,12px);line-height:.9;text-shadow:4px 4px 0 rgba(0,230,57,.15);}
+.hero-sub{font-family:'Oswald',sans-serif;font-size:clamp(13px,1.4vw,16px);letter-spacing:8px;color:var(--w5);margin-top:16px;}
+.scroll-ind{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);z-index:3;display:flex;flex-direction:column;align-items:center;gap:8px;animation:bob 2s ease-in-out infinite;}
+@keyframes bob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
 .scroll-ind span{font-size:11px;letter-spacing:3px;color:var(--w5);font-family:'Oswald',sans-serif;}
 .scroll-ind .arrow{width:1px;height:40px;background:var(--w15);position:relative;overflow:hidden;}
-.scroll-ind .arrow::after{content:'';position:absolute;top:-100%;left:0;width:100%;height:100%;background:var(--g);animation:scrollDown 1.5s infinite;}
-@keyframes scrollDown{0%{top:-100%}100%{top:100%}}
-@keyframes glitch{0%,90%,100%{text-shadow:4px 4px 0 rgba(0,230,57,.15),-2px -2px 0 rgba(255,0,102,.1)}92%{text-shadow:-3px 0 var(--g),3px 0 var(--g)}94%{text-shadow:3px 0 var(--g),-3px 0 var(--g)}96%{text-shadow:-2px 3px var(--g),2px -3px var(--g)}98%{text-shadow:2px -2px var(--g),-2px 2px var(--g)}}
+.scroll-ind .arrow::after{content:'';position:absolute;top:-100%;left:0;width:100%;height:100%;background:var(--g);animation:arrowDown 1.5s infinite;}
+@keyframes arrowDown{0%{top:-100%}100%{top:100%}}
 
-/* ========== 2. ABOUT ========== */
-#about{background:var(--dk);position:relative;overflow:hidden;}
-#about .side-text{content:'ABOUT';right:20px;}
-.about-mission{font-size:clamp(16px,2vw,22px);line-height:1.9;font-weight:300;max-width:700px;color:var(--w);margin-bottom:60px;}
-.about-mission strong{color:var(--dk);font-weight:500;background:var(--g);padding:0 6px;display:inline;}
-.wwd-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,5vw,64px);letter-spacing:3px;margin-bottom:32px;-webkit-text-stroke:1px var(--w);color:transparent;}
-.tag-row{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:16px;}
-.tag{padding:10px 24px;border:2px solid var(--w15);border-radius:0;font-size:clamp(13px,1.3vw,15px);transition:all .3s ease;letter-spacing:1px;cursor:default;position:relative;overflow:hidden;
-background:rgba(0,230,57,.05);clip-path:polygon(4% 0%,100% 0%,96% 100%,0% 100%);}
-.tag::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,230,57,.2),rgba(255,0,102,.1));opacity:0;transition:opacity .3s;}
-.tag:hover{border-color:var(--g);color:var(--g);box-shadow:0 0 20px rgba(0,230,57,.15);transform:translateY(-3px) rotate(-1deg);}
-.tag:hover::before{opacity:1;}
-/* sticker tags alternate rotation */
-.tag:nth-child(odd){transform:rotate(1deg);}
-.tag:nth-child(even){transform:rotate(-1deg);}
-.tag:hover{transform:rotate(0deg) scale(1.05)!important;}
+/* ===== TEXT SECTIONS ===== */
+.label{font-family:'Oswald',sans-serif;font-size:clamp(11px,1.2vw,13px);letter-spacing:4px;text-transform:uppercase;color:var(--g);margin-bottom:16px;}
+.sec-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,6vw,72px);letter-spacing:3px;line-height:1.1;margin-bottom:16px;}
+.sec-desc{font-size:clamp(15px,1.6vw,20px);color:var(--w7);line-height:1.9;max-width:700px;margin-bottom:40px;}
+.sec-desc strong{color:var(--dk);background:var(--g);padding:0 6px;font-weight:500;}
 
-/* ========== 3. WHAT IS LOCAL ENTERTAINMENT ========== */
-#what-le{background:var(--d1);padding-top:var(--sp);padding-bottom:var(--sp);position:relative;overflow:hidden;}
-#what-le::after{content:'ENT';position:absolute;bottom:-30px;right:-20px;font-family:'Bebas Neue',sans-serif;font-size:clamp(100px,20vw,300px);color:rgba(255,255,255,.02);pointer-events:none;line-height:1;}
-.wle-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(32px,6vw,80px);letter-spacing:4px;line-height:1.1;
-text-shadow:3px 3px 0 rgba(0,230,57,.15),-1px -1px 0 rgba(255,0,102,.08);margin-bottom:12px;
--webkit-text-stroke:1px rgba(255,255,255,.2);color:transparent;}
-.wle-sub{font-size:clamp(14px,1.4vw,18px);color:var(--w5);margin-bottom:60px;}
-.kw-flow{position:relative;counter-reset:kwcount;padding-left:40px;}
-.kw-flow::before{content:'';position:absolute;left:40px;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--g),rgba(0,230,57,.2));}
-.kw-item{padding:32px 32px 32px 48px;position:relative;transition:all .3s ease;counter-increment:kwcount;margin-left:calc(var(--kw-offset,0) * 50px);}
-.kw-item:nth-child(1){--kw-offset:0;}
-.kw-item:nth-child(2){--kw-offset:1;}
-.kw-item:nth-child(3){--kw-offset:2;}
-.kw-item:nth-child(4){--kw-offset:0;}
-.kw-item::before{content:'0' counter(kwcount);position:absolute;left:-28px;top:50%;transform:translateY(-50%);font-family:'Bebas Neue',sans-serif;font-size:clamp(48px,6vw,80px);color:rgba(0,230,57,.07);line-height:1;pointer-events:none;}
-.kw-item::after{content:'';position:absolute;left:calc(-1 * var(--kw-offset,0) * 50px);top:50%;width:calc(var(--kw-offset,0) * 50px + 8px);height:2px;background:var(--g);opacity:.3;}
-.kw-item:hover{background:rgba(0,230,57,.03);transform:translateX(8px);}
-.kw-item .kw-en{font-family:'Bebas Neue',sans-serif;font-size:clamp(28px,3.5vw,48px);color:var(--w);letter-spacing:2px;}
-.kw-item .kw-ko{font-size:14px;color:rgba(255,255,255,.7);margin-top:8px;}
-.kw-item .kw-dot{position:absolute;top:50%;left:calc(-1 * var(--kw-offset,0) * 50px - 4px);width:10px;height:10px;background:var(--g);border-radius:50%;box-shadow:var(--glow-sm);transform:translateY(-50%);}
-/* Connecting dashed SVG paths */
-.kw-connector{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:0;}
-.kw-connector line{stroke:var(--g);stroke-width:1;opacity:.15;stroke-dasharray:6 4;animation:dashMove 2s linear infinite;}
-@media(max-width:768px){
-  .kw-item{margin-left:0!important;padding-left:60px;}
-  .kw-item::before{font-size:40px;left:5px;}
-}
+/* ===== TAG ROW ===== */
+.tags{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:32px;}
+.tag{padding:10px 24px;border:1px solid var(--w15);font-size:clamp(13px,1.3vw,15px);letter-spacing:1px;transition:all .3s;cursor:default;background:rgba(0,230,57,.04);}
+.tag:hover{border-color:var(--g);color:var(--g);transform:translateY(-3px);box-shadow:0 0 20px rgba(0,230,57,.12);}
 
-/* ========== 4. HOW IT WORKS ========== */
-#how{background:var(--dk);position:relative;overflow:hidden;}
-.how-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;margin-top:48px;}
-.how-card{position:relative;padding:48px 32px 40px;border:1px solid var(--w06);border-radius:0;overflow:hidden;transition:all .4s ease;background:rgba(255,255,255,.02);backdrop-filter:blur(5px);}
-.how-card::after{content:'';position:absolute;top:0;left:0;width:100%;height:3px;background:linear-gradient(90deg,var(--g),var(--g));transform:scaleX(0);transition:transform .4s;transform-origin:left;}
-.how-card:hover::after{transform:scaleX(1);}
-.how-card:hover{border-color:var(--g);transform:perspective(800px) rotateX(1deg) rotateY(-1deg) translateY(-8px);box-shadow:0 20px 40px rgba(0,0,0,.3),0 0 30px rgba(0,230,57,.1);}
-.how-num{font-family:'Bebas Neue',sans-serif;font-size:120px;position:absolute;top:-20px;right:16px;color:rgba(255,255,255,.03);line-height:1;}
-.how-card h3{font-family:'Oswald',sans-serif;font-size:clamp(18px,2vw,24px);letter-spacing:2px;margin-bottom:16px;color:var(--g);display:flex;align-items:center;gap:8px;}
-.how-card p{font-size:14px;color:var(--w5);line-height:1.8;}
-.how-card .pulse-dot{margin-right:0;}
+/* ===== STATS ROW ===== */
+.stats-row{display:flex;flex-wrap:wrap;gap:clamp(24px,5vw,64px);margin-top:40px;}
+.stat .num{font-family:'Bebas Neue',sans-serif;font-size:clamp(48px,7vw,80px);line-height:1;background:linear-gradient(135deg,var(--g),var(--gb));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.stat .txt{font-size:13px;color:var(--w5);margin-top:4px;}
 
-/* ========== 5. LOCAL CONTENTS (STATS) ========== */
-#contents{background:var(--d1);position:relative;overflow:hidden;}
-#contents::before{content:'DATA';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Bebas Neue',sans-serif;font-size:clamp(120px,25vw,400px);color:rgba(255,255,255,.015);pointer-events:none;}
-.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:32px;margin-top:48px;}
-.stat-card{text-align:left;padding:48px 28px;border:1px solid var(--w06);border-radius:0;transition:all .3s ease;position:relative;overflow:hidden;}
-.stat-card:nth-child(1){transform:rotate(-1deg);}
-.stat-card:nth-child(2){transform:rotate(0.5deg);margin-top:20px;}
-.stat-card:nth-child(3){transform:rotate(-0.5deg);margin-top:-10px;}
-.stat-card:nth-child(4){transform:rotate(1deg);margin-top:10px;}
-.stat-card::before{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--g),var(--g));transform:scaleX(0);transition:transform .4s ease;transform-origin:left;}
-.stat-card:hover::before{transform:scaleX(1);}
-.stat-card:hover{border-color:var(--g);box-shadow:0 0 30px rgba(0,230,57,.1);transform:rotate(0deg) translateY(-6px)!important;}
-.stat-num{font-family:'Bebas Neue',sans-serif;font-size:clamp(64px,9vw,120px);line-height:1;background:linear-gradient(135deg,var(--g),var(--gb),#80ff80);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-.stat-plus{font-family:'Oswald',sans-serif;font-size:clamp(24px,3vw,36px);background:linear-gradient(135deg,var(--g),var(--gb));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-.stat-en{font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:3px;color:var(--w5);margin-top:12px;text-transform:uppercase;}
-.stat-ko{font-size:13px;color:var(--w5);margin-top:4px;}
-.stat-underline{width:40px;height:2px;background:linear-gradient(90deg,var(--g),transparent);margin:8px 0 0;animation:underlinePulse 2s ease-in-out infinite;}
-@keyframes underlinePulse{0%,100%{width:40px;opacity:.5}50%{width:60px;opacity:1}}
+/* ===== MARQUEE ===== */
+.marquee{overflow:hidden;white-space:nowrap;padding:24px 0;border-top:1px solid var(--w06);border-bottom:1px solid var(--w06);-webkit-mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);}
+.marquee-inner{display:inline-block;animation:mscroll 12s linear infinite;font-family:'Bebas Neue',sans-serif;font-size:clamp(28px,4vw,56px);letter-spacing:10px;color:var(--w15);}
+@keyframes mscroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 
-/* ========== 6. BUSINESS 4 SECTION ========== */
-#biz4{background:var(--dk);position:relative;overflow:hidden;}
-.biz4-head{margin-bottom:48px;}
-.biz4-head .small{font-family:'Oswald',sans-serif;font-size:14px;letter-spacing:4px;color:var(--g);text-shadow:var(--glow-sm);}
-.biz4-head .big{font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,6vw,72px);letter-spacing:3px;line-height:1.1;}
-.biz4-grid{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto auto;gap:20px;}
-.biz4-card{position:relative;padding:48px 36px;background:linear-gradient(135deg,var(--d2),var(--d1));border:1px solid var(--w06);border-radius:0;overflow:hidden;transition:all .4s ease;min-height:220px;}
-.biz4-card:first-child{grid-row:span 2;min-height:460px;border-color:rgba(0,230,57,.2);}
-.biz4-card:nth-child(2){border-left:3px solid var(--g);}
-.biz4-card:nth-child(3){border-left:3px solid var(--gb);}
-.biz4-card:nth-child(4){border-left:3px solid var(--gold);}
-.biz4-card::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 10px,rgba(0,230,57,.03) 10px,rgba(0,230,57,.03) 20px);opacity:0;transition:opacity .4s;}
-.biz4-card:hover::before{opacity:1;}
-.biz4-card:hover{border-color:var(--g);box-shadow:0 0 40px rgba(0,230,57,.12);transform:scale(1.02);}
-.biz4-card .card-num{font-family:'Bebas Neue',sans-serif;font-size:clamp(80px,10vw,140px);position:absolute;top:-10px;right:20px;color:rgba(255,255,255,.03);line-height:1;}
-.biz4-card h3{font-family:'Bebas Neue',sans-serif;font-size:clamp(28px,3.5vw,44px);letter-spacing:3px;position:relative;z-index:1;}
-.biz4-card .ko{font-size:14px;color:var(--g);margin-top:8px;position:relative;z-index:1;}
+/* ===== BRAND CARDS ===== */
+.brand-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:32px;}
+.brand-card{position:relative;overflow:hidden;border:1px solid var(--w06);aspect-ratio:16/10;cursor:default;transition:all .4s;}
+.brand-card img{width:100%;height:100%;object-fit:cover;transition:transform .6s,filter .4s;filter:brightness(.9);}
+.brand-card:hover img{transform:scale(1.05);filter:brightness(1);}
+.brand-card::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.6),transparent 60%);pointer-events:none;}
+.brand-card .bc-info{position:absolute;bottom:0;left:0;right:0;padding:24px;z-index:1;}
+.brand-card .bc-name{font-family:'Bebas Neue',sans-serif;font-size:clamp(24px,3vw,40px);letter-spacing:2px;}
+.brand-card .bc-sub{font-size:13px;color:var(--g);font-family:'Oswald',sans-serif;letter-spacing:1px;}
 
-/* ========== 7. TEAM SECTIONS ========== */
-.team-section{padding:var(--sp) 24px;position:relative;overflow:hidden;}
-.team-section:nth-child(odd) .team-bg-pattern{background-image:radial-gradient(rgba(0,230,57,.06) 1px,transparent 1px);background-size:30px 30px;}
-.team-section:nth-child(even) .team-bg-pattern{background-image:linear-gradient(rgba(0,230,57,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,230,57,.04) 1px,transparent 1px);background-size:30px 30px;}
-.team-section:nth-child(odd){background:var(--d1);}
-.team-section:nth-child(even){background:var(--dk);}
-/* Background patterns */
-.team-section::before{content:'';position:absolute;inset:0;pointer-events:none;}
-#team-tour::before{background-image:radial-gradient(rgba(0,230,57,.06) 1px,transparent 1px);background-size:30px 30px;}
-#team-fnb::before{background-image:linear-gradient(rgba(0,230,57,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,230,57,.03) 1px,transparent 1px);background-size:40px 40px;}
-#team-lifestyle::before{background-image:radial-gradient(circle at 50% 50%,rgba(0,230,57,.04) 0,transparent 50%);background-size:60px 60px;}
-#team-artist::before{background-image:repeating-linear-gradient(45deg,transparent,transparent 20px,rgba(0,230,57,.02) 20px,rgba(0,230,57,.02) 21px);background-size:100% 100%;}
-.team-bg-text{font-family:'Bebas Neue',sans-serif;font-size:clamp(60px,15vw,200px);position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);white-space:nowrap;pointer-events:none;
--webkit-text-stroke:1px rgba(255,255,255,.03);color:transparent;letter-spacing:20px;}
-.team-label{font-family:'Oswald',sans-serif;font-size:clamp(11px,1.2vw,13px);letter-spacing:4px;color:var(--g);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
-.team-name{font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,7vw,80px);letter-spacing:4px;line-height:1;
--webkit-text-stroke:1px rgba(255,255,255,.15);color:transparent;
-text-shadow:none;margin-bottom:8px;}
-.team-desc{font-size:clamp(14px,1.4vw,18px);color:var(--w5);margin-bottom:8px;max-width:600px;}
-.team-tagline{font-size:15px;color:var(--w);font-weight:500;margin-bottom:32px;}
-.team-members{display:flex;flex-wrap:wrap;gap:12px;}
-.member-tag{padding:8px 20px;border:1px solid var(--w15);border-radius:0;font-family:'Oswald',sans-serif;font-size:13px;letter-spacing:2px;transition:all .3s ease;cursor:default;
-clip-path:polygon(3% 0%,100% 0%,97% 100%,0% 100%);background:rgba(0,230,57,.05);}
-.member-tag:nth-child(odd){transform:rotate(1deg);}
-.member-tag:nth-child(even){transform:rotate(-1.5deg);}
-.member-tag:hover{border-color:var(--g);color:var(--g);box-shadow:0 0 15px rgba(0,230,57,.15);transform:rotate(0) scale(1.05);}
+/* ===== CREW GRID ===== */
+.crew-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-top:24px;}
+.crew-card{text-align:center;padding:20px 12px;border:1px solid var(--w06);transition:all .3s;cursor:default;}
+.crew-card:hover{border-color:var(--g);transform:translateY(-4px);box-shadow:0 0 20px rgba(0,230,57,.1);}
+.crew-card img{width:64px;height:64px;border-radius:50%;object-fit:cover;margin:0 auto 10px;border:2px solid var(--w15);filter:grayscale(.3);transition:all .3s;}
+.crew-card:hover img{filter:grayscale(0);border-color:var(--g);}
+.crew-card .cn{font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:2px;margin-bottom:2px;}
+.crew-card .mbti{font-size:11px;color:var(--g);font-family:'Oswald',sans-serif;}
 
-/* ========== 8. LOCAL IS FUN ========== */
-#fun{background:var(--d2);text-align:center;position:relative;overflow:hidden;animation:breathGlow 6s ease-in-out infinite;}
-.fun-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(48px,10vw,140px);letter-spacing:4px;line-height:1;
--webkit-text-stroke:2px var(--g);color:transparent;margin-bottom:40px;
-text-shadow:4px 4px 0 rgba(255,0,102,.1);}
-.fun-stats{display:flex;justify-content:center;gap:clamp(24px,5vw,64px);flex-wrap:wrap;margin-bottom:32px;}
-.fun-stat .num{font-family:'Bebas Neue',sans-serif;font-size:clamp(32px,4vw,56px);background:linear-gradient(135deg,var(--g),var(--gb));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-.fun-stat .txt{font-size:13px;color:var(--w5);}
-.fun-desc{font-size:15px;color:var(--w5);max-width:500px;margin:0 auto;}
-/* Sparkle deco */
-.sparkle{position:absolute;width:20px;height:20px;opacity:.3;animation:sparkleFloat 6s ease-in-out infinite;}
-.sparkle::before,.sparkle::after{content:'';position:absolute;background:var(--g);}
-.sparkle::before{width:100%;height:2px;top:50%;left:0;transform:translateY(-50%);}
-.sparkle::after{width:2px;height:100%;left:50%;top:0;transform:translateX(-50%);}
-@keyframes sparkleFloat{0%,100%{transform:translateY(0) rotate(0deg);opacity:.3}50%{transform:translateY(-10px) rotate(45deg);opacity:.6}}
-
-/* ========== 9. LOCAL BRAND ========== */
-#brand{background:var(--dk);position:relative;overflow:hidden;}
-.brand-scroll{display:flex;gap:24px;overflow-x:auto;padding-bottom:20px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;}
-.brand-scroll::-webkit-scrollbar{height:4px;}.brand-scroll::-webkit-scrollbar-track{background:var(--d1);}.brand-scroll::-webkit-scrollbar-thumb{background:var(--g);border-radius:2px;}
-.brand-card{min-width:300px;max-width:340px;flex-shrink:0;scroll-snap-align:start;padding:0;background:var(--d1);border:1px solid var(--w06);border-radius:0;transition:all .3s ease;overflow:hidden;position:relative;}
-.brand-card:nth-child(1){border-top:3px solid var(--g);}
-.brand-card:nth-child(2){border-top:3px solid var(--gb);}
-.brand-card:nth-child(3){border-top:3px solid var(--g);}
-.brand-card:nth-child(4){border-top:3px solid var(--gold);}
-.brand-card::after{content:'';position:absolute;top:50%;right:20px;font-family:'Bebas Neue',sans-serif;font-size:120px;color:rgba(255,255,255,.02);pointer-events:none;line-height:1;transform:translateY(-50%);}
-.brand-card:nth-child(1)::after{content:'01';}
-.brand-card:nth-child(2)::after{content:'02';}
-.brand-card:nth-child(3)::after{content:'03';}
-.brand-card:nth-child(4)::after{content:'04';}
-.brand-card:hover{border-color:var(--g);transform:translateY(-6px) rotate(-0.5deg);box-shadow:0 20px 40px rgba(0,0,0,.3),0 0 20px rgba(0,230,57,.08);}
-.brand-card-top{display:none;}
-.brand-card-inner{padding:36px 28px;}
-.brand-card .bname{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px;margin-bottom:4px;}
-.brand-card .bname-ko{font-size:20px;font-weight:700;margin-bottom:12px;}
-.brand-card .bsub{font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:2px;color:var(--g);margin-bottom:16px;text-transform:uppercase;}
-.brand-card p{font-size:13px;color:var(--w5);line-height:1.8;margin-bottom:8px;}
-.brand-card .bstat{font-family:'Oswald',sans-serif;font-size:12px;color:var(--g);letter-spacing:1px;}
-.brand-summary{display:flex;gap:48px;margin-top:48px;justify-content:flex-start;flex-wrap:wrap;}
-.brand-summary .bs-item .bs-num{font-family:'Bebas Neue',sans-serif;font-size:clamp(56px,7vw,80px);background:linear-gradient(135deg,var(--g),var(--gb));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-.brand-summary .bs-item .bs-txt{font-size:13px;color:var(--w5);}
-
-/* ========== 10. BUSINESS OUTPUT ========== */
-#biz-out{background:var(--d1);text-align:center;position:relative;overflow:hidden;}
-#biz-out::before{content:'OUTPUT';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Bebas Neue',sans-serif;font-size:clamp(80px,15vw,200px);-webkit-text-stroke:1px rgba(255,255,255,.02);color:transparent;pointer-events:none;}
-.bout-title{font-size:clamp(16px,2vw,22px);color:var(--w5);margin-bottom:8px;}
-.bout-big{font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,6vw,72px);letter-spacing:4px;margin-bottom:48px;-webkit-text-stroke:1px rgba(255,255,255,.1);color:transparent;}
-.bout-big-filled{color:var(--w);-webkit-text-stroke:0;}
-.bout-stats{display:flex;justify-content:center;gap:clamp(32px,6vw,80px);flex-wrap:wrap;}
-.bout-stat .num{font-family:'Bebas Neue',sans-serif;font-size:clamp(40px,5vw,64px);background:linear-gradient(135deg,var(--g),var(--gb));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-.bout-stat .txt{font-size:14px;color:var(--w5);margin-top:4px;}
-
-/* ========== 11. SOCIAL OUTPUT ========== */
-#social-out{background:var(--dk);text-align:center;position:relative;overflow:hidden;}
-.sout-grid{display:flex;justify-content:center;gap:clamp(32px,6vw,80px);flex-wrap:wrap;margin-top:48px;position:relative;}
-.sout-stat{position:relative;padding:0 24px;}
-.sout-stat:not(:last-child)::after{content:'';position:absolute;right:-16px;top:20%;height:60%;width:1px;background:linear-gradient(to bottom,transparent,var(--g),transparent);opacity:.5;}
-.sout-stat .num{font-family:'Bebas Neue',sans-serif;font-size:clamp(40px,5vw,64px);background:linear-gradient(135deg,var(--g),var(--gb));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-.sout-stat .txt{font-size:14px;color:var(--w5);margin-top:4px;}
-
-/* ========== 12. CONNECT THEORY ========== */
-#connect{background:var(--d1);position:relative;overflow:hidden;}
-#connect::before{content:'';position:absolute;inset:0;pointer-events:none;
-background-image:linear-gradient(rgba(0,230,57,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(0,230,57,.02) 1px,transparent 1px);
-background-size:50px 50px;}
-.ct-block{margin-bottom:80px;}
-.ct-block:last-child{margin-bottom:0;}
-.ct-title{font-family:'Oswald',sans-serif;font-size:clamp(20px,2.5vw,30px);letter-spacing:2px;margin-bottom:24px;display:flex;align-items:center;gap:10px;}
-.ct-desc{font-size:15px;color:var(--w5);line-height:1.9;margin-bottom:32px;max-width:700px;}
-.diagram{padding:40px;border:1px solid var(--w06);border-radius:0;background:rgba(0,0,0,.3);position:relative;backdrop-filter:blur(5px);}
-.diagram-row{display:flex;align-items:center;justify-content:center;gap:24px;flex-wrap:wrap;}
-.diagram-box{padding:16px 28px;border:1px solid var(--w15);border-radius:0;font-family:'Oswald',sans-serif;font-size:14px;letter-spacing:2px;text-align:center;transition:all .3s ease;position:relative;}
-.diagram-box::before,.diagram-box::after{content:'';position:absolute;width:12px;height:12px;border-color:var(--g);border-style:solid;opacity:.3;transition:opacity .3s;}
-.diagram-box::before{top:-3px;left:-3px;border-width:1px 0 0 1px;}
-.diagram-box::after{bottom:-3px;right:-3px;border-width:0 1px 1px 0;}
-.diagram-box:hover{transform:translateY(-2px);box-shadow:0 4px 15px rgba(0,0,0,.3);}
-.diagram-box:hover::before,.diagram-box:hover::after{opacity:1;}
-.diagram-box.green{border-color:var(--g);color:var(--g);box-shadow:0 0 15px rgba(0,230,57,.1);animation:nodeGlow 3s ease-in-out infinite;}
-@keyframes nodeGlow{0%,100%{box-shadow:0 0 15px rgba(0,230,57,.1)}50%{box-shadow:0 0 30px rgba(0,230,57,.2),0 0 60px rgba(0,230,57,.1)}}
-.diagram-arrow-svg{display:flex;align-items:center;justify-content:center;opacity:.6;animation:arrowPulse 2s ease-in-out infinite;}
-@keyframes arrowPulse{0%,100%{opacity:.6;transform:translateX(0)}50%{opacity:1;transform:translateX(3px)}}
-.diagram-stamp{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-12deg);font-family:'Bebas Neue',sans-serif;font-size:clamp(24px,4vw,48px);color:#ff2040;border:3px solid #ff2040;padding:8px 24px;opacity:.3;pointer-events:none;letter-spacing:4px;}
-.tri-diagram{display:flex;flex-direction:column;align-items:center;gap:24px;padding:48px;position:relative;}
-.tri-top{text-align:center;}
-.tri-bottom{display:flex;gap:48px;justify-content:center;flex-wrap:wrap;}
-.tri-node{padding:20px 28px;border:1px solid var(--w15);border-radius:0;text-align:center;transition:all .3s ease;min-width:160px;position:relative;}
-.tri-node::before,.tri-node::after{content:'';position:absolute;width:10px;height:10px;border-color:var(--g);border-style:solid;opacity:.3;}
-.tri-node::before{top:-3px;left:-3px;border-width:1px 0 0 1px;}
-.tri-node::after{bottom:-3px;right:-3px;border-width:0 1px 1px 0;}
-.tri-node:hover{border-color:var(--g);box-shadow:0 0 20px rgba(0,230,57,.1);transform:translateY(-3px);}
-.tri-node .tn-title{font-family:'Oswald',sans-serif;font-size:16px;letter-spacing:2px;margin-bottom:4px;}
-.tri-node .tn-sub{font-size:12px;color:var(--g);font-family:'Oswald',sans-serif;letter-spacing:1px;}
-.tri-center{padding:16px 32px;background:var(--g);color:var(--dk);border-radius:0;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:3px;box-shadow:0 0 30px rgba(0,230,57,.3);animation:nodeGlow 3s ease-in-out infinite;}
-.tri-center-sub{font-size:11px;font-family:'Oswald',sans-serif;letter-spacing:2px;color:var(--dk);opacity:.7;}
-/* Connecting lines SVG */
-.connect-lines{position:absolute;inset:0;pointer-events:none;z-index:0;}
-.connect-lines line{stroke:var(--g);stroke-width:1;opacity:.15;stroke-dasharray:6 4;animation:dashMove 2s linear infinite;}
-@keyframes dashMove{0%{stroke-dashoffset:0}100%{stroke-dashoffset:-16}}
-.clyn-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
-.clyn-card{padding:24px;border:1px solid var(--w06);border-radius:0;text-align:center;transition:all .3s ease;position:relative;overflow:hidden;}
-.clyn-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--g),transparent);transform:scaleX(0);transition:transform .3s;}
-.clyn-card:hover::before{transform:scaleX(1);}
-.clyn-card:hover{border-color:var(--g);box-shadow:0 0 20px rgba(0,230,57,.08);}
-.clyn-card .cc-code{font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--g);letter-spacing:2px;}
-.clyn-card .cc-desc{font-size:13px;color:var(--w5);margin-top:8px;}
-.clyn-outcome{display:flex;justify-content:center;gap:24px;margin-top:32px;flex-wrap:wrap;}
-.clyn-outcome span{padding:8px 20px;border:1px solid var(--g);border-radius:0;font-size:13px;color:var(--g);transition:all .3s;cursor:default;clip-path:polygon(3% 0%,100% 0%,97% 100%,0% 100%);}
-.clyn-outcome span:hover{background:rgba(0,230,57,.1);box-shadow:var(--glow-sm);}
-
-/* ========== 13. CREW ========== */
-#crew{background:var(--dk);position:relative;overflow:hidden;}
-#crew::before{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(0,230,57,.04) 1px,transparent 1px);background-size:24px 24px;pointer-events:none;}
-#crew::after{content:'CREW';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Bebas Neue',sans-serif;font-size:clamp(100px,25vw,350px);-webkit-text-stroke:1px rgba(255,255,255,.015);color:transparent;pointer-events:none;letter-spacing:30px;}
-.crew-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,6vw,72px);letter-spacing:3px;margin-bottom:8px;display:flex;align-items:center;gap:16px;}
-.crew-sub{font-size:16px;color:var(--w5);margin-bottom:12px;}
-.crew-roles{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:48px;}
-.crew-role{padding:6px 16px;border:1px solid var(--g);border-radius:0;font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:2px;color:var(--g);transition:all .3s;cursor:default;
-clip-path:polygon(4% 0%,100% 0%,96% 100%,0% 100%);}
-.crew-role:hover{background:rgba(0,230,57,.15);box-shadow:var(--glow-sm);transform:translateY(-2px) rotate(-1deg);}
-.crew-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px;margin-bottom:48px;position:relative;z-index:1;}
-.crew-card{padding:24px 16px;background:var(--d1);border:1px solid var(--w06);border-radius:0;text-align:center;transition:all .3s ease;position:relative;}
-.crew-card:nth-child(odd){transform:rotate(-0.5deg);}
-.crew-card:nth-child(even){transform:rotate(0.5deg);}
-.crew-card:nth-child(3n){margin-top:10px;}
-.crew-card:hover{border-color:var(--g);box-shadow:0 0 20px rgba(0,230,57,.1);transform:rotate(0) translateY(-6px) scale(1.03)!important;}
-.crew-avatar{width:80px;height:80px;border-radius:0;background:linear-gradient(135deg,rgba(0,230,57,.3),rgba(255,0,102,.1));border:2px solid rgba(0,230,57,.3);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--g);text-shadow:var(--glow-sm);transition:all .3s;overflow:hidden;
-clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);}
-.crew-avatar img{width:100%;height:100%;object-fit:cover;filter:grayscale(.3);transition:filter .3s;}
-.crew-card:hover .crew-avatar img{filter:grayscale(0);}
-.allcrew-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px;margin-top:12px;position:relative;z-index:1;}
-.allcrew-item{text-align:center;padding:12px 8px;border:1px solid var(--w06);transition:all .3s;cursor:default;}
-.allcrew-item:nth-child(odd){transform:rotate(-0.5deg);}
-.allcrew-item:nth-child(even){transform:rotate(0.5deg);}
-.allcrew-item:hover{border-color:var(--g);box-shadow:0 0 15px rgba(0,230,57,.1);transform:rotate(0) translateY(-4px);}
-.allcrew-item img{width:60px;height:60px;object-fit:cover;border-radius:50%;border:2px solid var(--w15);margin-bottom:8px;filter:grayscale(.4);transition:all .3s;}
-.allcrew-item:hover img{filter:grayscale(0);border-color:var(--g);}
-.allcrew-item .ac-name{font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:1px;color:var(--w5);}
-.crew-card:hover .crew-avatar{border-color:var(--g);box-shadow:0 0 20px rgba(0,230,57,.2);}
-.crew-card .cn{font-family:'Oswald',sans-serif;font-size:14px;letter-spacing:2px;margin-bottom:4px;}
-.crew-card .mbti{font-size:11px;color:var(--g);font-family:'Oswald',sans-serif;letter-spacing:1px;}
-.allcrew{display:flex;flex-wrap:wrap;gap:10px;position:relative;z-index:1;}
-.allcrew span{padding:6px 16px;border:1px solid var(--w06);border-radius:0;font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:1px;color:var(--w5);transition:all .3s;cursor:default;}
-.allcrew span:nth-child(odd){transform:rotate(0.5deg);}
-.allcrew span:nth-child(even){transform:rotate(-0.5deg);}
-.allcrew span:hover{border-color:var(--g);color:var(--g);transform:rotate(0) translateY(-2px);}
-
-/* ========== 14. AWARDS ========== */
-#awards{background:var(--d1);text-align:center;position:relative;overflow:hidden;}
-.award-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px;margin-top:48px;}
-.award-card{padding:40px 24px;border:2px solid rgba(255,215,0,.15);border-radius:0;transition:all .3s ease;position:relative;overflow:hidden;background:rgba(255,215,0,.02);}
-.award-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#c9a835,var(--gold),#c9a835);opacity:.8;}
-.award-card::after{content:'';position:absolute;inset:6px;border:1px solid rgba(255,215,0,.08);pointer-events:none;}
-.award-card:hover{border-color:var(--gold);transform:translateY(-6px) rotate(-1deg);box-shadow:0 20px 40px rgba(0,0,0,.3),0 0 30px rgba(255,215,0,.1);}
-.award-icon{margin-bottom:16px;display:flex;justify-content:center;}
-.award-card h4{font-family:'Oswald',sans-serif;font-size:16px;letter-spacing:1px;margin-bottom:8px;}
-.award-card p{font-size:13px;color:var(--w5);}
-
-/* ========== 15. MEDIA ========== */
-#media{background:var(--dk);position:relative;overflow:hidden;}
-.media-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-top:48px;}
-.media-card{padding:36px 28px;background:var(--d1);border:1px solid var(--w06);border-radius:0;transition:all .4s ease;min-height:160px;display:flex;flex-direction:column;justify-content:flex-end;position:relative;overflow:hidden;}
-.media-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,230,57,.05),transparent);opacity:0;transition:opacity .3s;}
-.media-card:hover::before{opacity:1;}
-.media-card:hover{border-color:var(--g);box-shadow:0 0 30px rgba(0,230,57,.1);transform:translateY(-6px) translateX(4px);}
-.media-card h4{font-family:'Oswald',sans-serif;font-size:18px;letter-spacing:1px;display:flex;align-items:center;gap:8px;}
-.media-card p{font-size:13px;color:var(--w5);margin-top:4px;}
-
-/* ========== 16. VISION ========== */
-#vision{background:var(--d2);text-align:center;position:relative;overflow:hidden;}
-#vision::before{content:'';position:absolute;inset:0;pointer-events:none;
-background-image:linear-gradient(rgba(0,230,57,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,230,57,.03) 1px,transparent 1px);
-background-size:60px 60px;}
-.vision-bg-svg{position:absolute;bottom:0;left:50%;transform:translateX(-50%);opacity:.03;pointer-events:none;}
-.vision-big{font-family:'Bebas Neue',sans-serif;font-size:clamp(28px,5vw,56px);letter-spacing:4px;margin-bottom:12px;
--webkit-text-stroke:1px rgba(255,255,255,.15);color:transparent;}
-.vision-desc{font-size:clamp(15px,1.6vw,20px);color:var(--w5);margin-bottom:48px;max-width:600px;margin-left:auto;margin-right:auto;}
-.vision-stats{display:flex;justify-content:center;gap:clamp(24px,5vw,64px);flex-wrap:wrap;}
-.vision-stat .v-num{font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,4vw,56px);background:linear-gradient(135deg,var(--g),var(--g),var(--gb));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-size:200% 200%;animation:gradientShift 4s ease infinite;}
-@keyframes gradientShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
-.vision-stat .v-label{font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:2px;color:var(--w5);text-transform:uppercase;margin-top:4px;}
-.vision-stat .v-ko{font-size:13px;color:var(--w5);}
-
-/* ========== 17. ENDING ========== */
-#ending{background:var(--dk);text-align:center;padding:var(--sp) 24px 60px;}
-.ending-text{font-size:clamp(15px,1.8vw,20px);color:var(--w5);max-width:700px;margin:0 auto 48px;line-height:2;}
-.ending-text strong{color:var(--g);font-weight:700;text-shadow:var(--glow-sm);}
-.marquee{overflow:hidden;white-space:nowrap;padding:32px 0;border-top:1px solid var(--w06);border-bottom:1px solid var(--w06);margin-bottom:48px;position:relative;-webkit-mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);}
-.marquee-inner{display:inline-block;animation:marqueeScroll 10s linear infinite;font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,6vw,72px);letter-spacing:8px;color:var(--w15);-webkit-text-stroke:1px rgba(255,255,255,.05);}
-@keyframes marqueeScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-.ending-final{font-size:clamp(20px,3vw,32px);font-weight:700;}
-.ending-final span{color:var(--g);text-shadow:var(--glow-sm);}
-
-/* ========== 18. CONTACT ========== */
-#contact{background:var(--d1);text-align:center;padding:80px 24px;}
-.contact-btn{display:inline-block;padding:16px 48px;border:2px solid var(--g);color:var(--g);font-family:'Oswald',sans-serif;font-size:18px;letter-spacing:4px;text-transform:uppercase;transition:all .3s ease;border-radius:0;position:relative;overflow:hidden;
-clip-path:polygon(2% 0%,100% 0%,98% 100%,0% 100%);}
-.contact-btn::before{content:'';position:absolute;inset:0;background:var(--g);transform:scaleX(0);transform-origin:left;transition:transform .3s ease;z-index:-1;}
-.contact-btn:hover{color:var(--dk);box-shadow:var(--glow);transform:scale(1.05);}
-.contact-btn:hover::before{transform:scaleX(1);}
-
-/* ========== 19. PRESS ========== */
-#press{background:var(--dk);position:relative;overflow:hidden;}
-.press-list{border-top:1px solid var(--w06);counter-reset:presscount;}
-.press-item{display:flex;justify-content:space-between;align-items:center;padding:20px 0 20px 0;border-bottom:1px solid var(--w06);transition:all .3s ease;gap:16px;position:relative;counter-increment:presscount;}
-.press-item::before{content:'0' counter(presscount);font-family:'Bebas Neue',sans-serif;font-size:24px;color:rgba(0,230,57,.2);min-width:40px;transition:color .3s;}
-.press-item::after{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--g);transform:scaleY(0);transform-origin:bottom;transition:transform .4s ease;}
-.press-item:hover::after{transform:scaleY(1);}
+/* ===== PRESS LIST ===== */
+.press-list{border-top:1px solid var(--w06);}
+.press-item{display:flex;justify-content:space-between;align-items:center;padding:20px 0;border-bottom:1px solid var(--w06);transition:all .3s;gap:16px;}
 .press-item:hover{padding-left:16px;}
-.press-item:hover::before{color:var(--g);}
-.press-item .pt{flex:1;font-size:15px;transition:color .3s;}
 .press-item:hover .pt{color:var(--g);}
+.press-item .pt{flex:1;font-size:15px;transition:color .3s;}
 .press-item .pa{font-size:13px;color:var(--w5);white-space:nowrap;}
 .press-item .pd{font-family:'Oswald',sans-serif;font-size:13px;color:var(--w5);letter-spacing:1px;white-space:nowrap;}
 
-/* ========== 20. FOOTER ========== */
-footer{background:var(--dk);padding:80px 24px 48px;text-align:center;position:relative;overflow:hidden;}
-.footer-green-line{height:3px;background:linear-gradient(90deg,transparent,var(--g),var(--g),var(--g),transparent);position:absolute;top:0;left:0;right:0;}
-.footer-logo{font-family:'Bebas Neue',sans-serif;font-size:clamp(60px,12vw,140px);letter-spacing:clamp(8px,2vw,20px);
--webkit-text-stroke:1px rgba(255,255,255,.1);color:transparent;margin-bottom:12px;line-height:1;}
-.footer-info{font-size:13px;color:var(--w5);margin-bottom:4px;}
-.footer-copy{font-size:12px;color:var(--w15);margin-top:12px;}
-/* Barcode decoration */
-.footer-barcode{display:flex;justify-content:center;gap:2px;margin-top:24px;opacity:.15;}
-.footer-barcode span{display:block;height:30px;background:var(--w);transition:background .3s;}
+/* ===== CONTACT ===== */
+.contact-btn{display:inline-block;padding:16px 48px;border:2px solid var(--g);color:var(--g);font-family:'Oswald',sans-serif;font-size:18px;letter-spacing:4px;text-transform:uppercase;transition:all .3s;position:relative;overflow:hidden;}
+.contact-btn::before{content:'';position:absolute;inset:0;background:var(--g);transform:scaleX(0);transform-origin:left;transition:transform .3s;z-index:-1;}
+.contact-btn:hover{color:var(--dk);box-shadow:0 0 30px rgba(0,230,57,.3);}
+.contact-btn:hover::before{transform:scaleX(1);}
 
-/* QR decoration */
-.footer-qr{display:inline-grid;grid-template-columns:repeat(7,4px);grid-template-rows:repeat(7,4px);gap:1px;opacity:.1;margin-top:16px;}
-.footer-qr span{background:var(--w);}
-.footer-qr span:nth-child(2n){background:transparent;}
+/* ===== FOOTER ===== */
+footer{background:var(--dk);padding:80px 24px 48px;text-align:center;border-top:3px solid var(--g);}
+.footer-logo{font-family:'Bebas Neue',sans-serif;font-size:clamp(60px,12vw,140px);letter-spacing:clamp(8px,2vw,20px);-webkit-text-stroke:1px rgba(255,255,255,.1);color:transparent;line-height:1;}
+.footer-info{font-size:13px;color:var(--w5);margin-top:12px;}
+.footer-copy{font-size:12px;color:var(--w15);margin-top:8px;}
 
-/* ========== MARQUEE DIVIDERS ========== */
-.marquee-div{overflow:hidden;white-space:nowrap;padding:20px 0;border-top:1px solid var(--w06);border-bottom:1px solid var(--w06);-webkit-mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);position:relative;}
-.marquee-div .md-inner{display:inline-block;animation:marqueeScroll 12s linear infinite;font-family:'Bebas Neue',sans-serif;font-size:clamp(24px,3.5vw,48px);letter-spacing:10px;color:var(--w15);-webkit-text-stroke:0.5px rgba(255,255,255,.05);}
+/* ===== REVEAL ===== */
+.rv{opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease;}
+.rv.vis{opacity:1;transform:translateY(0);}
+.rv-d1{transition-delay:.1s}.rv-d2{transition-delay:.2s}.rv-d3{transition-delay:.3s}.rv-d4{transition-delay:.4s}
 
-/* ========== ZIGZAG DIVIDER ========== */
-.zigzag-divider{width:100%;height:20px;overflow:hidden;position:relative;}
-.zigzag-divider svg{width:100%;height:100%;}
+/* ===== DIVIDER ===== */
+.green-hr{height:1px;border:none;background:linear-gradient(90deg,transparent,var(--g),transparent);opacity:.4;margin:0;}
 
-/* ========== LOADING TEXT ========== */
-.loading-text{font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:4px;color:var(--w15);text-transform:uppercase;position:absolute;bottom:20px;right:24px;}
-.loading-text::after{content:'...';animation:loadDots 1.5s infinite;}
-@keyframes loadDots{0%{content:''}33%{content:'.'}66%{content:'..'}100%{content:'...'}}
-
-/* ========== SECTION IMAGES ========== */
-.section-img{width:100%;border-radius:0;display:block;opacity:.9;transition:opacity .4s;}
-.section-img:hover{opacity:1;}
-.about-img-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:48px;}
-.about-img-grid img{width:100%;height:200px;object-fit:cover;border:1px solid var(--w06);transition:all .4s;}
-.about-img-grid img:hover{border-color:var(--g);box-shadow:0 0 20px rgba(0,230,57,.15);transform:scale(1.03);}
-.poster-scroll{display:flex;gap:16px;overflow-x:auto;padding:24px 0;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;}
-.poster-scroll::-webkit-scrollbar{height:3px;}.poster-scroll::-webkit-scrollbar-track{background:var(--d1);}.poster-scroll::-webkit-scrollbar-thumb{background:var(--g);}
-.poster-scroll img{height:220px;width:auto;flex-shrink:0;scroll-snap-align:start;border:1px solid var(--w06);transition:all .3s;filter:grayscale(.2);}
-.poster-scroll img:hover{filter:grayscale(0);border-color:var(--g);transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,.4);}
-.team-img-wrap{margin-top:32px;position:relative;overflow:hidden;border:1px solid var(--w06);}
-.team-img-wrap img{width:100%;max-height:400px;object-fit:cover;display:block;filter:brightness(.85);transition:filter .4s;}
-.team-img-wrap:hover img{filter:brightness(1);}
-.team-img-wrap::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,var(--dk),transparent 60%);pointer-events:none;}
-.brand-card-img{width:100%;height:180px;object-fit:cover;display:block;border-bottom:1px solid var(--w06);}
-.brand-detail{margin-top:48px;}
-.brand-detail-section{margin-bottom:80px;position:relative;}
-.brand-detail-hero{width:100%;max-height:500px;object-fit:cover;border:1px solid var(--w06);margin-bottom:24px;}
-.brand-detail h3{font-family:'Bebas Neue',sans-serif;font-size:clamp(28px,4vw,48px);letter-spacing:3px;margin-bottom:8px;}
-.brand-detail .brand-sub{font-size:15px;color:var(--w5);margin-bottom:24px;max-width:600px;}
-.brand-photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-top:16px;}
-.brand-photo-grid img{width:100%;height:180px;object-fit:cover;border:1px solid var(--w06);transition:all .3s;}
-.brand-photo-grid img:hover{border-color:var(--g);transform:scale(1.04);box-shadow:0 0 20px rgba(0,230,57,.1);}
-.award-img{width:100%;height:120px;object-fit:cover;border-radius:0;margin-bottom:16px;border:1px solid rgba(255,215,0,.1);}
-.biz4-card-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.15;transition:opacity .4s;z-index:0;}
-.biz4-card:hover .biz4-card-img{opacity:.25;}
+/* ===== RESPONSIVE ===== */
 @media(max-width:768px){
-  .about-img-grid{grid-template-columns:1fr 1fr;}
-  .brand-photo-grid{grid-template-columns:repeat(2,1fr);}
-  .poster-scroll img{height:160px;}
-  .team-img-wrap img{max-height:250px;}
-}
-
-/* ========== RESPONSIVE ========== */
-@media(max-width:768px){
-  .how-grid{grid-template-columns:1fr;}
-  .stats-grid{grid-template-columns:repeat(2,1fr);}
-  .stats-grid .stat-card{transform:none!important;margin-top:0!important;}
-  .biz4-grid{grid-template-columns:1fr;}
-  .biz4-card:first-child{grid-row:auto;min-height:auto;}
-  .media-grid{grid-template-columns:1fr;}
-  .clyn-grid{grid-template-columns:1fr;}
-  .crew-grid{grid-template-columns:repeat(2,1fr);}
-  .hero-top{position:absolute;top:20px;right:20px;}
-  .hero-title{color:var(--w);}
-  .sout-stat:not(:last-child)::after{display:none;}
+  .brand-grid{grid-template-columns:1fr;}
+  .crew-grid{grid-template-columns:repeat(3,1fr);}
   .press-item{flex-direction:column;align-items:flex-start;gap:4px;}
-  .back-top{bottom:16px;right:16px;width:36px;height:36px;}
-  .footer-logo{font-size:clamp(40px,10vw,80px);}
-  .side-text{display:none;}
+  .stats-row{gap:24px;}
+  .btt{bottom:16px;right:16px;width:36px;height:36px;}
 }
 @media(max-width:480px){
-  .stats-grid{grid-template-columns:1fr;}
-  .crew-grid{grid-template-columns:1fr 1fr;}
-  .crew-card{transform:none!important;}
+  .crew-grid{grid-template-columns:repeat(2,1fr);}
 }
 </style>
 </head>
@@ -617,48 +159,41 @@ footer{background:var(--dk);padding:80px 24px 48px;text-align:center;position:re
 <!-- Scroll Progress -->
 <div class="spbar" id="spbar"></div>
 
-<!-- Header Navigation -->
-<header class="site-header" id="siteHeader">
+<!-- Header -->
+<header class="hdr" id="hdr">
   <a href="#hero" class="logo">UPPTOWN</a>
   <nav>
     <a href="#about">ABOUT UPP</a>
-    <a href="#biz4">BUSINESS</a>
+    <a href="#biz">BUSINESS</a>
     <a href="#brand">BRAND</a>
     <a href="#crew">CREW</a>
     <a href="#press">PRESS</a>
     <a href="#contact">CONTACT</a>
   </nav>
-  <div class="hamburger" id="hamburger">
-    <span></span><span></span><span></span>
-  </div>
+  <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
 </header>
-<div class="mobile-menu" id="mobileMenu">
-  <a href="#about" onclick="closeMobile()">ABOUT UPP</a>
-  <a href="#biz4" onclick="closeMobile()">BUSINESS</a>
-  <a href="#brand" onclick="closeMobile()">BRAND</a>
-  <a href="#crew" onclick="closeMobile()">CREW</a>
-  <a href="#press" onclick="closeMobile()">PRESS</a>
-  <a href="#contact" onclick="closeMobile()">CONTACT</a>
+<div class="mob-menu" id="mobMenu">
+  <a href="#about" onclick="closeMob()">ABOUT UPP</a>
+  <a href="#biz" onclick="closeMob()">BUSINESS</a>
+  <a href="#brand" onclick="closeMob()">BRAND</a>
+  <a href="#crew" onclick="closeMob()">CREW</a>
+  <a href="#press" onclick="closeMob()">PRESS</a>
+  <a href="#contact" onclick="closeMob()">CONTACT</a>
 </div>
 
-
 <!-- Back to Top -->
-<button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+<button class="btt" id="btt" onclick="window.scrollTo({top:0,behavior:'smooth'})">
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 15l-6-6-6 6"/></svg>
 </button>
 
-<!-- HERO -->
+<!-- ========== HERO ========== -->
 <section id="hero">
-  <div class="particles" id="heroParticles"></div>
-  <div class="hero-scanlines"></div>
-  <div class="hero-top">UPPTOWN</div>
   <video autoplay muted loop playsinline>
     <source src="KakaoTalk_20260324_134623031.mp4" type="video/mp4">
   </video>
-  <div class="hero-title-bg">UPPTOWN</div>
   <div class="hero-c">
     <h1 class="hero-title">LOCAL<br>ENTERTAINMENT</h1>
-    <div class="hero-sub2">REDEFINING LOCAL CULTURE</div>
+    <div class="hero-sub">REDEFINING LOCAL CULTURE</div>
   </div>
   <div class="scroll-ind">
     <span>SCROLL</span>
@@ -666,1027 +201,282 @@ footer{background:var(--dk);padding:80px 24px 48px;text-align:center;position:re
   </div>
 </section>
 
-<!-- ABOUT -->
-<section id="about">
-  <div class="side-text">ABOUT US</div>
+<!-- ========== ABOUT UPP ========== -->
+<section id="about" class="sec-pad">
   <div class="inner">
-    <div class="label rv">
-      <svg class="starburst svg-icon svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="#00e639" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
-      local entertainment
-    </div>
-    <p class="about-mission rv rv-d1">
+    <div class="label rv">local entertainment</div>
+    <p class="sec-desc rv rv-d1">
       업타운은 <strong>'로컬을 새롭게 디자인하다'</strong>라는 미션하에
       다양한 재능을 보유한 <strong>LOCAL ARTIST</strong> 들과
       새로운 기획을 통해 지속가능한 지역 주도 성장을 지향합니다
     </p>
-    <h2 class="wwd-title rv rv-d2">WHAT WE DO?</h2>
-    <div class="tag-row rv rv-d3">
+    <h2 class="sec-title rv rv-d2" style="-webkit-text-stroke:1px var(--w);color:transparent;">WHAT WE DO?</h2>
+    <div class="tags rv rv-d3">
       <span class="tag">강연</span><span class="tag">워크샵</span><span class="tag">페스티벌</span><span class="tag">박람회</span><span class="tag">행사</span>
-    </div>
-    <div class="tag-row rv rv-d4">
       <span class="tag">로컬 투어</span><span class="tag">브랜딩</span><span class="tag">F&B</span><span class="tag">공간 기획</span><span class="tag">컨설팅</span>
     </div>
-    <div class="about-img-grid rv rv-d5">
-      <img src="images/web/about-main.png" alt="업타운 팀" loading="lazy">
-      <img src="images/web/about-team.png" alt="업타운 크루" loading="lazy">
-      <img src="images/web/about-crew.png" alt="업타운 멤버" loading="lazy">
-    </div>
-    <div class="poster-scroll rv rv-d6">
-      <img src="images/web/poster1.png" alt="업타운 포스터" loading="lazy">
-      <img src="images/web/poster2.png" alt="업타운 포스터" loading="lazy">
-      <img src="images/web/poster3.png" alt="업타운 포스터" loading="lazy">
-      <img src="images/web/poster4.png" alt="업타운 포스터" loading="lazy">
-      <img src="images/web/poster5.png" alt="업타운 포스터" loading="lazy">
-      <img src="images/web/poster6.png" alt="업타운 포스터" loading="lazy">
+  </div>
+</section>
+
+<!-- WHAT IS LOCAL ENTERTAINMENT - Full Image -->
+<div class="hero-img-sec rv"><img src="what_is_le.jpg" alt="What is Local Entertainment?" loading="lazy"></div>
+
+<!-- ========== LOCAL CONTENTS ========== -->
+<section class="sec-pad">
+  <div class="inner" style="text-align:center;">
+    <div class="label rv" style="justify-content:center;">local contents</div>
+    <p class="sec-desc rv rv-d1" style="margin:0 auto 40px;text-align:center;">소셜링을 기반으로 오고 싶은 지역을 만들어 나갑니다</p>
+    <div class="stats-row rv rv-d2" style="justify-content:center;">
+      <div class="stat"><div class="num" data-count="130">0</div><div class="txt">contents production</div></div>
+      <div class="stat"><div class="num" data-count="3000">0</div><div class="txt">contents management</div></div>
+      <div class="stat"><div class="num" data-count="40000">0</div><div class="txt">total customers</div></div>
+      <div class="stat"><div class="num" data-count="80">0</div><div class="txt">collaboration project</div></div>
     </div>
   </div>
-  <div class="loading-text">NOW LOADING</div>
 </section>
+
+<hr class="green-hr">
+
+<!-- ========== BUSINESS 4 SECTION ========== -->
+<div class="hero-img-sec rv"><img src="biz_4section.jpg" alt="UPPTOWN Business 4 Section" loading="lazy"></div>
 
 <!-- MARQUEE -->
-<div class="marquee-div"><div class="md-inner">LOCAL ENTERTAINMENT &mdash; UPPTOWN &mdash; REDEFINING LOCAL &mdash; LOCAL ENTERTAINMENT &mdash; UPPTOWN &mdash; REDEFINING LOCAL &mdash; LOCAL ENTERTAINMENT &mdash; UPPTOWN &mdash; REDEFINING LOCAL &mdash; </div></div>
+<div class="marquee"><div class="marquee-inner">TOUR &mdash; F&B &mdash; LIFE STYLE &mdash; ARTIST &mdash; TOUR &mdash; F&B &mdash; LIFE STYLE &mdash; ARTIST &mdash; TOUR &mdash; F&B &mdash; LIFE STYLE &mdash; ARTIST &mdash; </div></div>
 
-<!-- WHAT IS LOCAL ENTERTAINMENT -->
-<section id="what-le">
-  <div class="inner">
-    <div class="wle-sub rv">우리가 말하는 엔터테인먼트는</div>
-    <h2 class="wle-title rv rv-d1 split-text">WHAT IS LOCAL<br>ENTERTAINMENT?</h2>
-    <div class="kw-flow">
-      <svg class="kw-connector" viewBox="0 0 800 400" preserveAspectRatio="none">
-        <line x1="50" y1="50" x2="150" y2="150"/>
-        <line x1="150" y1="150" x2="300" y2="250"/>
-        <line x1="300" y1="250" x2="500" y2="350"/>
-      </svg>
-      <div class="kw-item rv">
-        <div class="kw-dot"></div>
-        <div class="kw-en">TRAFFIC</div>
-        <div class="kw-ko">사람을 모으고</div>
-      </div>
-      <div class="kw-item rv rv-d1">
-        <div class="kw-dot"></div>
-        <div class="kw-en">EMOTION</div>
-        <div class="kw-ko">감정을 움직이고</div>
-      </div>
-      <div class="kw-item rv rv-d2">
-        <div class="kw-dot"></div>
-        <div class="kw-en">CONSUME</div>
-        <div class="kw-ko">소비를 만들고</div>
-      </div>
-      <div class="kw-item rv rv-d3">
-        <div class="kw-dot"></div>
-        <div class="kw-en">BRAND</div>
-        <div class="kw-ko">브랜드를 남기는 산업 구조입니다</div>
-      </div>
-    </div>
-  </div>
+<!-- ========== TEAM SECTIONS ========== -->
+<section id="biz">
+  <!-- TEAM LOCAL TOUR -->
+  <div class="hero-img-sec rv"><img src="team_tour.jpg" alt="Team Local Tour" loading="lazy"></div>
+
+  <!-- LOCAL IS FUN -->
+  <div class="hero-img-sec rv"><img src="local_is_fun.jpg" alt="Local is Fun" loading="lazy"></div>
+
+  <hr class="green-hr">
+
+  <!-- TEAM F&B -->
+  <div class="hero-img-sec rv"><img src="team_fnb.jpg" alt="Team F&B" loading="lazy"></div>
+
+  <hr class="green-hr">
+
+  <!-- TEAM LIFESTYLE -->
+  <div class="hero-img-sec rv"><img src="team_lifestyle.jpg" alt="Team Lifestyle" loading="lazy"></div>
+
+  <hr class="green-hr">
+
+  <!-- TEAM ARTIST -->
+  <div class="hero-img-sec rv"><img src="team_artist.jpg" alt="Team Artist" loading="lazy"></div>
 </section>
-
-<!-- GREEN HR DIVIDER -->
-<hr class="green-hr">
-
-<!-- HOW IT WORKS -->
-<section id="how">
-  <div class="side-text">PROCESS</div>
-  <div class="inner">
-    <div class="label rv">
-      <svg class="starburst svg-icon svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="#00e639" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
-      how it works
-    </div>
-    <h2 class="wwd-title rv rv-d1">LOCAL SOLUTION SYSTEM</h2>
-    <div class="how-grid">
-      <div class="how-card tilt-card rv">
-        <div class="how-num">01</div>
-        <h3><span class="pulse-dot"></span>01 TRAFFIC CREATE</h3>
-        <p>소셜링 기반 트래픽 그룹의 트래픽 요소 생성</p>
-      </div>
-      <div class="how-card tilt-card rv rv-d1">
-        <div class="how-num">02</div>
-        <h3><span class="pulse-dot"></span>02 CONNECT LOCAL</h3>
-        <p>로컬과 소비자 연결, 지역에 직접적인 소비 생태계 제공</p>
-      </div>
-      <div class="how-card tilt-card rv rv-d2">
-        <div class="how-num">03</div>
-        <h3><span class="pulse-dot"></span>03 BRAND LOOP</h3>
-        <p>소비자가 다시 와야하는 이유, 브랜드를 통해 지속하는 선순환 생태</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- LOCAL CONTENTS -->
-<section id="contents">
-  <div class="inner">
-    <div class="label rv">
-      <!-- Chart/growth icon -->
-      <svg class="svg-icon svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="#00e639" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-      local contents
-    </div>
-    <p class="about-mission rv rv-d1" style="margin-bottom:32px;">소셜링을 기반으로 오고 싶은 지역을 만들어 나갑니다</p>
-    <div class="stats-grid">
-      <div class="stat-card corner-marks rv">
-        <div class="stat-num" data-count="130">0</div><span class="stat-plus">+</span>
-        <div class="stat-underline"></div>
-        <div class="stat-en">contents production</div>
-        <div class="stat-ko">콘텐츠 프로덕션</div>
-      </div>
-      <div class="stat-card corner-marks rv rv-d1">
-        <div class="stat-num" data-count="3000">0</div><span class="stat-plus">+</span>
-        <div class="stat-underline"></div>
-        <div class="stat-en">contents management</div>
-        <div class="stat-ko">콘텐츠 매니지먼트</div>
-      </div>
-      <div class="stat-card corner-marks rv rv-d2">
-        <div class="stat-num" data-count="40000">0</div><span class="stat-plus">+</span>
-        <div class="stat-underline"></div>
-        <div class="stat-en">total customers</div>
-        <div class="stat-ko">누적 고객</div>
-      </div>
-      <div class="stat-card corner-marks rv rv-d3">
-        <div class="stat-num" data-count="80">0</div><span class="stat-plus">+</span>
-        <div class="stat-underline"></div>
-        <div class="stat-en">collaboration project</div>
-        <div class="stat-ko">협업 프로젝트</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ZIGZAG DIVIDER -->
-<div class="zigzag-divider">
-  <svg viewBox="0 0 1200 20" preserveAspectRatio="none" fill="none" stroke="#00e639" stroke-width="1" opacity=".3">
-    <polyline points="0,10 30,2 60,18 90,2 120,18 150,2 180,18 210,2 240,18 270,2 300,18 330,2 360,18 390,2 420,18 450,2 480,18 510,2 540,18 570,2 600,18 630,2 660,18 690,2 720,18 750,2 780,18 810,2 840,18 870,2 900,18 930,2 960,18 990,2 1020,18 1050,2 1080,18 1110,2 1140,18 1170,2 1200,10"/>
-  </svg>
-</div>
-
-<!-- BUSINESS 4 SECTION -->
-<section id="biz4">
-  <div class="inner">
-    <div class="biz4-head rv">
-      <div class="small">LOCAL DESIGN?</div>
-      <div class="big">UPPTOWN BUSINESS</div>
-      <div class="big" style="color:var(--g);text-shadow:0 0 30px rgba(0,230,57,.3);">4 SECTION</div>
-    </div>
-    <div class="biz4-grid">
-      <div class="biz4-card rv">
-        <img class="biz4-card-img" src="images/web/biz-tour-festival.png" alt="TOUR" loading="lazy">
-        <div class="card-num">1</div>
-        <h3>TOUR</h3>
-        <div class="ko">트래픽 확산</div>
-      </div>
-      <div class="biz4-card rv rv-d1">
-        <img class="biz4-card-img" src="images/web/biz-fnb-food.png" alt="F&B" loading="lazy">
-        <div class="card-num">2</div>
-        <h3>F&B</h3>
-        <div class="ko">핫플레이스 메이킹</div>
-      </div>
-      <div class="biz4-card rv rv-d2">
-        <img class="biz4-card-img" src="images/web/biz-lifestyle-main.png" alt="LIFESTYLE" loading="lazy">
-        <div class="card-num">3</div>
-        <h3>LIFE STYLE</h3>
-        <div class="ko">정체성 입히기</div>
-      </div>
-      <div class="biz4-card rv rv-d3">
-        <img class="biz4-card-img" src="images/web/biz-artist-stage.png" alt="ARTIST" loading="lazy">
-        <div class="card-num">4</div>
-        <h3>ARTIST</h3>
-        <div class="ko">서사 창출</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- MARQUEE -->
-<div class="marquee-div"><div class="md-inner">TOUR &mdash; F&B &mdash; LIFE STYLE &mdash; ARTIST &mdash; TOUR &mdash; F&B &mdash; LIFE STYLE &mdash; ARTIST &mdash; TOUR &mdash; F&B &mdash; LIFE STYLE &mdash; ARTIST &mdash; </div></div>
-
-<!-- TEAM SECTIONS -->
-<div class="team-section" id="team-tour">
-  <div class="team-bg-text">LOCAL TOUR</div>
-  <div class="inner">
-    <div class="team-label rv">
-      <svg class="starburst svg-icon svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="#00e639" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
-      TEAM 01
-    </div>
-    <h2 class="team-name rv rv-d1">TEAM<br>LOCAL TOUR</h2>
-    <p class="team-desc rv rv-d2">로컬의 매력을 재미로 알리는 MZ팀</p>
-    <p class="team-tagline rv rv-d2">사람들이 '재미' 때문에 로컬을 찾아오게 합니다</p>
-    <div class="team-members rv rv-d3">
-      <span class="member-tag">BYEOL YEE</span>
-      <span class="member-tag">JJO JJO</span>
-      <span class="member-tag">DOONG DOONG</span>
-      <span class="member-tag">BO BO</span>
-      <span class="member-tag">BBOOM BBOOM</span>
-    </div>
-    <div class="team-img-wrap rv rv-d4">
-      <img src="images/web/biz-tour-main.png" alt="Team Local Tour" loading="lazy">
-    </div>
-  </div>
-</div>
 
 <hr class="green-hr">
 
-<div class="team-section" id="team-fnb">
-  <div class="team-bg-text">F&B</div>
+<!-- ========== LOCAL BRAND ========== -->
+<section id="brand" class="sec-pad">
   <div class="inner">
-    <div class="team-label rv">
-      <svg class="starburst svg-icon svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="#00e639" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
-      TEAM 02
-    </div>
-    <h2 class="team-name rv rv-d1">TEAM<br>F&B</h2>
-    <p class="team-desc rv rv-d2">로컬의 매력을 맛으로 알리는 MZ팀 / HOT PLACE MAKING</p>
-    <p class="team-tagline rv rv-d2">사람들이 '맛' 때문에 로컬을 찾아오게 합니다</p>
-    <div class="team-img-wrap rv rv-d3">
-      <img src="images/web/biz-fnb-food.png" alt="Team F&B" loading="lazy">
-    </div>
-  </div>
-</div>
-
-<hr class="green-hr">
-
-<div class="team-section" id="team-lifestyle">
-  <div class="team-bg-text">LIFESTYLE</div>
-  <div class="inner">
-    <div class="team-label rv">
-      <svg class="starburst svg-icon svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="#00e639" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
-      TEAM 03
-    </div>
-    <h2 class="team-name rv rv-d1">TEAM<br>LIFESTYLE</h2>
-    <p class="team-desc rv rv-d2">로컬의 매력을 일상으로 전하는 MZ팀 / LOCAL IS HIP</p>
-    <p class="team-tagline rv rv-d2">LOCAL IS LIFE</p>
-    <div class="team-img-wrap rv rv-d3">
-      <img src="images/web/biz-lifestyle-main.png" alt="Team Lifestyle" loading="lazy">
-    </div>
-  </div>
-</div>
-
-<hr class="green-hr">
-
-<div class="team-section" id="team-artist">
-  <div class="team-bg-text">ARTIST</div>
-  <div class="inner">
-    <div class="team-label rv">
-      <svg class="starburst svg-icon svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="#00e639" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
-      TEAM 04
-    </div>
-    <h2 class="team-name rv rv-d1">TEAM<br>ARTIST</h2>
-    <p class="team-desc rv rv-d2">로컬의 매력을 감동으로 전하는 MZ팀 / LOCAL IS STAGE</p>
-    <p class="team-tagline rv rv-d2">사람들의 '마음'에 로컬의 이야기를 남깁니다</p>
-    <div class="team-members rv rv-d3">
-      <span class="member-tag">BAND</span>
-      <span class="member-tag">MC</span>
-      <span class="member-tag">DANCE</span>
-      <span class="member-tag">PERFORMANCE</span>
-    </div>
-    <div class="team-img-wrap rv rv-d4">
-      <img src="images/web/biz-artist-stage.png" alt="Team Artist" loading="lazy">
-    </div>
-  </div>
-</div>
-
-<!-- WAVE DIVIDER -->
-<div class="wave-divider">
-  <svg viewBox="0 0 1200 40" preserveAspectRatio="none" fill="none" stroke="#00e639" stroke-width="1.5" opacity=".25">
-    <path d="M0,20 Q150,0 300,20 Q450,40 600,20 Q750,0 900,20 Q1050,40 1200,20"/>
-  </svg>
-</div>
-
-<!-- LOCAL IS FUN -->
-<section id="fun">
-  <div class="inner" style="position:relative;">
-    <div class="sparkle" style="top:10%;left:5%;"></div>
-    <div class="sparkle" style="top:20%;right:10%;transform:rotate(45deg);"></div>
-    <div class="sparkle" style="bottom:15%;left:15%;transform:rotate(22deg);"></div>
-    <div class="sparkle" style="bottom:10%;right:5%;transform:rotate(-15deg);"></div>
-    <h2 class="fun-title rv">LOCAL IS FUN!</h2>
-    <div class="fun-stats">
-      <div class="fun-stat rv">
-        <div class="num" data-count="130">0</div>
-        <div class="txt">프로그램 개발 (개)</div>
-      </div>
-      <div class="fun-stat rv rv-d1">
-        <div class="num" data-count="3000">0</div>
-        <div class="txt">프로그램 운영 (+)</div>
-      </div>
-      <div class="fun-stat rv rv-d2">
-        <div class="num" data-count="23">0</div>
-        <div class="txt">페스티벌 운영 (회)</div>
-      </div>
-    </div>
-    <p class="fun-desc rv rv-d3">소셜링을 활용해 UPPTOWN만의 로컬 프로그램을 만듭니다</p>
-    <div class="brand-photo-grid rv rv-d4" style="margin-top:40px;">
-      <img src="images/web/biz-tour-photo1.png" alt="로컬 투어" loading="lazy">
-      <img src="images/web/biz-tour-photo2.png" alt="로컬 투어" loading="lazy">
-      <img src="images/web/biz-tour-photo3.png" alt="로컬 투어" loading="lazy">
-      <img src="images/web/biz-tour-photo4.png" alt="로컬 투어" loading="lazy">
-    </div>
-    <div class="poster-scroll rv rv-d5" style="margin-top:24px;">
-      <img src="images/web/biz-poster1.png" alt="프로그램 포스터" loading="lazy">
-      <img src="images/web/biz-poster2.png" alt="프로그램 포스터" loading="lazy">
-      <img src="images/web/biz-poster3.png" alt="프로그램 포스터" loading="lazy">
-      <img src="images/web/biz-poster4.png" alt="프로그램 포스터" loading="lazy">
-      <img src="images/web/biz-poster5.png" alt="프로그램 포스터" loading="lazy">
-    </div>
-  </div>
-</section>
-
-<!-- GREEN HR DIVIDER -->
-<hr class="green-hr">
-
-<!-- LOCAL BRAND -->
-<section id="brand">
-  <div class="inner">
-    <div class="label rv">
-      <!-- Map pin icon -->
-      <svg class="svg-icon svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="#00e639" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-      local brand
-    </div>
-    <p class="about-mission rv rv-d1">지역주민과 MZ청년들의 연대로 지역 대표 브랜드를 함께 만들어 지속가능한 로컬 주도 성장을 목표로 합니다</p>
-    <div class="brand-scroll rv rv-d2">
+    <div class="label rv">local brand</div>
+    <p class="sec-desc rv rv-d1">지역주민과 MZ청년들의 연대로 지역 대표 브랜드들을 함께 만들어 지속가능한 로컬 주도 성장을 목표로 합니다</p>
+    <div class="brand-grid rv rv-d2">
       <div class="brand-card">
-        <img class="brand-card-img" src="images/web/biz-fnb-food.png" alt="정밀" loading="lazy">
-        <div class="brand-card-inner">
-          <div class="bname-ko">정밀</div>
-          <div class="bsub">Korean Traditional Full-Course Meal</div>
-          <p>인천 그린벨트 재배 농산물 활용 한식 브랜드</p>
-          <p class="bstat">연매출 24억 / MASTER OF KOREAN CUISINE</p>
-        </div>
+        <img src="brand_jungmil.jpg" alt="정밀" loading="lazy">
+        <div class="bc-info"><div class="bc-sub">KOREAN TRADITIONAL FULL-COURSE MEAL</div><div class="bc-name">정밀</div></div>
       </div>
       <div class="brand-card">
-        <img class="brand-card-img" src="images/web/brand-bangagan.png" alt="방앗간" loading="lazy">
-        <div class="brand-card-inner">
-          <div class="bname-ko">방앗간</div>
-          <div class="bsub">Hongcheon Buckwheat Noodles</div>
-          <p>홍천 메밀을 활용한 막국수 브랜드<br>청년농부 한승재</p>
-          <p class="bstat">사회적 자본창출 30억 / 연매출 10억 / 연방문 8만명 / 투자유치 10억</p>
-        </div>
+        <img src="brand_bangatgan.jpg" alt="방앗간" loading="lazy">
+        <div class="bc-info"><div class="bc-sub">HONGCHEON BUCKWHEAT NOODLES</div><div class="bc-name">방앗간</div></div>
       </div>
       <div class="brand-card">
-        <img class="brand-card-img" src="images/web/brand-gangwondon-main.png" alt="강원돈" loading="lazy">
-        <div class="brand-card-inner">
-          <div class="bname-ko">강원돈</div>
-          <div class="bsub">Gangwon.逐 / Korean Pork Dish</div>
-          <p>강원도 돼지를 활용한 프리미엄 돈카츠 브랜드</p>
-          <p class="bstat">1 STORE 홍천 / 2 STORE 춘천 / BLACK MOUNTAIN GANGWON</p>
-        </div>
+        <img src="brand_gangwondon.jpg" alt="강원돈" loading="lazy">
+        <div class="bc-info"><div class="bc-sub">GANGWON.逐 / KOREAN PORK DISH</div><div class="bc-name">강원돈</div></div>
       </div>
       <div class="brand-card">
-        <img class="brand-card-img" src="images/web/brand-mombae-main.png" alt="몸빼" loading="lazy">
-        <div class="brand-card-inner">
-          <div class="bname-ko">몸빼</div>
-          <div class="bsub">MOMBBAE / Local Lifestyle Fashion</div>
-          <p>로컬 라이프스타일 패션 브랜드</p>
-          <p>HOODIE, SUNCAP, PANTS, GLOVES, SOCKS, T-SHIRT, BAG</p>
-          <p class="bstat">OFFLINE STORE / POP UP STORE</p>
-        </div>
+        <img src="brand_mombbae.jpg" alt="몸빼" loading="lazy">
+        <div class="bc-info"><div class="bc-sub">MOMBBAE / LOCAL LIFESTYLE FASHION</div><div class="bc-name">몸빼</div></div>
       </div>
     </div>
-    <div class="brand-summary rv rv-d3">
-      <div class="bs-item">
-        <div class="bs-num" data-count="6">0</div>
-        <div class="bs-txt">brand launching</div>
-      </div>
-      <div class="bs-item">
-        <div class="bs-num" data-count="50">0</div>
-        <div class="bs-txt">억+ total revenue</div>
-      </div>
-    </div>
-
-    <!-- BRAND DETAILS -->
-    <div class="brand-detail">
-      <!-- 방앗간 -->
-      <div class="brand-detail-section rv">
-        <h3>방앗간 <span style="color:var(--g);font-size:.5em;">K-MAEMIL FOOD</span></h3>
-        <p class="brand-sub">홍천 서석 메밀 15만평 공동재배 청년농부 — 로즈마리 카르노솔 추출물을 활용한 100% 순메밀 반죽 제조 기술</p>
-        <img class="brand-detail-hero" src="images/web/brand-bangagan-store.png" alt="방앗간 매장" loading="lazy">
-        <div class="brand-photo-grid">
-          <img src="images/web/brand-food1.png" alt="방앗간 메뉴" loading="lazy">
-          <img src="images/web/brand-food2.png" alt="방앗간 메뉴" loading="lazy">
-          <img src="images/web/brand-food3.png" alt="방앗간 메뉴" loading="lazy">
-          <img src="images/web/brand-food4.png" alt="방앗간 메뉴" loading="lazy">
-          <img src="images/web/brand-food5.png" alt="방앗간 메뉴" loading="lazy">
-          <img src="images/web/brand-food6.png" alt="방앗간 메뉴" loading="lazy">
-          <img src="images/web/brand-food7.png" alt="방앗간 매장" loading="lazy">
-          <img src="images/web/brand-buckwheat-field.png" alt="메밀밭" loading="lazy">
-          <img src="images/web/brand-farmer.png" alt="청년농부" loading="lazy">
-        </div>
-      </div>
-
-      <!-- 강원돈 -->
-      <div class="brand-detail-section rv">
-        <h3>강원돈 <span style="color:var(--g);font-size:.5em;">GANGWON 逐</span></h3>
-        <p class="brand-sub">강원도의 우수한 원물을 활용해 카츠를 한국식으로 재해석 — 황기 다당체, 곤드레 폴리페놀 항산화 성분 배합</p>
-        <img class="brand-detail-hero" src="images/web/brand-gangwondon-hero.png" alt="강원돈" loading="lazy">
-        <div class="brand-photo-grid">
-          <img src="images/web/brand-gangwondon-store1.png" alt="강원돈 매장" loading="lazy">
-          <img src="images/web/brand-gangwondon-store2.png" alt="강원돈 매장" loading="lazy">
-          <img src="images/web/brand-gangwondon-food.png" alt="강원돈 음식" loading="lazy">
-          <img src="images/web/brand-gangwondon-interior1.png" alt="강원돈 인테리어" loading="lazy">
-          <img src="images/web/brand-gangwondon-interior2.png" alt="강원돈 인테리어" loading="lazy">
-          <img src="images/web/brand-gangwondon-map.png" alt="강원돈 지역" loading="lazy">
-        </div>
-      </div>
-
-      <!-- 몸빼 -->
-      <div class="brand-detail-section rv">
-        <h3>몸빼 <span style="color:var(--g);font-size:.5em;">MOMBBAE</span></h3>
-        <p class="brand-sub">한국 농촌 전통 의복 '몸빼'를 재해석한 최초의 K-농촌 패션 브랜드 — HOODIE, T-SHIRT, SUN CAP, BAG</p>
-        <img class="brand-detail-hero" src="images/web/brand-mombae-main.png" alt="몸빼" loading="lazy">
-        <div class="brand-photo-grid">
-          <img src="images/web/brand-mombae-product1.png" alt="몸빼 제품" loading="lazy">
-          <img src="images/web/brand-mombae-product2.png" alt="몸빼 제품" loading="lazy">
-          <img src="images/web/brand-mombae-product3.png" alt="몸빼 제품" loading="lazy">
-          <img src="images/web/brand-mombae-product4.png" alt="몸빼 제품" loading="lazy">
-          <img src="images/web/brand-mombae-hoodie.png" alt="몸빼 후디" loading="lazy">
-          <img src="images/web/brand-mombae-popup.png" alt="몸빼 팝업스토어" loading="lazy">
-          <img src="images/web/brand-mombae-vision.png" alt="몸빼 비전" loading="lazy">
-        </div>
-      </div>
+    <div class="stats-row rv rv-d3">
+      <div class="stat"><div class="num" data-count="6">0</div><div class="txt">brand launching</div></div>
+      <div class="stat"><div class="num" data-count="50">0</div><div class="txt">억+ total revenue</div></div>
     </div>
   </div>
 </section>
 
 <!-- BUSINESS OUTPUT -->
-<section id="biz-out">
-  <div class="inner">
-    <p class="bout-title rv">우리는 이렇게 5년간 로컬을 바꿔왔습니다</p>
-    <h2 class="bout-big rv rv-d1">BUSINESS OUTPUT</h2>
-    <div class="bout-stats">
-      <div class="bout-stat rv">
-        <div class="num" data-count="6">0</div>
-        <div class="txt">로컬 브랜드 런칭</div>
-      </div>
-      <div class="bout-stat rv rv-d1">
-        <div class="num" data-count="50">0</div>
-        <div class="txt">매출 창출 (억)</div>
-      </div>
-      <div class="bout-stat rv rv-d2">
-        <div class="num" data-count="130">0</div>
-        <div class="txt">로컬 프로그램 런칭</div>
-      </div>
-    </div>
-  </div>
-</section>
+<div class="hero-img-sec rv"><img src="biz_output.jpg" alt="Business Output" loading="lazy"></div>
 
 <!-- SOCIAL OUTPUT -->
-<section id="social-out">
-  <div class="inner">
-    <div class="label rv">
-      <!-- Chart icon -->
-      <svg class="svg-icon svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="#00e639" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-      local impact
-    </div>
-    <h2 class="bout-big rv rv-d1">SOCIAL OUTPUT</h2>
-    <div class="sout-grid">
-      <div class="sout-stat rv">
-        <div class="num" data-count="4000">0</div>
-        <div class="txt">로컬 생활인구 (+)</div>
-      </div>
-      <div class="sout-stat rv rv-d1">
-        <div class="num" data-count="60">0</div>
-        <div class="txt">로컬 정착인구 (+)</div>
-      </div>
-      <div class="sout-stat rv rv-d2">
-        <div class="num" data-count="30">0</div>
-        <div class="txt">창출 사회적 가치 (억)</div>
-      </div>
-    </div>
-  </div>
-</section>
+<div class="hero-img-sec rv"><img src="social_output.jpg" alt="Social Output" loading="lazy"></div>
 
 <!-- MARQUEE -->
-<div class="marquee-div"><div class="md-inner">CONNECT &mdash; SOCIALRING &mdash; MXZ PROJECT &mdash; CLYN &mdash; CONNECT &mdash; SOCIALRING &mdash; MXZ PROJECT &mdash; CLYN &mdash; CONNECT &mdash; SOCIALRING &mdash; MXZ PROJECT &mdash; CLYN &mdash; </div></div>
+<div class="marquee"><div class="marquee-inner">CONNECT &mdash; SOCIALRING &mdash; MXZ PROJECT &mdash; CLYN &mdash; CONNECT &mdash; SOCIALRING &mdash; MXZ PROJECT &mdash; CLYN &mdash; CONNECT &mdash; SOCIALRING &mdash; MXZ PROJECT &mdash; CLYN &mdash; </div></div>
 
-<!-- CONNECT THEORY -->
-<section id="connect">
+<!-- ========== CONNECT THEORY ========== -->
+<section class="sec-pad">
   <div class="inner">
-    <div class="label rv">
-      <!-- Heart/connection icon -->
-      <svg class="svg-icon svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="#00e639" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
-      about upp
-    </div>
-    <h2 class="wwd-title rv rv-d1" style="margin-bottom:60px;">CONNECT THEORY</h2>
-
-    <!-- A -->
-    <div class="ct-block">
-      <h3 class="ct-title rv">
-        <svg class="svg-icon svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="#00e639" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
-        지역 소멸 위기 &mdash; 본질적 문제는 '관계 단절'
-      </h3>
-      <div class="diagram glass rv rv-d1">
-        <div class="diagram-row">
-          <div class="diagram-box">도시</div>
-          <div class="diagram-arrow-svg"><svg width="32" height="16" viewBox="0 0 32 16" fill="none" stroke="#00e639" stroke-width="2"><line x1="0" y1="8" x2="28" y2="8"/><polyline points="24,3 29,8 24,13"/></svg></div>
-          <div class="diagram-box" style="border-color:#ff2040;color:#ff2040;">DISCONNECTED</div>
-          <div class="diagram-arrow-svg"><svg width="32" height="16" viewBox="0 0 32 16" fill="none" stroke="#00e639" stroke-width="2"><line x1="0" y1="8" x2="28" y2="8"/><polyline points="24,3 29,8 24,13"/></svg></div>
-          <div class="diagram-box">로컬</div>
-        </div>
-        <div class="diagram-row" style="margin-top:20px;">
-          <div class="diagram-box">청년</div>
-          <div class="diagram-arrow-svg"><svg width="32" height="16" viewBox="0 0 32 16" fill="none" stroke="#00e639" stroke-width="2"><line x1="0" y1="8" x2="28" y2="8"/><polyline points="24,3 29,8 24,13"/></svg></div>
-          <div class="diagram-box" style="border-color:#ff2040;color:#ff2040;">DISCONNECTED</div>
-          <div class="diagram-arrow-svg"><svg width="32" height="16" viewBox="0 0 32 16" fill="none" stroke="#00e639" stroke-width="2"><line x1="0" y1="8" x2="28" y2="8"/><polyline points="24,3 29,8 24,13"/></svg></div>
-          <div class="diagram-box">장년층</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- B -->
-    <div class="ct-block">
-      <h3 class="ct-title rv">
-        <svg class="svg-icon svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="#00e639" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
-        소셜링을 통한 관계 에너지 획득
-      </h3>
-      <div class="diagram glass rv rv-d1">
-        <div class="diagram-row">
-          <div class="diagram-box green">SOCIALRING</div>
-          <div class="diagram-arrow-svg"><svg width="32" height="16" viewBox="0 0 32 16" fill="none" stroke="#00e639" stroke-width="2"><line x1="0" y1="8" x2="28" y2="8"/><polyline points="24,3 29,8 24,13"/></svg></div>
-          <div class="diagram-box">사람 &harr; 사람</div>
-          <div class="diagram-arrow-svg"><svg width="32" height="16" viewBox="0 0 32 16" fill="none" stroke="#00e639" stroke-width="2"><line x1="0" y1="8" x2="28" y2="8"/><polyline points="24,3 29,8 24,13"/></svg></div>
-          <div class="diagram-box green">관계 에너지</div>
-          <div class="diagram-arrow-svg"><svg width="32" height="16" viewBox="0 0 32 16" fill="none" stroke="#00e639" stroke-width="2"><line x1="0" y1="8" x2="28" y2="8"/><polyline points="24,3 29,8 24,13"/></svg></div>
-          <div class="diagram-box">행복의 필수 재화<br><small style="color:var(--g);">사회적 자본의 핵심</small></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- C -->
-    <div class="ct-block">
-      <h3 class="ct-title rv">
-        <svg class="svg-icon svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="#00e639" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        사회연대경제모델: MXZ 프로젝트
-      </h3>
-      <div class="tri-diagram rv rv-d1" style="position:relative;">
-        <!-- Animated connecting lines -->
-        <svg class="connect-lines" width="100%" height="100%" style="position:absolute;inset:0;">
-          <line x1="50%" y1="25%" x2="35%" y2="75%" />
-          <line x1="50%" y1="25%" x2="65%" y2="75%" />
-          <line x1="35%" y1="80%" x2="65%" y2="80%" />
-          <line x1="50%" y1="25%" x2="50%" y2="50%" />
-        </svg>
-        <div class="tri-top" style="position:relative;z-index:1;">
-          <div class="tri-node">
-            <div class="tn-title">청년</div>
-            <div class="tn-sub">IDEA / PLANNING</div>
-          </div>
-        </div>
-        <div style="text-align:center;position:relative;z-index:1;">
-          <div class="tri-center">UPPTOWN</div>
-          <div class="tri-center-sub" style="margin-top:4px;color:var(--w5);font-size:11px;">TRANSLATE / CONNECT / PLAN</div>
-        </div>
-        <div class="tri-bottom" style="position:relative;z-index:1;">
-          <div class="tri-node">
-            <div class="tn-title">주민</div>
-            <div class="tn-sub">SKILL / DNA</div>
-          </div>
-          <div class="tri-node">
-            <div class="tn-title">지역</div>
-            <div class="tn-sub">SPACE / RESOURCE</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- D -->
-    <div class="ct-block">
-      <h3 class="ct-title rv">
-        <svg class="svg-icon svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="#00e639" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
-        CLYN 관계 연결 모델
-      </h3>
-      <div class="clyn-grid rv rv-d1">
-        <div class="clyn-card">
-          <div class="cc-code">CL-R</div>
-          <div class="cc-desc">도시관련자</div>
-        </div>
-        <div class="clyn-card">
-          <div class="cc-code">LY-R</div>
-          <div class="cc-desc">로컬관련자</div>
-        </div>
-        <div class="clyn-card">
-          <div class="cc-code">YN-R</div>
-          <div class="cc-desc">청년관련자</div>
-        </div>
-      </div>
-      <div class="clyn-outcome rv rv-d2">
-        <span>로컬 플랫폼</span>
-        <span>브랜딩 실험</span>
-        <span>세대통합</span>
-      </div>
-    </div>
+    <div class="label rv">connect theory</div>
+    <h2 class="sec-title rv rv-d1" style="margin-bottom:40px;">CONNECT THEORY</h2>
   </div>
 </section>
 
-<!-- GREEN HR DIVIDER -->
+<div class="hero-img-sec rv"><img src="ct_problem.jpg" alt="지역 소멸 위기 - 관계 단절" loading="lazy"></div>
+<div class="hero-img-sec rv"><img src="ct_socialring.jpg" alt="소셜링을 통한 관계 에너지 획득" loading="lazy"></div>
+<div class="hero-img-sec rv"><img src="ct_mxz.jpg" alt="사회연대경제모델 MXZ 프로젝트" loading="lazy"></div>
+<div class="hero-img-sec rv"><img src="ct_clyn.jpg" alt="CLYN 관계 연결 모델" loading="lazy"></div>
+<div class="hero-img-sec rv"><img src="ct_upptown_flow.jpg" alt="UPPTOWN 프로세스" loading="lazy"></div>
+
 <hr class="green-hr">
 
-<!-- 34+ CREW -->
+<!-- ========== CREW ========== -->
 <section id="crew">
-  <div class="inner">
-    <h2 class="crew-title rv">
-      <!-- People/group icon -->
-      <svg class="svg-icon svg-icon-lg" viewBox="0 0 24 24" fill="none" stroke="#00e639" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
-      34+ CREW
-    </h2>
-    <p class="crew-sub rv rv-d1">34+ 명의 CREW가 함께합니다</p>
-    <div class="crew-roles rv rv-d2">
-      <span class="crew-role">PD</span>
-      <span class="crew-role">BAND</span>
-      <span class="crew-role">MC</span>
-      <span class="crew-role">DESIGN</span>
-      <span class="crew-role">CHEF</span>
-    </div>
-    <div class="label rv">main crew</div>
-    <div class="crew-grid" style="margin-top:16px;">
-      <div class="crew-card tilt-card rv"><div class="crew-avatar"><img src="images/web/crew-doongdoong.png" alt="둥둥" loading="lazy"></div><div class="cn">DOONG DOONG</div><div class="mbti">ENTP</div></div>
-      <div class="crew-card tilt-card rv"><div class="crew-avatar"><img src="images/web/crew-jjojjo.png" alt="쪼쪼" loading="lazy"></div><div class="cn">JJO JJO</div><div class="mbti">ENFP</div></div>
-      <div class="crew-card tilt-card rv"><div class="crew-avatar"><img src="images/web/crew-niceguy.png" alt="나이스가이" loading="lazy"></div><div class="cn">NICE GUY</div><div class="mbti">ESTP</div></div>
-      <div class="crew-card tilt-card rv"><div class="crew-avatar"><img src="images/web/crew-gyeongin.png" alt="별이" loading="lazy"></div><div class="cn">BYEOL I</div><div class="mbti">ESTP</div></div>
-      <div class="crew-card tilt-card rv"><div class="crew-avatar"><img src="images/web/crew-bobo.png" alt="보보" loading="lazy"></div><div class="cn">BO BO</div><div class="mbti">ISTP</div></div>
-      <div class="crew-card tilt-card rv"><div class="crew-avatar"><img src="images/web/crew-bboomboom.png" alt="뿜뿜" loading="lazy"></div><div class="cn">BBOOM BBOOM</div><div class="mbti">ESFJ</div></div>
-      <div class="crew-card tilt-card rv"><div class="crew-avatar"><img src="images/web/crew-gamja.png" alt="감자" loading="lazy"></div><div class="cn">GAM JA</div><div class="mbti">ISFP</div></div>
-      <div class="crew-card tilt-card rv"><div class="crew-avatar"><img src="images/web/crew-all01.png" alt="돌쇠" loading="lazy"></div><div class="cn">DOL SOE</div><div class="mbti">ESTJ</div></div>
-      <div class="crew-card tilt-card rv"><div class="crew-avatar"><img src="images/web/crew-all03.png" alt="곽디" loading="lazy"></div><div class="cn">KWAK D</div><div class="mbti">ISFJ</div></div>
-      <div class="crew-card tilt-card rv"><div class="crew-avatar"><img src="images/web/crew-extra1.png" alt="조이" loading="lazy"></div><div class="cn">JOY</div><div class="mbti">ENFJ</div></div>
-    </div>
-    <div class="label rv" style="margin-top:40px;">all crew</div>
-    <div class="allcrew-grid rv rv-d1">
-      <div class="allcrew-item"><img src="images/web/crew-all01.png" alt="crew" loading="lazy"><div class="ac-name">DDO LI</div></div>
-      <div class="allcrew-item"><img src="images/web/crew-all02.png" alt="crew" loading="lazy"><div class="ac-name">PE PE</div></div>
-      <div class="allcrew-item"><img src="images/web/crew-all03.png" alt="crew" loading="lazy"><div class="ac-name">KKU KKU</div></div>
-      <div class="allcrew-item"><img src="images/web/crew-all04.png" alt="crew" loading="lazy"><div class="ac-name">HYEO NI</div></div>
-      <div class="allcrew-item"><img src="images/web/crew-all05.png" alt="crew" loading="lazy"><div class="ac-name">RO MI</div></div>
-      <div class="allcrew-item"><img src="images/web/crew-all06.png" alt="crew" loading="lazy"><div class="ac-name">BI NI</div></div>
-      <div class="allcrew-item"><img src="images/web/crew-all07.png" alt="crew" loading="lazy"><div class="ac-name">MU SU</div></div>
-      <div class="allcrew-item"><img src="images/web/crew-all08.png" alt="crew" loading="lazy"><div class="ac-name">HUN I</div></div>
-      <div class="allcrew-item"><img src="images/web/crew-all09.png" alt="crew" loading="lazy"><div class="ac-name">ASSA</div></div>
-      <div class="allcrew-item"><img src="images/web/crew-all10.png" alt="crew" loading="lazy"><div class="ac-name">TAK GI</div></div>
-      <div class="allcrew-item"><img src="images/web/crew-all11.png" alt="crew" loading="lazy"><div class="ac-name">U GI</div></div>
-      <div class="allcrew-item"><img src="images/web/crew-all12.png" alt="crew" loading="lazy"><div class="ac-name">KYU</div></div>
-      <div class="allcrew-item"><img src="images/web/crew-all13.png" alt="crew" loading="lazy"><div class="ac-name">BANG BANG</div></div>
-      <div class="allcrew-item"><img src="images/web/crew-all14.png" alt="crew" loading="lazy"><div class="ac-name">HYE PPI</div></div>
-      <div class="allcrew-item"><img src="images/web/crew-all15.png" alt="crew" loading="lazy"><div class="ac-name">PONG PONG</div></div>
-      <div class="allcrew-item"><img src="images/web/crew-all16.png" alt="crew" loading="lazy"><div class="ac-name">NU NU</div></div>
-    </div>
-  </div>
-</section>
+  <div class="hero-img-sec rv"><img src="main_crew.jpg" alt="Main Crew" loading="lazy"></div>
+  <div class="sec-pad">
+    <div class="inner">
+      <div class="label rv">34+ crew</div>
+      <h2 class="sec-title rv rv-d1">34+ CREW</h2>
+      <p class="sec-desc rv rv-d2">34+ 명의 CREW가 함께합니다</p>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:32px;" class="rv rv-d2">
+        <span class="tag" style="padding:6px 16px;font-size:12px;border-color:var(--g);color:var(--g);">PD</span>
+        <span class="tag" style="padding:6px 16px;font-size:12px;border-color:var(--g);color:var(--g);">BAND</span>
+        <span class="tag" style="padding:6px 16px;font-size:12px;border-color:var(--g);color:var(--g);">MC</span>
+        <span class="tag" style="padding:6px 16px;font-size:12px;border-color:var(--g);color:var(--g);">DESIGN</span>
+        <span class="tag" style="padding:6px 16px;font-size:12px;border-color:var(--g);color:var(--g);">CHEF</span>
+      </div>
 
-<!-- WAVE DIVIDER -->
-<div class="wave-divider">
-  <svg viewBox="0 0 1200 40" preserveAspectRatio="none" fill="none" stroke="#00e639" stroke-width="1.5" opacity=".25">
-    <path d="M0,20 Q150,0 300,20 Q450,40 600,20 Q750,0 900,20 Q1050,40 1200,20"/>
-  </svg>
-</div>
+      <div class="label rv rv-d2">main crew</div>
+      <div class="crew-grid rv rv-d3">
+        <div class="crew-card"><img src="images/web/crew-doongdoong.png" alt="둥둥" loading="lazy"><div class="cn">DOONG DOONG</div><div class="mbti">ENTP</div></div>
+        <div class="crew-card"><img src="images/web/crew-jjojjo.png" alt="쪼쪼" loading="lazy"><div class="cn">JJO JJO</div><div class="mbti">ENFP</div></div>
+        <div class="crew-card"><img src="images/web/crew-niceguy.png" alt="나이스가이" loading="lazy"><div class="cn">NICE GUY</div><div class="mbti">ESTP</div></div>
+        <div class="crew-card"><img src="images/web/crew-gyeongin.png" alt="별이" loading="lazy"><div class="cn">BYEOL I</div><div class="mbti">ESTP</div></div>
+        <div class="crew-card"><img src="images/web/crew-bobo.png" alt="보보" loading="lazy"><div class="cn">BO BO</div><div class="mbti">ISTP</div></div>
+        <div class="crew-card"><img src="images/web/crew-bboomboom.png" alt="뿜뿜" loading="lazy"><div class="cn">BBOOM BBOOM</div><div class="mbti">ESFJ</div></div>
+        <div class="crew-card"><img src="images/web/crew-gamja.png" alt="감자" loading="lazy"><div class="cn">GAM JA</div><div class="mbti">ISFP</div></div>
+        <div class="crew-card"><img src="images/web/crew-all01.png" alt="돌쇠" loading="lazy"><div class="cn">DOL SOE</div><div class="mbti">ESTJ</div></div>
+        <div class="crew-card"><img src="images/web/crew-all03.png" alt="곽디" loading="lazy"><div class="cn">KWAK D</div><div class="mbti">ISFJ</div></div>
+        <div class="crew-card"><img src="images/web/crew-extra1.png" alt="조이" loading="lazy"><div class="cn">JOY</div><div class="mbti">ENFJ</div></div>
+      </div>
 
-<!-- AWARDS -->
-<section id="awards">
-  <div class="inner">
-    <div class="label rv">
-      <!-- Trophy icon -->
-      <svg class="svg-icon svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="#00e639" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 010-5H6"/><path d="M18 9h1.5a2.5 2.5 0 000-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0012 0V2z"/></svg>
-      only.1 local entertainment
-    </div>
-    <h2 class="bout-big bout-big-filled rv rv-d1" style="-webkit-text-stroke:0;color:var(--w);">AWARDS</h2>
-    <div class="award-grid">
-      <div class="award-card tilt-card rv">
-        <img class="award-img" src="images/web/about-award4.png" alt="대통령 청년타운홀" loading="lazy">
-        <h4>대통령 청년타운홀</h4>
-        <p>JTBC</p>
-      </div>
-      <div class="award-card tilt-card rv rv-d1">
-        <img class="award-img" src="images/web/about-award1.png" alt="로컬혁신 우수사례" loading="lazy">
-        <h4>로컬혁신 우수사례 강연</h4>
-        <p>Local Innovation</p>
-      </div>
-      <div class="award-card tilt-card rv rv-d2">
-        <img class="award-img" src="images/web/about-award2.png" alt="행안부 장관상" loading="lazy">
-        <h4>행정안전부 장관상</h4>
-        <p>Minister of the Interior</p>
-      </div>
-      <div class="award-card tilt-card rv rv-d3">
-        <img class="award-img" src="images/web/about-award3.png" alt="농림부 장관상" loading="lazy">
-        <h4>농림축산식품부 장관상</h4>
-        <p>Minister of Agriculture</p>
+      <div class="label rv" style="margin-top:40px;">all crew</div>
+      <div class="crew-grid rv rv-d1">
+        <div class="crew-card"><img src="images/web/crew-all01.png" alt="crew" loading="lazy"><div class="cn">DDO LI</div></div>
+        <div class="crew-card"><img src="images/web/crew-all02.png" alt="crew" loading="lazy"><div class="cn">PE PE</div></div>
+        <div class="crew-card"><img src="images/web/crew-all04.png" alt="crew" loading="lazy"><div class="cn">HYEO NI</div></div>
+        <div class="crew-card"><img src="images/web/crew-all05.png" alt="crew" loading="lazy"><div class="cn">RO MI</div></div>
+        <div class="crew-card"><img src="images/web/crew-all06.png" alt="crew" loading="lazy"><div class="cn">BI NI</div></div>
+        <div class="crew-card"><img src="images/web/crew-all07.png" alt="crew" loading="lazy"><div class="cn">MU SU</div></div>
+        <div class="crew-card"><img src="images/web/crew-all08.png" alt="crew" loading="lazy"><div class="cn">HUN I</div></div>
+        <div class="crew-card"><img src="images/web/crew-all09.png" alt="crew" loading="lazy"><div class="cn">ASSA</div></div>
+        <div class="crew-card"><img src="images/web/crew-all10.png" alt="crew" loading="lazy"><div class="cn">TAK GI</div></div>
+        <div class="crew-card"><img src="images/web/crew-all11.png" alt="crew" loading="lazy"><div class="cn">U GI</div></div>
+        <div class="crew-card"><img src="images/web/crew-all12.png" alt="crew" loading="lazy"><div class="cn">KYU</div></div>
+        <div class="crew-card"><img src="images/web/crew-all13.png" alt="crew" loading="lazy"><div class="cn">BANG BANG</div></div>
+        <div class="crew-card"><img src="images/web/crew-all14.png" alt="crew" loading="lazy"><div class="cn">HYE PPI</div></div>
+        <div class="crew-card"><img src="images/web/crew-all15.png" alt="crew" loading="lazy"><div class="cn">PONG PONG</div></div>
+        <div class="crew-card"><img src="images/web/crew-all16.png" alt="crew" loading="lazy"><div class="cn">NU NU</div></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- GREEN HR DIVIDER -->
 <hr class="green-hr">
 
-<!-- MEDIA -->
-<section id="media">
+<!-- ========== AWARDS & MEDIA ========== -->
+<section class="sec-pad">
   <div class="inner">
-    <div class="label rv">
-      <!-- TV/monitor icon -->
-      <svg class="svg-icon svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="#00e639" stroke-width="2"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/></svg>
-      no.1 로컬 엔터테인먼트
-    </div>
-    <p class="about-mission rv rv-d1">MZ들이 사랑하는 NO.1 로컬 엔터테인먼트</p>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:32px;" class="rv rv-d1">
-      <div style="position:relative;overflow:hidden;border:1px solid var(--w06);">
-        <img src="images/web/brand-celeb.png" alt="유명인사" loading="lazy" style="width:100%;display:block;filter:brightness(.9);">
-        <div style="position:absolute;bottom:0;left:0;right:0;padding:16px;background:linear-gradient(transparent,rgba(0,0,0,.8));font-family:'Oswald',sans-serif;font-size:13px;letter-spacing:2px;color:var(--g);">CELEBRITY</div>
-      </div>
-      <div style="position:relative;overflow:hidden;border:1px solid var(--w06);">
-        <img src="images/web/brand-press.png" alt="언론사" loading="lazy" style="width:100%;display:block;filter:brightness(.9);">
-        <div style="position:absolute;bottom:0;left:0;right:0;padding:16px;background:linear-gradient(transparent,rgba(0,0,0,.8));font-family:'Oswald',sans-serif;font-size:13px;letter-spacing:2px;color:var(--g);">PRESS</div>
-      </div>
-    </div>
-    <div class="media-grid">
-      <div class="media-card rv">
-        <h4>
-          <svg class="svg-icon svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="#00e639" stroke-width="2" style="opacity:.5"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/></svg>
-          폭스클럽
-        </h4>
-        <p>FOX CLUB</p>
-      </div>
-      <div class="media-card rv rv-d1">
-        <h4>
-          <svg class="svg-icon svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="#00e639" stroke-width="2" style="opacity:.5"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/></svg>
-          트와이스 지효 [세입자]
-        </h4>
-        <p>TWICE JIHYO</p>
-      </div>
-      <div class="media-card rv rv-d2">
-        <h4>
-          <svg class="svg-icon svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="#00e639" stroke-width="2" style="opacity:.5"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/></svg>
-          인피니트 성규 [투어요정]
-        </h4>
-        <p>INFINITE SUNGGYU</p>
-      </div>
-      <div class="media-card rv rv-d3">
-        <h4>
-          <svg class="svg-icon svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="#00e639" stroke-width="2" style="opacity:.5"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/></svg>
-          KBS 아침마당
-        </h4>
-        <p>KBS MORNING</p>
-      </div>
-    </div>
+    <div class="label rv">only.1 local entertainment</div>
+    <h2 class="sec-title rv rv-d1">AWARDS</h2>
   </div>
 </section>
+<div class="hero-img-sec rv"><img src="awards.jpg" alt="Awards" loading="lazy"></div>
 
-<!-- ZIGZAG DIVIDER -->
-<div class="zigzag-divider">
-  <svg viewBox="0 0 1200 20" preserveAspectRatio="none" fill="none" stroke="#00e639" stroke-width="1" opacity=".3">
-    <polyline points="0,10 30,2 60,18 90,2 120,18 150,2 180,18 210,2 240,18 270,2 300,18 330,2 360,18 390,2 420,18 450,2 480,18 510,2 540,18 570,2 600,18 630,2 660,18 690,2 720,18 750,2 780,18 810,2 840,18 870,2 900,18 930,2 960,18 990,2 1020,18 1050,2 1080,18 1110,2 1140,18 1170,2 1200,10"/>
-  </svg>
-</div>
-
-<!-- VISION -->
-<section id="vision">
-  <!-- Background building SVG decoration -->
-  <svg class="vision-bg-svg" width="800" height="400" viewBox="0 0 800 400" fill="none" stroke="white" stroke-width="0.5">
-    <rect x="50" y="100" width="80" height="300"/><rect x="55" y="110" width="15" height="20"/><rect x="75" y="110" width="15" height="20"/><rect x="95" y="110" width="15" height="20"/><rect x="55" y="140" width="15" height="20"/><rect x="75" y="140" width="15" height="20"/><rect x="95" y="140" width="15" height="20"/><rect x="55" y="170" width="15" height="20"/><rect x="75" y="170" width="15" height="20"/><rect x="95" y="170" width="15" height="20"/>
-    <rect x="160" y="50" width="100" height="350"/><rect x="170" y="65" width="18" height="25"/><rect x="195" y="65" width="18" height="25"/><rect x="220" y="65" width="18" height="25"/><rect x="170" y="100" width="18" height="25"/><rect x="195" y="100" width="18" height="25"/><rect x="220" y="100" width="18" height="25"/><rect x="170" y="135" width="18" height="25"/><rect x="195" y="135" width="18" height="25"/><rect x="220" y="135" width="18" height="25"/>
-    <rect x="290" y="150" width="70" height="250"/><rect x="297" y="160" width="12" height="18"/><rect x="315" y="160" width="12" height="18"/><rect x="333" y="160" width="12" height="18"/><rect x="297" y="185" width="12" height="18"/><rect x="315" y="185" width="12" height="18"/><rect x="333" y="185" width="12" height="18"/>
-    <rect x="390" y="80" width="120" height="320"/><rect x="400" y="95" width="20" height="25"/><rect x="430" y="95" width="20" height="25"/><rect x="460" y="95" width="20" height="25"/><rect x="400" y="130" width="20" height="25"/><rect x="430" y="130" width="20" height="25"/><rect x="460" y="130" width="20" height="25"/><rect x="400" y="165" width="20" height="25"/><rect x="430" y="165" width="20" height="25"/><rect x="460" y="165" width="20" height="25"/>
-    <rect x="540" y="180" width="60" height="220"/><rect x="548" y="190" width="10" height="15"/><rect x="565" y="190" width="10" height="15"/><rect x="580" y="190" width="10" height="15"/>
-    <rect x="630" y="120" width="90" height="280"/><rect x="640" y="135" width="15" height="20"/><rect x="660" y="135" width="15" height="20"/><rect x="680" y="135" width="15" height="20"/><rect x="640" y="165" width="15" height="20"/><rect x="660" y="165" width="15" height="20"/><rect x="680" y="165" width="15" height="20"/>
-  </svg>
+<section class="sec-pad">
   <div class="inner">
-    <div class="label rv">
-      <!-- Building icon -->
-      <svg class="svg-icon svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="#00e639" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"/><path d="M9 22V12h6v10"/><path d="M8 6h.01M16 6h.01M12 6h.01M8 10h.01M16 10h.01M12 10h.01"/></svg>
-      vision
-    </div>
-    <h2 class="vision-big rv rv-d1">LOCAL COMPLEX<br>CULTURAL TOWN</h2>
-    <p class="vision-desc rv rv-d2">우리는 앞으로 로컬 복합 문화 타운을 만들 것입니다</p>
-    <div class="vision-stats">
-      <div class="vision-stat rv">
-        <div class="v-num" data-count="10">0</div>
-        <div class="v-label">new local brand open</div>
-        <div class="v-ko">개</div>
-      </div>
-      <div class="vision-stat rv rv-d1">
-        <div class="v-num">200K</div>
-        <div class="v-label">new local traffic</div>
-      </div>
-      <div class="vision-stat rv rv-d2">
-        <div class="v-num" data-count="5">0</div>
-        <div class="v-label">new local festival</div>
-        <div class="v-ko">회</div>
-      </div>
-    </div>
+    <div class="label rv">no.1 로컬 엔터테인먼트</div>
+    <h2 class="sec-title rv rv-d1" style="margin-bottom:0;">MEDIA</h2>
   </div>
 </section>
+<div class="hero-img-sec rv"><img src="tv_appearances.jpg" alt="TV Appearances" loading="lazy"></div>
 
-<!-- ENDING -->
-<section id="ending">
-  <div class="inner">
-    <p class="ending-text rv">로컬에서 실제 <strong>5년간</strong> 살아가면서 모인<br><strong>34명의 로컬 전문가</strong>가 업타운과 함께합니다</p>
-  </div>
-  <div class="marquee">
-    <div class="marquee-inner">ONLY 1 MZ LOCAL CREATOR UPPTOWN &mdash; ONLY 1 MZ LOCAL CREATOR UPPTOWN &mdash; ONLY 1 MZ LOCAL CREATOR UPPTOWN &mdash; ONLY 1 MZ LOCAL CREATOR UPPTOWN &mdash; </div>
-  </div>
-  <div class="inner">
-    <p class="ending-final rv"><span>UPPTOWN</span>은 함께입니다</p>
-  </div>
-</section>
+<hr class="green-hr">
 
-<!-- CONTACT -->
-<section id="contact">
+<!-- ========== VISION ========== -->
+<div class="hero-img-sec rv"><img src="vision.jpg" alt="Vision - Local Complex Cultural Town" loading="lazy"></div>
+
+<!-- ========== ENDING ========== -->
+<div class="hero-img-sec rv"><img src="crew_ending.jpg" alt="UPPTOWN Crew" loading="lazy"></div>
+
+<!-- MARQUEE -->
+<div class="marquee"><div class="marquee-inner">ONLY 1 MZ LOCAL CREATOR UPPTOWN &mdash; ONLY 1 MZ LOCAL CREATOR UPPTOWN &mdash; ONLY 1 MZ LOCAL CREATOR UPPTOWN &mdash; ONLY 1 MZ LOCAL CREATOR UPPTOWN &mdash; </div></div>
+
+<!-- ========== CONTACT ========== -->
+<section id="contact" class="sec-pad" style="text-align:center;">
   <div class="inner">
-    <div class="label rv">get in touch</div>
-    <h2 class="bout-big bout-big-filled rv rv-d1" style="margin-bottom:32px;-webkit-text-stroke:0;color:var(--w);">CONTACT US</h2>
+    <div class="label rv" style="justify-content:center;">get in touch</div>
+    <h2 class="sec-title rv rv-d1">CONTACT US</h2>
     <a href="mailto:info@upptown.co.kr" class="contact-btn rv rv-d2">CONTACT US</a>
   </div>
 </section>
 
-<!-- PRESS -->
-<section id="press">
+<!-- ========== PRESS ========== -->
+<section id="press" class="sec-pad">
   <div class="inner">
-    <div class="label rv">
-      <!-- Newspaper icon -->
-      <svg class="svg-icon svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="#00e639" stroke-width="2"><path d="M4 22h16a2 2 0 002-2V4a2 2 0 00-2-2H8a2 2 0 00-2 2v16a2 2 0 01-2 2zm0 0a2 2 0 01-2-2v-9c0-1.1.9-2 2-2h2"/><line x1="10" y1="6" x2="18" y2="6"/><line x1="10" y1="10" x2="18" y2="10"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
-      press
-    </div>
-    <h2 class="wwd-title rv rv-d1" style="margin-bottom:32px;">NEWS</h2>
+    <div class="label rv">press</div>
+    <h2 class="sec-title rv rv-d1" style="margin-bottom:32px;">NEWS</h2>
     <div class="press-list rv rv-d2">
-      <div class="press-item">
-        <span class="pt">업타운, MZ세대가 이끄는 로컬 엔터테인먼트의 새로운 지평</span>
-        <span class="pa">한국경제</span>
-        <span class="pd">2025</span>
-      </div>
-      <div class="press-item">
-        <span class="pt">홍천 방앗간, 청년농부가 만든 메밀 막국수 브랜드의 성공</span>
-        <span class="pa">중앙일보</span>
-        <span class="pd">2025</span>
-      </div>
-      <div class="press-item">
-        <span class="pt">지역 소멸 위기, 업타운의 해법 '소셜링'</span>
-        <span class="pa">KBS</span>
-        <span class="pd">2024</span>
-      </div>
-      <div class="press-item">
-        <span class="pt">로컬 크리에이터 34인의 도전, 강원도에서 브랜드를 만들다</span>
-        <span class="pa">매일경제</span>
-        <span class="pd">2024</span>
-      </div>
-      <div class="press-item">
-        <span class="pt">대통령 청년타운홀 참여, 업타운 로컬 혁신 사례 발표</span>
-        <span class="pa">JTBC</span>
-        <span class="pd">2024</span>
-      </div>
+      <div class="press-item"><span class="pt">업타운, MZ세대가 이끄는 로컬 엔터테인먼트의 새로운 지평</span><span class="pa">한국경제</span><span class="pd">2025</span></div>
+      <div class="press-item"><span class="pt">홍천 방앗간, 청년농부가 만든 메밀 막국수 브랜드의 성공</span><span class="pa">중앙일보</span><span class="pd">2025</span></div>
+      <div class="press-item"><span class="pt">지역 소멸 위기, 업타운의 해법 '소셜링'</span><span class="pa">KBS</span><span class="pd">2024</span></div>
+      <div class="press-item"><span class="pt">로컬 크리에이터 34인의 도전, 강원도에서 브랜드를 만들다</span><span class="pa">매일경제</span><span class="pd">2024</span></div>
+      <div class="press-item"><span class="pt">대통령 청년타운홀 참여, 업타운 로컬 혁신 사례 발표</span><span class="pa">JTBC</span><span class="pd">2024</span></div>
     </div>
   </div>
 </section>
 
-<!-- FOOTER -->
+<!-- ========== FOOTER ========== -->
 <footer>
-  <div class="footer-green-line"></div>
   <div class="inner">
     <div class="footer-logo">UPPTOWN</div>
-    <!-- Barcode decoration -->
-    <div class="footer-barcode" id="footerBarcode"></div>
     <div class="footer-info">070.8064.9082 | 대표 이은석</div>
-    <div class="footer-copy">UPPTOWN &copy; 2025 All rights reserved</div>
-    <!-- QR decoration -->
-    <div class="footer-qr" id="footerQR"></div>
+    <div class="footer-info" style="margin-top:4px;">개인정보처리방침 &nbsp;&nbsp;&nbsp; 비즈니스 문의</div>
+    <div class="footer-copy">UPPTOWN의 모든 컨텐츠는 저작권의 보호를 받고 있습니다. &copy;UPPTOWN ALL RIGHTS RESERVED.</div>
   </div>
 </footer>
 
 <script>
 // Mobile menu
-const hamburger=document.getElementById('hamburger');
-const mobileMenu=document.getElementById('mobileMenu');
-hamburger.addEventListener('click',()=>{hamburger.classList.toggle('open');mobileMenu.classList.toggle('open');});
-function closeMobile(){hamburger.classList.remove('open');mobileMenu.classList.remove('open');}
+const hamburger=document.getElementById('hamburger'),mobMenu=document.getElementById('mobMenu');
+hamburger.addEventListener('click',()=>{hamburger.classList.toggle('open');mobMenu.classList.toggle('open');});
+function closeMob(){hamburger.classList.remove('open');mobMenu.classList.remove('open');}
 
-// Header scroll effect + active nav links
-const siteHeader=document.getElementById('siteHeader');
-const headerLinks=document.querySelectorAll('.site-header nav a');
-
-// Scroll progress bar + back to top + side nav + parallax
-const spbar=document.getElementById('spbar');
-const backTop=document.getElementById('backTop');
-const sections=document.querySelectorAll('section[id]');
-
+// Scroll progress + header + back to top
+const spbar=document.getElementById('spbar'),btt=document.getElementById('btt'),hdr=document.getElementById('hdr');
+const navLinks=document.querySelectorAll('.hdr nav a'),sections=document.querySelectorAll('section[id]');
 window.addEventListener('scroll',()=>{
   const h=document.documentElement.scrollHeight-window.innerHeight;
-  const pct=window.scrollY/h*100;
-  spbar.style.width=pct+'%';
-
-  if(window.scrollY>600){backTop.classList.add('show');siteHeader.classList.add('scrolled');}
-  else{backTop.classList.remove('show');siteHeader.classList.remove('scrolled');}
-
-  let currentSection='';
-  sections.forEach(s=>{if(window.scrollY>=s.offsetTop-200)currentSection=s.id;});
-  headerLinks.forEach(a=>{a.classList.remove('active');if(a.getAttribute('href')==='#'+currentSection)a.classList.add('active');});
+  spbar.style.width=(window.scrollY/h*100)+'%';
+  if(window.scrollY>400){btt.classList.add('show');hdr.classList.add('scrolled');}
+  else{btt.classList.remove('show');hdr.classList.remove('scrolled');}
+  let cur='';sections.forEach(s=>{if(window.scrollY>=s.offsetTop-200)cur=s.id;});
+  navLinks.forEach(a=>{a.classList.remove('active');if(a.getAttribute('href')==='#'+cur)a.classList.add('active');});
 });
 
-// Intersection Observer for reveal animations
-const obs=new IntersectionObserver((entries)=>{
+// Reveal on scroll
+const obs=new IntersectionObserver(entries=>{
   entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('vis');obs.unobserve(e.target);}});
-},{threshold:0.15,rootMargin:'0px 0px -40px 0px'});
+},{threshold:0.1,rootMargin:'0px 0px -40px 0px'});
 document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
 
-// Count-up animation with overshoot (spring feel)
-const countObs=new IntersectionObserver((entries)=>{
+// Count-up
+const cobs=new IntersectionObserver(entries=>{
   entries.forEach(e=>{
-    if(e.isIntersecting){
-      const el=e.target;
-      const target=parseInt(el.dataset.count);
-      if(!target)return;
-      const overshoot=target*1.08;
-      let current=0;
-      const duration=1800;
-      const step=overshoot/duration*16;
-      const fmt=n=>{
-        if(n>=10000)return Math.floor(n/1000).toLocaleString()+','+String(n%1000).padStart(3,'0');
-        return n.toLocaleString();
-      };
-      let phase='up';
-      const tick=()=>{
-        if(phase==='up'){
-          current+=step;
-          if(current>=overshoot){
-            current=overshoot;
-            phase='settle';
-          }
-          el.textContent=fmt(Math.floor(current));
-          requestAnimationFrame(tick);
-        }else if(phase==='settle'){
-          current+=(target-current)*0.15;
-          if(Math.abs(current-target)<0.5){
-            el.textContent=fmt(target);
-            countObs.unobserve(el);
-            return;
-          }
-          el.textContent=fmt(Math.floor(current));
-          requestAnimationFrame(tick);
-        }
-      };
-      requestAnimationFrame(tick);
-    }
+    if(!e.isIntersecting)return;
+    const el=e.target,target=parseInt(el.dataset.count);
+    if(!target)return;
+    let cur=0;const dur=1600,step=target/dur*16;
+    const fmt=n=>n>=10000?Math.floor(n/1000).toLocaleString()+','+String(n%1000).padStart(3,'0'):n.toLocaleString();
+    const tick=()=>{cur+=step;if(cur>=target){el.textContent=fmt(target);cobs.unobserve(el);return;}el.textContent=fmt(Math.floor(cur));requestAnimationFrame(tick);};
+    requestAnimationFrame(tick);
   });
 },{threshold:0.5});
-document.querySelectorAll('[data-count]').forEach(el=>countObs.observe(el));
-
-// Hero floating particles
-(function(){
-  const container=document.getElementById('heroParticles');
-  if(!container)return;
-  for(let i=0;i<30;i++){
-    const p=document.createElement('div');
-    p.className='particle';
-    const size=Math.random()*3+2;
-    p.style.width=size+'px';
-    p.style.height=size+'px';
-    p.style.left=Math.random()*100+'%';
-    p.style.top=Math.random()*100+'%';
-    p.style.setProperty('--dx',(Math.random()*200-100)+'px');
-    p.style.setProperty('--dy',(Math.random()*200-100)+'px');
-    p.style.animationDuration=(Math.random()*10+8)+'s';
-    p.style.animationDelay=(Math.random()*8)+'s';
-    container.appendChild(p);
-  }
-})();
-
-// Staggered animation for grid items
-const staggerObs=new IntersectionObserver((entries)=>{
-  entries.forEach(e=>{
-    if(e.isIntersecting){
-      const cards=e.target.querySelectorAll('.tilt-card,.crew-card,.award-card,.stat-card,.biz4-card,.media-card');
-      cards.forEach((c,i)=>{
-        c.style.transitionDelay=(i*0.08)+'s';
-      });
-      staggerObs.unobserve(e.target);
-    }
-  });
-},{threshold:0.1});
-document.querySelectorAll('.how-grid,.crew-grid,.award-grid,.stats-grid,.biz4-grid,.media-grid').forEach(g=>staggerObs.observe(g));
-
-// Parallax on team bg text + subtle scroll transforms
-window.addEventListener('scroll',()=>{
-  const scrolled=window.scrollY;
-  document.querySelectorAll('.team-bg-text').forEach(el=>{
-    const rect=el.parentElement.getBoundingClientRect();
-    const speed=0.15;
-    el.style.transform='translate(-50%,-50%) translateY('+(rect.top*speed)+'px)';
-  });
-});
-
-// Generate barcode decoration
-(function(){
-  const bc=document.getElementById('footerBarcode');
-  if(!bc)return;
-  const pattern=[2,1,3,1,2,1,1,3,2,1,1,2,3,1,2,1,1,3,1,2,1,3,2,1,1,2,1,3,1,2,3,1,2,1,1,2,1,3,2,1];
-  pattern.forEach(w=>{
-    const s=document.createElement('span');
-    s.style.width=w+'px';
-    bc.appendChild(s);
-  });
-})();
-
-// Generate QR decoration
-(function(){
-  const qr=document.getElementById('footerQR');
-  if(!qr)return;
-  for(let i=0;i<49;i++){
-    const s=document.createElement('span');
-    if(Math.random()>0.5) s.style.background='transparent';
-    qr.appendChild(s);
-  }
-})();
+document.querySelectorAll('[data-count]').forEach(el=>cobs.observe(el));
 </script>
 </body>
 </html>
